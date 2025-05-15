@@ -52,21 +52,7 @@ struct MewNotchApp: App {
             content: {
                 Text("MewNotch")
                 
-                Button("Settings") {
-                    openSettings()
-                }
-                .keyboardShortcut(
-                    ",",
-                    modifiers: .command
-                )
-
-                
-                Button("Restart") {
-                    AppManager.shared.restartApp(
-                        killPreviousInstance: true
-                    )
-                }
-                .keyboardShortcut("R", modifiers: .command)
+                NotchOptionsView()
             }
         ) {
             MewNotch.Assets.iconMenuBar

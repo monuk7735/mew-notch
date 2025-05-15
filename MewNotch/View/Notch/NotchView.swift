@@ -79,28 +79,8 @@ struct NotchView: View {
             Spacer()
         }
         .preferredColorScheme(.dark)
-        .contextMenu(
-            menuItems: {
-                
-                Button("Fix System HUD") {
-                    OSDUIManager.shared.reset()
-                }
-                
-                Button("Settings") {
-                    openSettings()
-                }
-                .keyboardShortcut(
-                    ",",
-                    modifiers: .command
-                )
-                
-                Button("Restart") {
-                    AppManager.shared.restartApp(
-                        killPreviousInstance: true
-                    )
-                }
-                .keyboardShortcut("R", modifiers: .command)
-            }
-        )
+        .contextMenu {
+            NotchOptionsView()
+        }
     }
 }

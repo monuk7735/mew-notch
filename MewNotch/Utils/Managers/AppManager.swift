@@ -11,7 +11,11 @@ class AppManager {
     
     private init() {}
     
-    func restartApp(
+    func kill() {
+        NSApplication.shared.terminate(nil)
+    }
+    
+    func restart(
         killPreviousInstance: Bool = true
     ) {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
