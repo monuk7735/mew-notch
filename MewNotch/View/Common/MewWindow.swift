@@ -38,7 +38,7 @@ class MewPanel: NSPanel {
         
         isReleasedWhenClosed = false
         level = .mainMenu + 3
-        hasShadow = true
+        hasShadow = false
     }
     
     override var canBecomeKey: Bool {
