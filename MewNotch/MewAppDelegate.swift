@@ -12,10 +12,6 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
     @Environment(\.openWindow) var openWindow
     @Environment(\.openSettings) var openSettingsWindow
     
-    var windows: [NSScreen: NSWindow] = [:]
-    
-    var window: NSWindow!
-    
     func applicationShouldTerminateAfterLastWindowClosed(
         _ sender: NSApplication
     ) -> Bool {
