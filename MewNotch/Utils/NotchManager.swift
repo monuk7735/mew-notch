@@ -13,6 +13,8 @@ class NotchManager {
     
     var notchDefaults: NotchDefaults = .shared
     
+    var windows: [NSScreen: NSWindow] = [:]
+    
     private init() {
         addListenerForScreenUpdates()
     }
@@ -35,35 +37,47 @@ class NotchManager {
             return shownOnDisplays.contains(screen.localizedName)
         }
         
-        NSApplication.shared.windows.forEach { window in
-            window.close()
-            
-            NotchSpaceManager.shared.notchSpace.windows
-                .remove(
-                    window
+        windows.forEach { screen, window in
+            if !NSScreen.screens.contains(
+                where: { $0 == screen}
+            ) || !shouldShowOnScreen(screen) {
+                window.close()
+                
+                NotchSpaceManager.shared.notchSpace.windows
+                    .remove(
+                        window
+                    )
+                
+                windows.removeValue(
+                    forKey: screen
                 )
+            }
         }
         
         NSScreen.screens.filter {
             shouldShowOnScreen($0)
         }.forEach { screen in
-            let view: NSView = NSHostingView(
-                rootView: NotchView(
-                    screen: screen
+            var panel: NSWindow! = windows[screen]
+            
+            if panel == nil {
+                let view: NSView = NSHostingView(
+                    rootView: NotchView(
+                        screen: screen
+                    )
                 )
-            )
-            
-            let panel = MewPanel(
-                contentRect: .zero,
-                styleMask: [
-                    .borderless,
-                    .nonactivatingPanel
-                ],
-                backing: .buffered,
-                defer: true
-            )
-            
-            panel.contentView = view
+                
+                panel = MewPanel(
+                    contentRect: .zero,
+                    styleMask: [
+                        .borderless,
+                        .nonactivatingPanel
+                    ],
+                    backing: .buffered,
+                    defer: true
+                )
+                
+                panel.contentView = view
+            }
             
             panel.setFrame(
                 screen.frame,
@@ -71,6 +85,8 @@ class NotchManager {
             )
             
             panel.orderFrontRegardless()
+            
+            windows[screen] = panel
             
             NotchSpaceManager.shared.notchSpace.windows.insert(panel)
         }
