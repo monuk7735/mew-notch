@@ -156,22 +156,6 @@ struct MewSettingsView: View {
                 )
             }
         )
-        .onChange(
-            of: scenePhase
-        ) {
-            if scenePhase == .active {
-                NSApp.setActivationPolicy(.regular)
-                NSApp.activate()
-            }
-        }
-        .onReceive(
-            NotificationCenter.default.publisher(
-                for: NSApplication.willResignActiveNotification
-            )
-        ) { _ in
-            NSApp.setActivationPolicy(.accessory)
-            NSApp.deactivate()
-        }
         .task {
             guard let window = NSApp.windows.first(
                 where: {
@@ -183,6 +167,8 @@ struct MewSettingsView: View {
             
             window.toolbarStyle = .unified
             window.styleMask.insert(.resizable)
+            
+            NSApp.activate()
         }
     }
 }

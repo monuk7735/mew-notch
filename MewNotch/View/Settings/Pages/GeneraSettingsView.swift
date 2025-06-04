@@ -38,6 +38,36 @@ struct GeneraSettingsView: View {
                     Text("App")
                 }
             )
+            
+            Section(
+                content: {
+                    LaunchAtLogin.Toggle()
+                    
+                    Toggle(
+                        isOn: $appDefaults.disableSystemHUD
+                    ) {
+                        VStack(
+                            alignment: .leading
+                        ) {
+                            Text("Disable system HUD")
+                        }
+                    }
+                    .onChange(
+                        of: appDefaults.disableSystemHUD
+                    ) { _, newValue in
+                        if newValue {
+                            OSDUIManager.shared.stop()
+                            OSDUIManager.shared.startMonitoring()
+                        } else {
+                            OSDUIManager.shared.stopMonitoring()
+                            OSDUIManager.shared.start()
+                        }
+                    }
+                },
+                header: {
+                    Text("System")
+                }
+            )
         }
         .formStyle(.grouped)
         .navigationTitle("General")

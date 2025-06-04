@@ -11,6 +11,8 @@ class OSDUIManager {
     
     static let shared = OSDUIManager()
     
+    private var timer: Timer?
+    
     private init() {}
 
     public func start() {
@@ -39,7 +41,7 @@ class OSDUIManager {
             try kickstart.run()
             kickstart.waitUntilExit()
             
-            usleep(1000000) // Make sure it started
+            usleep(500000) // Wait a bit
             
             let task = Process()
             
@@ -55,8 +57,84 @@ class OSDUIManager {
     public func reset() {
         start()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.stop()
+        stop()
+    }
+    
+    func startMonitoring() {
+        timer = Timer.scheduledTimer(
+            timeInterval: 30,
+            target: self,
+            selector: #selector(killIfRunning),
+            userInfo: nil,
+            repeats: true
+        )
+    }
+    
+    func stopMonitoring() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    @objc private func killIfRunning() {
+        let count = countOSDUIHelperInstances() ?? 0
+        
+        if count > 1 {
+            self.stop()
         }
+    }
+    
+    private func countOSDUIHelperInstances() -> Int? {
+        let ps = Process()
+        let grep = Process()
+        let wc = Process()
+        let tr = Process()
+
+        let psPipe = Pipe()
+        let grepPipe = Pipe()
+        let wcPipe = Pipe()
+        let trPipe = Pipe()
+
+        // ps aux
+        ps.executableURL = URL(fileURLWithPath: "/bin/ps")
+        ps.arguments = ["aux"]
+        ps.standardOutput = psPipe
+
+        // grep "OSDUIHelper"
+        grep.executableURL = URL(fileURLWithPath: "/usr/bin/grep")
+        grep.arguments = ["OSDUIHelper"]
+        grep.standardInput = psPipe
+        grep.standardOutput = grepPipe
+
+        // wc -l
+        wc.executableURL = URL(fileURLWithPath: "/usr/bin/wc")
+        wc.arguments = ["-l"]
+        wc.standardInput = grepPipe
+        wc.standardOutput = wcPipe
+
+        // tr -d " "
+        tr.executableURL = URL(fileURLWithPath: "/usr/bin/tr")
+        tr.arguments = ["-d", " "]
+        tr.standardInput = wcPipe
+        tr.standardOutput = trPipe
+
+        do {
+            try ps.run()
+            try grep.run()
+            try wc.run()
+            try tr.run()
+
+            tr.waitUntilExit()
+        } catch {
+            print("Error running command chain: \(error)")
+            return nil
+        }
+
+        let data = trPipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8),
+              let count = Int(output.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+            return nil
+        }
+
+        return count
     }
 }

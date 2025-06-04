@@ -24,4 +24,14 @@ class AppDefaults: ObservableObject {
             self.objectWillChange.send()
         }
     }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "DisableSystemHUD",
+        defaultValue: true
+    )
+    var disableSystemHUD: Bool {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
 }

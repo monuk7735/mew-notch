@@ -27,7 +27,11 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(
         _ notification: Notification
     ) {
-        OSDUIManager.shared.stop()
+        if AppDefaults.shared.disableSystemHUD {
+            OSDUIManager.shared.stop()
+            
+            OSDUIManager.shared.startMonitoring()
+        }
         
         // Need to Initialise once to set system listeners
         AudioInput.sharedInstance()
@@ -37,6 +41,8 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
         NowPlaying.sharedInstance()
         
         NotchManager.shared.refreshNotches()
+        
+        NSApp.setActivationPolicy(.accessory)
     }
     
     func applicationShouldHandleReopen(
