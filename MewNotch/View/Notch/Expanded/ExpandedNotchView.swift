@@ -11,6 +11,8 @@ struct ExpandedNotchView: View {
     
     var namespace: Namespace.ID
     
+    @Namespace private var nilNamespace
+    
     @StateObject private var notchDefaults = NotchDefaults.shared
     
     @ObservedObject var notchViewModel: NotchViewModel
@@ -25,9 +27,12 @@ struct ExpandedNotchView: View {
                         notchViewModel: notchViewModel
                     )
                     
-                    OnlyNotchView(
-                        notchSize: notchViewModel.notchSize
+                    CollapsedNotchView(
+                        namespace: nilNamespace,
+                        notchViewModel: notchViewModel
                     )
+                    .opacity(0)
+                    .disabled(true)
                     
                     PinControlView(
                         notchViewModel: notchViewModel

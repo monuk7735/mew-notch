@@ -15,7 +15,7 @@ struct MinimalHUDRightView<T: HUDDefaultsProtocol>: View {
     var hudModel: HUDPropertyModel?
     
     var body: some View {
-        if let hud = hudModel, defaults.isEnabled, defaults.style == .Minimal {
+        if let hud = hudModel, defaults.isEnabled, (defaults.style == .Minimal || notchViewModel.isExpanded) {
             AnimatedTextView(
                 value: Double(hud.value * 100)
             ) { value in

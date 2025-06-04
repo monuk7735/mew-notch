@@ -17,7 +17,7 @@ struct NotchedHUDView<T: HUDDefaultsProtocol>: View {
     var hudModel: HUDPropertyModel?
     
     var body: some View {
-        if let hud = hudModel, defaults.isEnabled, defaults.style == .Notched {
+        if let hud = hudModel, defaults.isEnabled, defaults.style == .Notched && !notchViewModel.isExpanded {
             VStack {
                 Rectangle()
                     .opacity(0)

@@ -17,7 +17,7 @@ struct ProgressHUDView<T: HUDDefaultsProtocol>: View {
     var hudModel: HUDPropertyModel?
     
     var body: some View {
-        if let hud = hudModel, defaults.isEnabled, defaults.style == .Progress {
+        if let hud = hudModel, defaults.isEnabled, defaults.style == .Progress && !notchViewModel.isExpanded {
             VStack {
                 HStack {
                     Text(
