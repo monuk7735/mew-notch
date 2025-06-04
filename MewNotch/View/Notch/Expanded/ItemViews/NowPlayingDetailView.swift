@@ -163,9 +163,13 @@ struct NowPlayingDetailView: View {
                         let totalSeconds = totalDuration % 60
                         
                         Text(
-                            totalHours > 0 ? "\(totalHours):" : ""
-                            +
-                            String(
+                            totalHours > 0
+                            ? String(
+                                format: "%02d:%02d:%02d",
+                                totalHours,
+                                totalMinutes,
+                                totalSeconds
+                            ) : String(
                                 format: "%02d:%02d",
                                 totalMinutes,
                                 totalSeconds
