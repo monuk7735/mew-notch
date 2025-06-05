@@ -20,71 +20,77 @@ struct ExpandedNotchView: View {
     @StateObject private var expandedNotchViewModel: ExpandedNotchViewModel = .init()
     
     var body: some View {
-        if notchViewModel.isExpanded {
-            VStack {
-                HStack {
-                    SettingsControlView(
-                        notchViewModel: notchViewModel
-                    )
-                    
-                    CollapsedNotchView(
-                        namespace: nilNamespace,
-                        notchViewModel: notchViewModel
-                    )
-                    .opacity(0)
-                    .disabled(true)
-                    
-                    PinControlView(
-                        notchViewModel: notchViewModel
-                    )
-                }
+        VStack {
+            HStack {
+                SettingsControlView(
+                    notchViewModel: notchViewModel
+                )
                 
-                HStack(
-                    spacing: 12
-                ) {
-                    let items = Array(
-                        notchDefaults.expandedNotchItems.sorted {
-                            $0.rawValue < $1.rawValue
-                        }
-                    )
-                    
-                    ForEach(
-                        0..<items.count,
-                        id: \.self
-                    ) { index in
-                        
-                        let item = items[index]
-                        
-                        switch item {
-                        case .Mirror:
-                            MirrorView(
-                                notchViewModel: notchViewModel
-                            )
-                        case .NowPlaying:
-                            NowPlayingDetailView(
-                                namespace: namespace,
-                                notchViewModel: notchViewModel,
-                                nowPlayingModel: expandedNotchViewModel.nowPlayingMedia ?? .Placeholder
-                            )
-                        }
-                        
-                        if notchDefaults.showDividers && index != items.count - 1 {
-                            Divider()
-                        }
-                    }
-                }
-                .frame(
-                    height: notchViewModel.notchSize.height * 3
+                CollapsedNotchView(
+                    namespace: nilNamespace,
+                    notchViewModel: notchViewModel
+                )
+                .opacity(0)
+                .disabled(true)
+                
+                PinControlView(
+                    notchViewModel: notchViewModel
                 )
             }
-            .padding(
-                .init(
-                    top: 0,
-                    leading: 8 + notchViewModel.extraNotchPadSize.width / 2,
-                    bottom: 8,
-                    trailing: 8 + notchViewModel.extraNotchPadSize.width / 2
+            
+            HStack(
+                spacing: 12
+            ) {
+                let items = Array(
+                    notchDefaults.expandedNotchItems.sorted {
+                        $0.rawValue < $1.rawValue
+                    }
                 )
+                
+                ForEach(
+                    0..<items.count,
+                    id: \.self
+                ) { index in
+                    
+                    let item = items[index]
+                    
+                    switch item {
+                    case .Mirror:
+                        MirrorView(
+                            notchViewModel: notchViewModel
+                        )
+                    case .NowPlaying:
+                        NowPlayingDetailView(
+                            namespace: namespace,
+                            notchViewModel: notchViewModel,
+                            nowPlayingModel: expandedNotchViewModel.nowPlayingMedia ?? .Placeholder
+                        )
+                    }
+                    
+                    if notchDefaults.showDividers && index != items.count - 1 {
+                        Divider()
+                    }
+                }
+            }
+            .frame(
+                height: notchViewModel.notchSize.height * 3
             )
         }
+        .padding(
+            .init(
+                top: 0,
+                leading: 8 + notchViewModel.extraNotchPadSize.width / 2,
+                bottom: 8,
+                trailing: 8 + notchViewModel.extraNotchPadSize.width / 2
+            )
+        )
+        .offset(
+            y: notchViewModel.isExpanded ? 0 : -notchViewModel.notchSize.height * 3
+        )
+        .frame(
+            width: notchViewModel.isExpanded ? nil : 0,
+            height: notchViewModel.isExpanded ? nil : 0
+        )
+        .opacity(notchViewModel.isExpanded ? 1 : 0)
     }
 }
