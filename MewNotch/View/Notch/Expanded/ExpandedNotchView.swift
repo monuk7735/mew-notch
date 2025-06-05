@@ -58,6 +58,7 @@ struct ExpandedNotchView: View {
                         MirrorView(
                             notchViewModel: notchViewModel
                         )
+                        .id(notchViewModel.isExpanded)
                     case .NowPlaying:
                         NowPlayingDetailView(
                             namespace: namespace,
