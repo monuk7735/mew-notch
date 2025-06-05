@@ -129,6 +129,13 @@ struct MirrorView: View {
                 self.updateCameraAuthorization()
             }
         }
+        .onChange(
+            of: notchViewModel.isExpanded
+        ) { _, newValue in
+            if !newValue {
+                self.isCameraViewShown = false
+            }
+        }
         .onAppear {
             self.updateCameraAuthorization(
                 animate: false
