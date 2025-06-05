@@ -43,11 +43,6 @@ class NotchManager {
             ) || !shouldShowOnScreen(screen) {
                 window.close()
                 
-                NotchSpaceManager.shared.notchSpace.windows
-                    .remove(
-                        window
-                    )
-                
                 windows.removeValue(
                     forKey: screen
                 )
@@ -88,7 +83,7 @@ class NotchManager {
             
             windows[screen] = panel
             
-            NotchSpaceManager.shared.notchSpace.windows.insert(panel)
+            WindowManager.shared.moveToLockScreen(panel)
         }
     }
     

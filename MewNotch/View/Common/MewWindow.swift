@@ -36,8 +36,11 @@ class MewPanel: NSPanel {
             .ignoresCycle,
         ]
         
-        isReleasedWhenClosed = false
-        level = .mainMenu + 3
+        canBecomeVisibleWithoutLogin = true
+        level = .init(
+            rawValue: .init(Int32.max - 2)
+        )
+        
         hasShadow = false
     }
     
