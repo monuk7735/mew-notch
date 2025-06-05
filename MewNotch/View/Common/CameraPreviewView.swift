@@ -33,6 +33,10 @@ struct CameraPreviewView: NSViewRepresentable {
             )
             setupSession()
         }
+        
+        deinit {
+            session?.stopRunning()
+        }
 
         private func setupSession() {
             let session = AVCaptureSession()
