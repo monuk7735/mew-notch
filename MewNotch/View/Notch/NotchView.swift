@@ -37,15 +37,18 @@ struct NotchView: View {
                 ZStack(
                     alignment: .top
                 ) {
-                    ExpandedNotchView(
+                    let collapsedNotchView = CollapsedNotchView(
                         namespace: namespace,
                         notchViewModel: notchViewModel
                     )
                     
-                    CollapsedNotchView(
+                    ExpandedNotchView(
                         namespace: namespace,
-                        notchViewModel: notchViewModel
+                        notchViewModel: notchViewModel,
+                        collapsedNotchView: collapsedNotchView
                     )
+                    
+                    collapsedNotchView
                 }
                 .background {
                     Color.black

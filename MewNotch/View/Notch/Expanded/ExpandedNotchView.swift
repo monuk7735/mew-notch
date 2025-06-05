@@ -17,6 +17,8 @@ struct ExpandedNotchView: View {
     
     @ObservedObject var notchViewModel: NotchViewModel
     
+    var collapsedNotchView: CollapsedNotchView
+    
     @StateObject private var expandedNotchViewModel: ExpandedNotchViewModel = .init()
     
     var body: some View {
@@ -26,10 +28,7 @@ struct ExpandedNotchView: View {
                     notchViewModel: notchViewModel
                 )
                 
-                CollapsedNotchView(
-                    namespace: nilNamespace,
-                    notchViewModel: notchViewModel
-                )
+                collapsedNotchView
                 .opacity(0)
                 .disabled(true)
                 
