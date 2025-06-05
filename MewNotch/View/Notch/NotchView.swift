@@ -60,7 +60,7 @@ struct NotchView: View {
                     )
                 }
                 .scaleEffect(
-                    notchViewModel.isHovered ? 1.05 : 1.0,
+                    notchViewModel.isHovered ? 1.1 : 1.0,
                     anchor: .top
                 )
                 .shadow(
