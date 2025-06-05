@@ -23,7 +23,9 @@ class NotchManager {
         removeListenerForScreenUpdates()
     }
     
-    @objc func refreshNotches() {
+    @objc func refreshNotches(
+        killAllWindows: Bool = false
+    ) {
         
         let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
         
@@ -38,7 +40,7 @@ class NotchManager {
         }
         
         windows.forEach { screen, window in
-            if !NSScreen.screens.contains(
+            if killAllWindows || !NSScreen.screens.contains(
                 where: { $0 == screen}
             ) || !shouldShowOnScreen(screen) {
                 window.close()
@@ -53,6 +55,8 @@ class NotchManager {
             shouldShowOnScreen($0)
         }.forEach { screen in
             var panel: NSWindow! = windows[screen]
+            
+            let wasNil: Bool = panel == nil
             
             if panel == nil {
                 let view: NSView = NSHostingView(
@@ -83,7 +87,13 @@ class NotchManager {
             
             windows[screen] = panel
             
-            WindowManager.shared.moveToLockScreen(panel)
+            if wasNil {
+                if notchDefaults.shownOnLockScreen {
+                    WindowManager.shared.moveToLockScreen(panel)
+                } else {
+                    NotchSpaceManager.shared.notchSpace.windows.insert(panel)
+                }
+            }
         }
     }
     

@@ -35,6 +35,16 @@ class NotchDefaults: ObservableObject {
         }
     }
     
+    @PrimitiveUserDefault(
+        PREFIX + "ShownOnLockScreen",
+        defaultValue: true
+    )
+    var shownOnLockScreen: Bool {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
     @CodableUserDefault(
         PREFIX + "HeightMode",
         defaultValue: NotchHeightMode.Match_Notch

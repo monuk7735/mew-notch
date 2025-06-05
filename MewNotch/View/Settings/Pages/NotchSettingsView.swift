@@ -96,6 +96,20 @@ struct NotchSettingsView: View {
                             }
                         }
                     }
+                    
+                    Toggle(
+                        isOn: $notchDefaults.shownOnLockScreen
+                    ) {
+                        Text("Show on Lock Screen")
+                    }
+                    .onChange(
+                        of: notchDefaults.shownOnLockScreen
+                    ) {
+                        // Kill All Notch to move existing notches out of Lock Screen Space
+                        NotchManager.shared.refreshNotches(
+                            killAllWindows: true
+                        )
+                    }
                 },
                 header: {
                     Text("Displays")
