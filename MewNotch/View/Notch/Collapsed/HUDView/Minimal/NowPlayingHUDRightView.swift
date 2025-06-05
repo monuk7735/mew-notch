@@ -55,7 +55,7 @@ struct NowPlayingHUDRightView: View {
                     .padding(6)
                 }
             }
-            .padding(4)
+            .padding(notchViewModel.minimalHUDPadding)
             .frame(
                 width: notchViewModel.notchSize.height,
                 height: notchViewModel.notchSize.height

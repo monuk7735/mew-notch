@@ -21,6 +21,8 @@ class NotchViewModel: ObservableObject {
         bottom: 13
     )
     
+    var minimalHUDPadding: CGFloat = 0
+    
     var extraNotchPadSize: CGSize = .init(
         width: 16,
         height: 0
@@ -48,6 +50,8 @@ class NotchViewModel: ObservableObject {
         withAnimation {
             notchSize.width += extraNotchPadSize.width
             notchSize.height += extraNotchPadSize.height
+            
+            minimalHUDPadding = notchSize.height * 0.2
         }
     }
     
@@ -62,6 +66,8 @@ class NotchViewModel: ObservableObject {
         withAnimation {
             notchSize.width += extraNotchPadSize.width
             notchSize.height += extraNotchPadSize.height
+            
+            minimalHUDPadding = notchSize.height * 0.2
         }
     }
     

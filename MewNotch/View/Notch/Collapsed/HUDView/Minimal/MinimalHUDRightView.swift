@@ -32,7 +32,7 @@ struct MinimalHUDRightView<T: HUDDefaultsProtocol>: View {
                     )
                 )
                 .foregroundStyle(Color.white)
-                .padding(4)
+                .padding(notchViewModel.minimalHUDPadding)
             }
             .frame(
                 width: notchViewModel.notchSize.height,

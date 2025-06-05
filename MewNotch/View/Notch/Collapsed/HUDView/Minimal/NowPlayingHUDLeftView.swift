@@ -74,7 +74,7 @@ struct NowPlayingHUDLeftView: View {
                         self.isHovered = isHovered && !notchDefaults.expandOnHover
                     }
                 }
-                .padding(4)
+                .padding(notchViewModel.minimalHUDPadding)
                 .frame(
                     width: notchViewModel.notchSize.height,
                     height: notchViewModel.notchSize.height
