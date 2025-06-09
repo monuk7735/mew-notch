@@ -16,28 +16,12 @@ struct MinimalHUDLeftView<T: HUDDefaultsProtocol>: View {
     
     var body: some View {
         if let hud = hudModel, defaults.isEnabled, (defaults.style == .Minimal || notchViewModel.isExpanded) {
-            hud.getIcon()
-                .padding(notchViewModel.minimalHUDPadding)
-                .frame(
-                    width: notchViewModel.notchSize.height,
-                    height: notchViewModel.notchSize.height
-                )
-                .transition(
-                    .move(
-                        edge: .trailing
-                    )
-                    .combined(
-                        with: .opacity
-                    )
-                )
-                .padding(
-                    .init(
-                        top: 0,
-                        leading: notchViewModel.extraNotchPadSize.width / 2,
-                        bottom: 0,
-                        trailing: -notchViewModel.extraNotchPadSize.width / 2
-                    )
-                )
+            MinimalHUDView(
+                notchViewModel: notchViewModel,
+                variant: .left
+            ) {
+                hud.getIcon()
+            }
         }
     }
 }

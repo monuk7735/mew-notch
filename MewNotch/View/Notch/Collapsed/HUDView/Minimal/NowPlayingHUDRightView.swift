@@ -21,66 +21,50 @@ struct NowPlayingHUDRightView: View {
     
     var body: some View {
         if let nowPlayingModel {
-            LottieView(
-                animation: MewNotch.Lotties.visualizer
-            )
-            .animationSpeed(0.2)
-            .playbackMode(
-                nowPlayingModel.isPlaying
-                ? .playing(
-                    .fromProgress(
-                        0,
-                        toProgress: 1,
-                        loopMode: .loop
-                    )
+            MinimalHUDView(
+                notchViewModel: notchViewModel,
+                variant: .right
+            ) {
+                LottieView(
+                    animation: MewNotch.Lotties.visualizer
                 )
-                : .paused
-            )
-            .scaledToFit()
-            .opacity(self.isHovered ? 0 : 1)
-            .overlay {
-                if self.isHovered {
-                    Button(
-                        action: {
-                            MediaController.sharedInstance().togglePlayPause()
-                        }
-                    ) {
-                        Image(
-                            systemName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill"
+                .animationSpeed(0.2)
+                .playbackMode(
+                    nowPlayingModel.isPlaying
+                    ? .playing(
+                        .fromProgress(
+                            0,
+                            toProgress: 1,
+                            loopMode: .loop
                         )
-                        .resizable()
-                        .scaledToFit()
+                    )
+                    : .paused
+                )
+                .scaledToFit()
+                .opacity(self.isHovered ? 0 : 1)
+                .overlay {
+                    if self.isHovered {
+                        Button(
+                            action: {
+                                MediaController.sharedInstance().togglePlayPause()
+                            }
+                        ) {
+                            Image(
+                                systemName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill"
+                            )
+                            .resizable()
+                            .scaledToFit()
+                        }
+                        .buttonStyle(.plain)
+                        .padding(6)
                     }
-                    .buttonStyle(.plain)
-                    .padding(6)
                 }
             }
-            .padding(notchViewModel.minimalHUDPadding)
-            .frame(
-                width: notchViewModel.notchSize.height,
-                height: notchViewModel.notchSize.height
-            )
             .onHover { isHovered in
                 withAnimation {
                     self.isHovered = isHovered && !notchDefaults.expandOnHover
                 }
             }
-            .transition(
-                .move(
-                    edge: .leading
-                )
-                .combined(
-                    with: .opacity
-                )
-            )
-            .padding(
-                .init(
-                    top: 0,
-                    leading: -notchViewModel.extraNotchPadSize.width / 2,
-                    bottom: 0,
-                    trailing: notchViewModel.extraNotchPadSize.width / 2
-                )
-            )
         }
     }
 }

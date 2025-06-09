@@ -16,44 +16,28 @@ struct MinimalHUDRightView<T: HUDDefaultsProtocol>: View {
     
     var body: some View {
         if let hud = hudModel, defaults.isEnabled, (defaults.style == .Minimal || notchViewModel.isExpanded) {
-            AnimatedTextView(
-                value: Double(hud.value * 100)
-            ) { value in
-                Text(
-                    String(
-                        format: "%02.0f",
-                        value
+            MinimalHUDView(
+                notchViewModel: notchViewModel,
+                variant: .right
+            ) {
+                AnimatedTextView(
+                    value: Double(hud.value * 100)
+                ) { value in
+                    Text(
+                        String(
+                            format: "%02.0f",
+                            value
+                        )
                     )
-                )
-                .minimumScaleFactor(0.4)
-                .font(
-                    .title2.weight(
-                        .medium
+                    .minimumScaleFactor(0.4)
+                    .font(
+                        .title2.weight(
+                            .medium
+                        )
                     )
-                )
-                .foregroundStyle(Color.white)
-                .padding(notchViewModel.minimalHUDPadding)
+                    .foregroundStyle(Color.white)
+                }
             }
-            .frame(
-                width: notchViewModel.notchSize.height,
-                height: notchViewModel.notchSize.height
-            )
-            .transition(
-                .move(
-                    edge: .leading
-                )
-                .combined(
-                    with: .opacity
-                )
-            )
-            .padding(
-                .init(
-                    top: 0,
-                    leading: -notchViewModel.extraNotchPadSize.width / 2,
-                    bottom: 0,
-                    trailing: notchViewModel.extraNotchPadSize.width / 2
-                )
-            )
         }
     }
 }
