@@ -75,6 +75,10 @@ class NotchViewModel: ObservableObject {
         _ isHovered: Bool,
         shouldExpand: Bool = true
     ) {
+        HapticsManager.shared.feedback(
+            pattern: .generic
+        )
+        
         hoverTimer?.invalidate()
         
         if isHovered {
@@ -112,7 +116,7 @@ class NotchViewModel: ObservableObject {
         withAnimation(
             .spring(
                 .bouncy(
-                    duration: 0.5,
+                    duration: 0.4,
                     extraBounce: 0.1
                 )
             )
