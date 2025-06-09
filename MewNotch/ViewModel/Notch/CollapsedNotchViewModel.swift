@@ -23,6 +23,8 @@ class CollapsedNotchViewModel: ObservableObject {
     
     @Published var powerStatusHUD: HUDPropertyModel?
     
+    @Published var lockStatusHUD: HUDPropertyModel?
+    
     @Published var lastPowerStatus: String = ""
     
     init() {
@@ -123,10 +125,51 @@ class CollapsedNotchViewModel: ObservableObject {
             name: NSNotification.Name.NowPlayingState,
             object: nil
         )
+        
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(screenLocked),
+            name: NSNotification.Name("com.apple.screenIsLocked"),
+            object: nil
+        )
+        
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(screenUnlocked),
+            name: NSNotification.Name("com.apple.screenIsUnlocked"),
+            object: nil
+        )
     }
+    
+    @objc func screenLocked(notification: Notification) {
+        withAnimation {
+            self.lockStatusHUD = .init(
+                lottie: MewNotch.Lotties.brightness,
+                icon: MewNotch.Assets.iconSpeaker,
+                name: "Screen Locked",
+                value: 1.0,
+                timer: lockStatusHUD?.timer
+            )
+        }
+    }
+    
+    @objc func screenUnlocked(notification: Notification) {
+        withAnimation {
+            self.lockStatusHUD?.value = 0.0
+        }
+        
+        self.resetHUDTimer(&self.lockStatusHUD) {
+            withAnimation {
+                self.lockStatusHUD = nil
+            }
+        }
+    }
+
     
     func stopListeners() {
         NotificationCenter.default.removeObserver(self)
+        
+        DistributedNotificationCenter.default().removeObserver(self)
     }
     
     @objc private func handleAudioInputDeviceChanges() {

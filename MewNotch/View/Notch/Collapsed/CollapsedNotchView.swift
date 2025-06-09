@@ -46,6 +46,11 @@ struct CollapsedNotchView: View {
                     hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
                 )
                 
+                ScreenLockHUDView(
+                    notchViewModel: notchViewModel,
+                    hudModel: collapsedNotchViewModel.lockStatusHUD
+                )
+                
                 NowPlayingHUDLeftView(
                     namespace: namespace,
                     notchViewModel: notchViewModel,
@@ -71,6 +76,16 @@ struct CollapsedNotchView: View {
                 )
                 .hide(
                     when: notchViewModel.isExpanded
+                )
+                
+                MinimalHUDView(
+                    notchViewModel: notchViewModel,
+                    variant: .right
+                ) {
+                    Text("")
+                }
+                .hide(
+                    when: collapsedNotchViewModel.lockStatusHUD == nil
                 )
                 
                 MinimalHUDRightView(
