@@ -38,4 +38,16 @@ class HUDBrightnessDefaults: HUDDefaultsProtocol {
             }
         }
     }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "ShowAutoBrightnessChanges",
+        defaultValue: false
+    )
+    var showAutoBrightnessChanges: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }

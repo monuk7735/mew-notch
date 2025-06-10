@@ -24,7 +24,7 @@ int DisplayServicesUnregisterForBrightnessChangeNotifications(
 );
 
 @interface Brightness ()
-- (void)displayBrightnessDidChange;
+- (void)displayBrightnessDidChange:(NSDictionary *) userInfo;
 @end
 
 static void DisplayBrightnessListener(
@@ -35,8 +35,8 @@ static void DisplayBrightnessListener(
     CFDictionaryRef userInfo
 ) {
     [Brightness.sharedInstance
-        performSelectorOnMainThread:@selector(displayBrightnessDidChange)
-        withObject:(__bridge id _Nullable)(object)
+     performSelectorOnMainThread:@selector(displayBrightnessDidChange:)
+        withObject:(__bridge id _Nullable)(userInfo)
         waitUntilDone:NO];
     
     return;
@@ -105,12 +105,12 @@ static void DisplayBrightnessListener(
     }
 }
 
-- (void)displayBrightnessDidChange
+- (void)displayBrightnessDidChange:(NSDictionary *) userInfo
 {
     [[NSNotificationCenter defaultCenter]
         postNotificationName:BrightnessNotification
         object:self
-        userInfo: nil
+        userInfo: userInfo
     ];
 }
 @end

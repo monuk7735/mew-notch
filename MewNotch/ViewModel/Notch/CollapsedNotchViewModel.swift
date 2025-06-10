@@ -26,6 +26,7 @@ class CollapsedNotchViewModel: ObservableObject {
     @Published var lockStatusHUD: HUDPropertyModel?
     
     @Published var lastPowerStatus: String = ""
+    @Published var lastBrightness: Float = 0.0
     
     init() {
         self.startListeners()
@@ -98,7 +99,7 @@ class CollapsedNotchViewModel: ObservableObject {
         // MARK: Brightness Change Listener
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleBrightnessChanges),
+            selector: #selector(handleBrightnessChanges(_:)),
             name: NSNotification.Name.Brightness,
             object: nil
         )
@@ -260,8 +261,25 @@ class CollapsedNotchViewModel: ObservableObject {
         }
     }
     
-    @objc private func handleBrightnessChanges() {
+    @objc private func handleBrightnessChanges(
+        _ notification: NSNotification
+    ) {
         if !HUDBrightnessDefaults.shared.isEnabled {
+            return
+        }
+        
+        var newBrightness: Float! = (notification.userInfo?["value"] as? Float)
+        newBrightness = newBrightness ?? Brightness.sharedInstance().brightness
+        
+        defer {
+            lastBrightness = newBrightness
+        }
+        
+        if !HUDBrightnessDefaults.shared.showAutoBrightnessChanges && abs(lastBrightness - newBrightness) < 0.01 {
+            withAnimation {
+                self.brightnessHUD?.value = newBrightness
+            }
+            
             return
         }
         
@@ -270,7 +288,7 @@ class CollapsedNotchViewModel: ObservableObject {
                 lottie: MewNotch.Lotties.brightness,
                 icon: MewNotch.Assets.iconBrightness,
                 name: "Brightness",
-                value: Brightness.sharedInstance().brightness,
+                value: newBrightness,
                 timer: brightnessHUD?.timer
             )
         }
