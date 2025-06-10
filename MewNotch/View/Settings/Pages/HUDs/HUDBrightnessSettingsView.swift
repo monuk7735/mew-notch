@@ -41,6 +41,11 @@ struct HUDBrightnessSettingsView: View {
                         }
                     }
                     .disabled(!brightnessDefaults.isEnabled)
+                    
+                    Toggle(
+                        "Show Auto Brightness Changes",
+                        isOn: $brightnessDefaults.showAutoBrightnessChanges
+                    )
                 }
             )
         }
