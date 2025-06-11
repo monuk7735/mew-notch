@@ -29,7 +29,7 @@ struct MinimalHUDRightView<T: HUDDefaultsProtocol>: View {
                             value
                         )
                     )
-                    .minimumScaleFactor(0.4)
+                    .fixedSize(horizontal: true, vertical: false)
                     .font(
                         .title2.weight(
                             .medium
