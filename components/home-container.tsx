@@ -35,7 +35,7 @@ export default function HomeContainer({ children }: HomeContainerProps) {
             <div className="fixed h-dvh w-dvw -z-10 bg-[#2d3436]" />
 
             {/* Responsive Banner/Header */}
-            <div className="w-full text-white p-4 md:p-8 flex flex-col md:flex-row md:justify-between md:items-center">
+            <div className="w-full z-9999 text-white p-4 md:p-8 flex flex-col md:flex-row md:justify-between md:items-center">
                 <div className="flex items-center justify-between w-full md:w-auto">
                     <Link href="/" className="flex items-center gap-2 font-bold text-3xl">
                         <Image
