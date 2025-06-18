@@ -15,17 +15,10 @@ struct GenericControlView<Content: View>: View {
     
     var body: some View {
         content()
+            .padding(notchViewModel.minimalHUDPadding * 1.5)
             .frame(
                 width: notchViewModel.notchSize.height,
                 height: notchViewModel.notchSize.height
-            )
-            .transition(
-                .move(
-                    edge: .top
-                )
-                .combined(
-                    with: .opacity
-                )
             )
     }
 }

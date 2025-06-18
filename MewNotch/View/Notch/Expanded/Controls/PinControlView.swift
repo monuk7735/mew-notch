@@ -27,14 +27,9 @@ struct PinControlView: View {
                 )
                 .resizable()
                 .scaledToFit()
-                .frame(
-                    maxWidth: 24,
-                    maxHeight: 24
-                )
                 .rotationEffect(
                     notchViewModel.isPinned ? .degrees(45) : .zero
                 )
-                .padding(10)
             }
             .buttonStyle(.plain)
             .foregroundStyle(

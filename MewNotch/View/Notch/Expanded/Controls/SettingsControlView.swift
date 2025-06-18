@@ -25,11 +25,6 @@ struct SettingsControlView: View {
                 )
                 .resizable()
                 .scaledToFit()
-                .frame(
-                    maxWidth: 24,
-                    maxHeight: 24
-                )
-                .padding(10)
             }
             .buttonStyle(.plain)
         }
