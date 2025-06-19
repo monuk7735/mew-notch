@@ -41,8 +41,6 @@ struct GeneraSettingsView: View {
             
             Section(
                 content: {
-                    LaunchAtLogin.Toggle()
-                    
                     Toggle(
                         isOn: $appDefaults.disableSystemHUD
                     ) {
@@ -57,9 +55,7 @@ struct GeneraSettingsView: View {
                     ) { _, newValue in
                         if newValue {
                             OSDUIManager.shared.stop()
-                            OSDUIManager.shared.startMonitoring()
                         } else {
-                            OSDUIManager.shared.stopMonitoring()
                             OSDUIManager.shared.start()
                         }
                     }

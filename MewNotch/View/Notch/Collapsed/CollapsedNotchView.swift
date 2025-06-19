@@ -169,20 +169,7 @@ struct CollapsedNotchView: View {
         ) {
             collapsedNotchViewModel.hideHUDs()
             
-//            if defaultsManager.hudEnabled {
-//                OSDUIManager.shared.stop()
-//            } else {
-//                OSDUIManager.shared.start()
-//            }
-            
             notchViewModel.refreshNotchSize()
-        }
-        .onAppear {
-//            if defaultsManager.hudEnabled {
-//                OSDUIManager.shared.stop()
-//            } else {
-//                OSDUIManager.shared.start()
-//            }
         }
     }
 }

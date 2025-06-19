@@ -29,8 +29,6 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
     ) {
         if AppDefaults.shared.disableSystemHUD {
             OSDUIManager.shared.stop()
-            
-            OSDUIManager.shared.startMonitoring()
         }
         
         // Need to Initialise once to set system listeners

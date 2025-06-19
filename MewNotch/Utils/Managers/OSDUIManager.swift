@@ -13,7 +13,7 @@ class OSDUIManager {
     
     private var timer: Timer?
     
-    private init() {}
+    private init() { }
 
     public func start() {
         do {
@@ -23,6 +23,8 @@ class OSDUIManager {
             task.arguments = ["-9", "OSDUIHelper"]
             
             try task.run()
+            
+            removeObservers()
         } catch {
             NSLog("Error while trying to re-enable OSDUIHelper. \(error)")
         }
@@ -49,6 +51,8 @@ class OSDUIManager {
             task.arguments = ["-STOP", "OSDUIHelper"]
             
             try task.run()
+            
+            startObservers()
         } catch {
             NSLog("Error while trying to hide OSDUIHelper. Please create an issue on GitHub. Error: \(error)")
         }
@@ -60,81 +64,93 @@ class OSDUIManager {
         stop()
     }
     
-    func startMonitoring() {
-        timer = Timer.scheduledTimer(
-            timeInterval: 30,
-            target: self,
-            selector: #selector(killIfRunning),
-            userInfo: nil,
+    func startObservers() {
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(lidStateChanged(_:)),
+            name: NSWorkspace.screensDidSleepNotification,
+            object: nil
+        )
+        
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(lidStateChanged(_:)),
+            name: NSWorkspace.screensDidWakeNotification,
+            object: nil
+        )
+        
+        registerForSleepWakeNotifications()
+        
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(displayConfigurationChanged(_:)),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+        
+        timer = .scheduledTimer(
+            withTimeInterval: 60,
             repeats: true
+        ) { [weak self] _ in
+            
+            self?.stop()
+        }
+    }
+    
+    /// Register for system sleep/wake notifications
+    func registerForSleepWakeNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(receiveWakeNote(_:)),
+            name: NSWorkspace.didWakeNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(receiveSleepNote(_:)),
+            name: NSWorkspace.willSleepNotification,
+            object: nil
         )
     }
     
-    func stopMonitoring() {
+    func removeObservers() {
         timer?.invalidate()
         timer = nil
-    }
-    
-    @objc private func killIfRunning() {
-        let count = countOSDUIHelperInstances() ?? 0
         
-        if count > 1 {
-            self.stop()
-        }
+        NSWorkspace.shared.notificationCenter.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    private func countOSDUIHelperInstances() -> Int? {
-        let ps = Process()
-        let grep = Process()
-        let wc = Process()
-        let tr = Process()
-
-        let psPipe = Pipe()
-        let grepPipe = Pipe()
-        let wcPipe = Pipe()
-        let trPipe = Pipe()
-
-        // ps aux
-        ps.executableURL = URL(fileURLWithPath: "/bin/ps")
-        ps.arguments = ["aux"]
-        ps.standardOutput = psPipe
-
-        // grep "OSDUIHelper"
-        grep.executableURL = URL(fileURLWithPath: "/usr/bin/grep")
-        grep.arguments = ["OSDUIHelper"]
-        grep.standardInput = psPipe
-        grep.standardOutput = grepPipe
-
-        // wc -l
-        wc.executableURL = URL(fileURLWithPath: "/usr/bin/wc")
-        wc.arguments = ["-l"]
-        wc.standardInput = grepPipe
-        wc.standardOutput = wcPipe
-
-        // tr -d " "
-        tr.executableURL = URL(fileURLWithPath: "/usr/bin/tr")
-        tr.arguments = ["-d", " "]
-        tr.standardInput = wcPipe
-        tr.standardOutput = trPipe
-
-        do {
-            try ps.run()
-            try grep.run()
-            try wc.run()
-            try tr.run()
-
-            tr.waitUntilExit()
-        } catch {
-            print("Error running command chain: \(error)")
-            return nil
+    @objc func lidStateChanged(
+        _ notification: Notification
+    ) {
+        self.stop()
+    }
+    
+    @objc func displayConfigurationChanged(
+        _ notification: Notification
+    ) {
+        self.stop()
+    }
+    
+    @objc func receiveWakeNote(
+        _ notification: Notification
+    ) {
+        stop()
+        
+        timer = .scheduledTimer(
+            withTimeInterval: 60,
+            repeats: true
+            ) { [weak self] _ in
+            self?.stop()
         }
+    }
 
-        let data = trPipe.fileHandleForReading.readDataToEndOfFile()
-        guard let output = String(data: data, encoding: .utf8),
-              let count = Int(output.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            return nil
-        }
-
-        return count
+    @objc func receiveSleepNote(
+        _ notification: Notification
+    ) {
+        timer?.invalidate()
+        timer = nil
     }
 }

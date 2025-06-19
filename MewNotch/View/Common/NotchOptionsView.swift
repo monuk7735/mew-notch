@@ -16,6 +16,8 @@ struct NotchOptionsView: View {
     
     @Environment(\.openSettings) private var openSettings
     
+    @StateObject private var appDefaults = AppDefaults.shared
+    
     var type: OptionsType = .ContextMenu
     
     var body: some View {
@@ -23,8 +25,10 @@ struct NotchOptionsView: View {
             NotchManager.shared.refreshNotches()
         }
         
-        Button("Fix System HUD") {
-            OSDUIManager.shared.reset()
+        if appDefaults.disableSystemHUD {
+            Button("Fix System HUD") {
+                OSDUIManager.shared.reset()
+            }
         }
         
         Button("Settings") {
