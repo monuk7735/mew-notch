@@ -1,5 +1,6 @@
 import HomeContainer from "@/components/home-container";
 import { ReactNode } from "react";
+import { FaBeer, FaGithub } from "react-icons/fa";
 
 export default function Support() {
   return (
@@ -22,14 +23,28 @@ export default function Support() {
         </p>
         <div className="flex flex-col items-center gap-2 pt-16">
           <span className="text-gray-400">But if you really want to show appreciation...</span>
-          <a
-            href="https://coff.ee/monuk7735"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-black font-bold shadow transition-colors duration-200 text-lg mt-2"
-          >
-            🍺 Buy me a beer
-          </a>
+
+          <div className="flex items-center gap-4">
+            <a
+              href="https://coff.ee/monuk7735"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-black font-bold shadow transition-colors duration-200 text-lg mt-2"
+            >
+              <FaBeer className="text-lg" />
+              Buy me a beer
+            </a>
+
+            <a
+              href="https://github.com/sponsors/monuk7735"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#f6f8fa] hover:bg-[#b6b8ba] text-black font-bold shadow transition-colors duration-200 text-lg mt-2"
+            >
+              <FaGithub className="text-lg" />
+              Sponsor on GitHub
+            </a>
+          </div>
         </div>
       </div>
     </div>
