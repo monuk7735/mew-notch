@@ -1,35 +1,34 @@
-<div style="display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; padding-bottom: 10px;">
+<img src=".github/res/MewNotch-Logo.png" width="200" alt="App icon" align="left"/>
 
-  <div
-    style="display: flex; align-items: center;"
-  >
-    <img src=".github/res/MewNotch-Logo.png" width="180" alt="MewNotch Logo"/>
-    <div
-    style="display: flex; flex-direction: column;"
-  >
-  <h3 style="font-size: 2.5rem; letter-spacing: 1px;">MewNotch</h3>
-  <p style="font-size: 1.15rem; max-width: 600px; font-weight: 500;">
+<div>
+<h3 style="font-size: 2.5rem; letter-spacing: 1px;">MewNotch</h3>
+<p style="font-size: 1.15rem; font-weight: 500;">
     <strong>Make the Mac Notch Actually Useful!</strong><br>
     MewNotch is a free, open-source macOS app that transforms the notch into a customizable HUD for brightness, volume, power, and more. Minimal, beautiful, and privacy-friendly.
   </p>
 
+<br/><br/>
 
-  </div>
-  </div>
-  <br>
-  
-  [![GitHub License](https://img.shields.io/github/license/monuk7735/mew-notch)](LICENSE)
+<div align="center">
+
+[![GitHub License](https://img.shields.io/github/license/monuk7735/mew-notch)](LICENSE)
   [![Downloads](https://img.shields.io/github/downloads/monuk7735/mew-notch/total.svg)](https://github.com/monuk7735/mew-notch/releases)
   [![Issues](https://img.shields.io/github/issues/monuk7735/mew-notch.svg)](https://github.com/monuk7735/mew-notch/issues)
   [![Pull Requests](https://img.shields.io/github/issues-pr/monuk7735/mew-notch.svg)](https://github.com/monuk7735/mew-notch/pulls)
   [![macOS Version](https://img.shields.io/badge/macOS-14.0%2B-blue.svg)](https://www.apple.com/macos/)
   <!-- [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/MewNotch?style=flat&label=Join%20r%2FMewNotch)](https://www.reddit.com/r/MewNotch/) -->
 
-  <a href="https://github.com/monuk7735/mew-notch/releases"><img src=".github/res/macOS-Download.png" width="160" alt="Download for macOS"/></a>
+<br/>
+
+<a href="https://github.com/monuk7735/mew-notch/releases"><img src=".github/res/macOS-Download.png" width="160" alt="Download for macOS"/></a>
+
+<br/>
+
+<img src=".github/res/Screenshot.png" width="100%" alt="MewNotch Preview"/><br/>
 
 </div>
 
-<img src=".github/res/Screenshot.png" width="100%" alt="MewNotch Preview" style="border-radius: 12px;"/>
+<hr>
 
 ## Features
 
