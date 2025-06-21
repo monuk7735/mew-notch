@@ -11,7 +11,7 @@ class OSDUIManager {
     
     static let shared = OSDUIManager()
     
-    private var timer: Timer?
+//    private var timer: Timer?
     
     private init() { }
 
@@ -88,13 +88,16 @@ class OSDUIManager {
             object: nil
         )
         
-        timer = .scheduledTimer(
-            withTimeInterval: 60,
-            repeats: true
-        ) { [weak self] _ in
-            
-            self?.stop()
-        }
+//        timer = .scheduledTimer(
+//            withTimeInterval: 60,
+//            repeats: true
+//        ) { [weak self] _ in
+//            guard let self else { return }
+//            
+//            DispatchQueue.main.async {
+//                self.stop()
+//            }
+//        }
     }
     
     /// Register for system sleep/wake notifications
@@ -106,17 +109,17 @@ class OSDUIManager {
             object: nil
         )
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(receiveSleepNote(_:)),
-            name: NSWorkspace.willSleepNotification,
-            object: nil
-        )
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(receiveSleepNote(_:)),
+//            name: NSWorkspace.willSleepNotification,
+//            object: nil
+//        )
     }
     
     func removeObservers() {
-        timer?.invalidate()
-        timer = nil
+//        timer?.invalidate()
+//        timer = nil
         
         NSWorkspace.shared.notificationCenter.removeObserver(self)
         NotificationCenter.default.removeObserver(self)
@@ -139,18 +142,22 @@ class OSDUIManager {
     ) {
         stop()
         
-        timer = .scheduledTimer(
-            withTimeInterval: 60,
-            repeats: true
-            ) { [weak self] _ in
-            self?.stop()
-        }
+//        timer = .scheduledTimer(
+//            withTimeInterval: 60,
+//            repeats: true
+//        ) { [weak self] _ in
+//            guard let self else { return }
+//            
+//            DispatchQueue.main.async {
+//                self.stop()
+//            }
+//        }
     }
 
-    @objc func receiveSleepNote(
-        _ notification: Notification
-    ) {
-        timer?.invalidate()
-        timer = nil
-    }
+//    @objc func receiveSleepNote(
+//        _ notification: Notification
+//    ) {
+//        timer?.invalidate()
+//        timer = nil
+//    }
 }
