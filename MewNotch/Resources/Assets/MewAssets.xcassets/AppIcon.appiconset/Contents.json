@@ -25,37 +25,37 @@
       "size" : "32x32"
     },
     {
-      "filename" : "AppIcon 5.png",
+      "filename" : "Mew-Notch-128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "AppIcon 4.png",
+      "filename" : "Mew-Notch-256 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "AppIcon 3.png",
+      "filename" : "Mew-Notch-256.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "AppIcon 2.png",
+      "filename" : "Mew-Notch-512 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "AppIcon 1.png",
+      "filename" : "Mew-Notch-512.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "AppIcon.png",
+      "filename" : "Mew-Notch-1024.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
