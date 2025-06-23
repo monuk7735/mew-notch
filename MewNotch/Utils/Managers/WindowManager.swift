@@ -32,57 +32,49 @@ public class WindowManager {
     private let SLSShowSpaces: @convention(c) (Int32, CFArray) -> Int32
     private let SLSSpaceAddWindowsAndRemoveFromSpaces: @convention(c) (Int32, Int32, CFArray, Int32) -> Int32
 
-    private init() {
-        let handler = dlopen("/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight", RTLD_NOW)
+    private init?() {
+        guard let bundle = CFBundleCreate(
+            kCFAllocatorDefault,
+            NSURL(
+                fileURLWithPath: "/System/Library/PrivateFrameworks/SkyLight.framework"
+            )
+        ) else {
+            return nil
+        }
         
+        guard let SLSMainConnectionIDPointer = CFBundleGetFunctionPointerForName(bundle, "SLSMainConnectionID" as CFString) else { return nil }
+        typealias SLSMainConnectionIDAlias = @convention(c) () -> Int32
         SLSMainConnectionID = unsafeBitCast(
-            dlsym(
-                handler,
-                "SLSMainConnectionID"
-            ),
-            to: type(
-                of: SLSMainConnectionID
-            )
+            SLSMainConnectionIDPointer,
+            to: SLSMainConnectionIDAlias.self
         )
         
+        guard let SLSSpaceCreatePointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceCreate" as CFString) else { return nil }
+        typealias SLSSpaceCreateAlias = @convention(c) (Int32, Int32, Int32) -> Int32
         SLSSpaceCreate = unsafeBitCast(
-            dlsym(
-                handler,
-                "SLSSpaceCreate"
-            ),
-            to: type(
-                of: SLSSpaceCreate
-            )
+            SLSSpaceCreatePointer,
+            to: SLSSpaceCreateAlias.self
         )
         
+        guard let SLSSpaceSetAbsoluteLevelPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceSetAbsoluteLevel" as CFString) else { return nil }
+        typealias SLSSpaceSetAbsoluteLevelAlias = @convention(c) (Int32, Int32, Int32) -> Int32
         SLSSpaceSetAbsoluteLevel = unsafeBitCast(
-            dlsym(
-                handler,
-                "SLSSpaceSetAbsoluteLevel"
-            ),
-            to: type(
-                of: SLSSpaceSetAbsoluteLevel
-            )
+            SLSSpaceSetAbsoluteLevelPointer,
+            to: SLSSpaceSetAbsoluteLevelAlias.self
         )
         
+        guard let SLSShowSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSShowSpaces" as CFString) else { return nil }
+        typealias SLSShowSpacesAlias = @convention(c) (Int32, CFArray) -> Int32
         SLSShowSpaces = unsafeBitCast(
-            dlsym(
-                handler,
-                "SLSShowSpaces"
-            ),
-            to: type(
-                of: SLSShowSpaces
-            )
+            SLSShowSpacesPointer,
+            to: SLSShowSpacesAlias.self
         )
         
+        guard let SLSSpaceAddWindowsAndRemoveFromSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceAddWindowsAndRemoveFromSpaces" as CFString) else { return nil }
+        typealias SLSSpaceAddWindowsAndRemoveFromSpacesAlias = @convention(c) (Int32, Int32, CFArray, Int32) -> Int32
         SLSSpaceAddWindowsAndRemoveFromSpaces = unsafeBitCast(
-            dlsym(
-                handler,
-                "SLSSpaceAddWindowsAndRemoveFromSpaces"
-            ),
-            to: type(
-                of: SLSSpaceAddWindowsAndRemoveFromSpaces
-            )
+            SLSSpaceAddWindowsAndRemoveFromSpacesPointer,
+            to: SLSSpaceAddWindowsAndRemoveFromSpacesAlias.self
         )
 
         connection = SLSMainConnectionID()

@@ -1,25 +1,25 @@
 {
   "images" : [
     {
-      "filename" : "AppIcon 9.png",
+      "filename" : "Mew-Notch-16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "AppIcon 8.png",
+      "filename" : "Mew-Notch-32 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "AppIcon 7.png",
+      "filename" : "Mew-Notch-32.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "AppIcon 6.png",
+      "filename" : "Mew-Notch-64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"

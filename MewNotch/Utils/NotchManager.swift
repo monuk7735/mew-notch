@@ -89,7 +89,7 @@ class NotchManager {
             
             if wasNil {
                 if notchDefaults.shownOnLockScreen {
-                    WindowManager.shared.moveToLockScreen(panel)
+                    WindowManager.shared?.moveToLockScreen(panel)
                 } else {
                     NotchSpaceManager.shared.notchSpace.windows.insert(panel)
                 }
