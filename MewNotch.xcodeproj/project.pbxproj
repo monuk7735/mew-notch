@@ -8,30 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		253243BE2E09A6220030EC15 /* DisplayServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E05A76E2D7D93A900980012 /* DisplayServices.framework */; };
-		253243BF2E09A6220030EC15 /* DisplayServices.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E05A76E2D7D93A900980012 /* DisplayServices.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		253243C12E09A6230030EC15 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E284D432D8B2E8000ED8E89 /* MediaRemote.framework */; };
-		253243C22E09A6230030EC15 /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E284D432D8B2E8000ED8E89 /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		253243C32E09A6240030EC15 /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 253243AF2E09A1AA0030EC15 /* SkyLight.framework */; };
-		253243C42E09A6240030EC15 /* SkyLight.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 253243AF2E09A1AA0030EC15 /* SkyLight.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E36AFAB2D78EB2100D53482 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9E36AFAA2D78EB2100D53482 /* Lottie */; };
 		9ECA5C6B2DB7E65300EEE02C /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 9ECA5C6A2DB7E65300EEE02C /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		253243C02E09A6220030EC15 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				253243BF2E09A6220030EC15 /* DisplayServices.framework in Embed Frameworks */,
-				253243C22E09A6230030EC15 /* MediaRemote.framework in Embed Frameworks */,
-				253243C42E09A6240030EC15 /* SkyLight.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		253243AF2E09A1AA0030EC15 /* SkyLight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyLight.framework; path = ../../../../System/Library/PrivateFrameworks/SkyLight.framework; sourceTree = "<group>"; };
@@ -114,7 +95,6 @@
 				9EA41D832D6DEACA00817679 /* Sources */,
 				9EA41D842D6DEACA00817679 /* Frameworks */,
 				9EA41D852D6DEACA00817679 /* Resources */,
-				253243C02E09A6220030EC15 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -337,7 +317,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.monuk7735.mew.notch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -375,7 +355,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.monuk7735.mew.notch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
