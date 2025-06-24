@@ -85,11 +85,11 @@ class NotchManager {
             
             windows[screen] = panel
             
-            if notchDefaults.shownOnLockScreen {
-                WindowManager.shared?.moveToLockScreen(panel)
-            } else {
-                NotchSpaceManager.shared.notchSpace.windows.insert(panel)
-            }
+//            if notchDefaults.shownOnLockScreen {
+//                WindowManager.shared?.moveToLockScreen(panel)
+//            } else {
+//                NotchSpaceManager.shared.notchSpace.windows.insert(panel)
+//            }
         }
     }
     
