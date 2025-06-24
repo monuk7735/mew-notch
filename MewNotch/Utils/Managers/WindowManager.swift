@@ -99,11 +99,26 @@ public class WindowManager {
     func moveToLockScreen(
         _ window: NSWindow
     ) {
-        let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
-            connection,
-            space,
-            [window.windowNumber] as CFArray,
-            7
-        )
+        /**
+         Last arg is a option for what to do (ig)
+         7 = 0b0111 = Remove, Add, Animate
+         3 = 0b0011 = Remove, Add (no animation)
+        */
+        if #available(macOS 16, *) { // 26 won't work idk why
+            let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
+                connection,
+                space,
+                [window.windowNumber] as CFArray,
+                3
+            )
+        } else {
+            // Keeping same for older version as it was working fine.
+            let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
+                connection,
+                space,
+                [window.windowNumber] as CFArray,
+                7
+            )
+        }
     }
 }

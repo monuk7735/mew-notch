@@ -39,15 +39,15 @@ public final class CGSSpace {
             CGSRemoveWindowsFromSpaces(
                 _CGSDefaultConnection(),
                 remove.map { $0.windowNumber
-                } as NSArray,
-                [self.identifier]
+                } as CFArray,
+                [self.identifier] as CFArray
             )
             
             CGSAddWindowsToSpaces(
                 _CGSDefaultConnection(),
                 add.map { $0.windowNumber
-                } as NSArray,
-                [self.identifier]
+                } as CFArray,
+                [self.identifier] as CFArray
             )
         }
     }

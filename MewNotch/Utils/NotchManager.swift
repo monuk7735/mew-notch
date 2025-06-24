@@ -56,8 +56,6 @@ class NotchManager {
         }.forEach { screen in
             var panel: NSWindow! = windows[screen]
             
-            let wasNil: Bool = panel == nil
-            
             if panel == nil {
                 let view: NSView = NSHostingView(
                     rootView: NotchView(
@@ -87,12 +85,10 @@ class NotchManager {
             
             windows[screen] = panel
             
-            if wasNil {
-                if notchDefaults.shownOnLockScreen {
-                    WindowManager.shared?.moveToLockScreen(panel)
-                } else {
-                    NotchSpaceManager.shared.notchSpace.windows.insert(panel)
-                }
+            if notchDefaults.shownOnLockScreen {
+                WindowManager.shared?.moveToLockScreen(panel)
+            } else {
+                NotchSpaceManager.shared.notchSpace.windows.insert(panel)
             }
         }
     }
