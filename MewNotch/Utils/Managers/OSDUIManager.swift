@@ -68,59 +68,19 @@ class OSDUIManager {
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
             selector: #selector(lidStateChanged(_:)),
-            name: NSWorkspace.screensDidSleepNotification,
-            object: nil
-        )
-        
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self,
-            selector: #selector(lidStateChanged(_:)),
             name: NSWorkspace.screensDidWakeNotification,
             object: nil
         )
         
-        registerForSleepWakeNotifications()
-        
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self,
-            selector: #selector(displayConfigurationChanged(_:)),
-            name: NSApplication.didChangeScreenParametersNotification,
-            object: nil
-        )
-        
-//        timer = .scheduledTimer(
-//            withTimeInterval: 60,
-//            repeats: true
-//        ) { [weak self] _ in
-//            guard let self else { return }
-//            
-//            DispatchQueue.main.async {
-//                self.stop()
-//            }
-//        }
-    }
-    
-    /// Register for system sleep/wake notifications
-    func registerForSleepWakeNotifications() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(receiveWakeNote(_:)),
             name: NSWorkspace.didWakeNotification,
             object: nil
         )
-        
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(receiveSleepNote(_:)),
-//            name: NSWorkspace.willSleepNotification,
-//            object: nil
-//        )
     }
     
     func removeObservers() {
-//        timer?.invalidate()
-//        timer = nil
-        
         NSWorkspace.shared.notificationCenter.removeObserver(self)
         NotificationCenter.default.removeObserver(self)
     }
@@ -128,36 +88,12 @@ class OSDUIManager {
     @objc func lidStateChanged(
         _ notification: Notification
     ) {
-        self.stop()
-    }
-    
-    @objc func displayConfigurationChanged(
-        _ notification: Notification
-    ) {
-        self.stop()
+        self.reset()
     }
     
     @objc func receiveWakeNote(
         _ notification: Notification
     ) {
-        stop()
-        
-//        timer = .scheduledTimer(
-//            withTimeInterval: 60,
-//            repeats: true
-//        ) { [weak self] _ in
-//            guard let self else { return }
-//            
-//            DispatchQueue.main.async {
-//                self.stop()
-//            }
-//        }
+        self.reset()
     }
-
-//    @objc func receiveSleepNote(
-//        _ notification: Notification
-//    ) {
-//        timer?.invalidate()
-//        timer = nil
-//    }
 }
