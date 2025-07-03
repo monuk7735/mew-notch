@@ -12,6 +12,8 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
     @Environment(\.openWindow) var openWindow
     @Environment(\.openSettings) var openSettingsWindow
     
+    private var timer: Timer? = nil
+    
     func applicationShouldTerminateAfterLastWindowClosed(
         _ sender: NSApplication
     ) -> Bool {
@@ -38,7 +40,16 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
         PowerStatus.sharedInstance()
         NowPlaying.sharedInstance()
         
-        NotchManager.shared.refreshNotches()
+        timer = .scheduledTimer(
+            withTimeInterval: 30,
+            repeats: false
+        ) { _ in
+            NotchManager.shared.refreshNotches()
+        }
+        
+        NotchManager.shared.refreshNotches(
+            addToSeparateSpace: false
+        )
         
         NSApp.setActivationPolicy(.accessory)
     }
@@ -57,6 +68,7 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(
         _ sender: NSApplication
     ) -> NSApplication.TerminateReply {
+        timer?.invalidate()
         OSDUIManager.shared.start()
         
         return .terminateNow

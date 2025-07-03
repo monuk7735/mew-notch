@@ -24,7 +24,8 @@ class NotchManager {
     }
     
     @objc func refreshNotches(
-        killAllWindows: Bool = false
+        killAllWindows: Bool = false,
+        addToSeparateSpace: Bool = true
     ) {
         
         let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
@@ -85,11 +86,13 @@ class NotchManager {
             
             windows[screen] = panel
             
-//            if notchDefaults.shownOnLockScreen {
-//                WindowManager.shared?.moveToLockScreen(panel)
-//            } else {
-//                NotchSpaceManager.shared.notchSpace.windows.insert(panel)
-//            }
+            if addToSeparateSpace {
+                if notchDefaults.shownOnLockScreen {
+                    WindowManager.shared?.moveToLockScreen(panel)
+                } else {
+                    NotchSpaceManager.shared.notchSpace.windows.insert(panel)
+                }
+            }
         }
     }
     
