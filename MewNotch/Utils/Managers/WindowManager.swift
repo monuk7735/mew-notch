@@ -27,9 +27,15 @@ public class WindowManager {
     private let space: Int32
 
     private let SLSMainConnectionID: @convention(c) () -> Int32
+    
     private let SLSSpaceCreate: @convention(c) (Int32, Int32, Int32) -> Int32
+    private let SLSSpaceDestroy: @convention(c) (Int32, Int32) -> Int32
+    
     private let SLSSpaceSetAbsoluteLevel: @convention(c) (Int32, Int32, Int32) -> Int32
+    
     private let SLSShowSpaces: @convention(c) (Int32, CFArray) -> Int32
+    private let SLSHideSpaces: @convention(c) (Int32, CFArray) -> Int32
+    
     private let SLSSpaceAddWindowsAndRemoveFromSpaces: @convention(c) (Int32, Int32, CFArray, Int32) -> Int32
 
     private init?() {
@@ -56,6 +62,13 @@ public class WindowManager {
             to: SLSSpaceCreateAlias.self
         )
         
+        guard let SLSSpaceDestroyPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceDestroy" as CFString) else { return nil }
+        typealias SLSSpaceDestroyAlias = @convention(c) (Int32, Int32) -> Int32
+        SLSSpaceDestroy = unsafeBitCast(
+            SLSSpaceDestroyPointer,
+            to: SLSSpaceDestroyAlias.self
+        )
+        
         guard let SLSSpaceSetAbsoluteLevelPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceSetAbsoluteLevel" as CFString) else { return nil }
         typealias SLSSpaceSetAbsoluteLevelAlias = @convention(c) (Int32, Int32, Int32) -> Int32
         SLSSpaceSetAbsoluteLevel = unsafeBitCast(
@@ -68,6 +81,13 @@ public class WindowManager {
         SLSShowSpaces = unsafeBitCast(
             SLSShowSpacesPointer,
             to: SLSShowSpacesAlias.self
+        )
+        
+        guard let SLSHideSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSHideSpaces" as CFString) else { return nil }
+        typealias SLSHideSpacesAlias = @convention(c) (Int32, CFArray) -> Int32
+        SLSHideSpaces = unsafeBitCast(
+            SLSHideSpacesPointer,
+            to: SLSHideSpacesAlias.self
         )
         
         guard let SLSSpaceAddWindowsAndRemoveFromSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceAddWindowsAndRemoveFromSpaces" as CFString) else { return nil }
@@ -95,6 +115,18 @@ public class WindowManager {
             [space] as CFArray
         )
     }
+    
+    deinit {
+        let _ = SLSHideSpaces(
+            connection,
+            [space] as CFArray
+        )
+        
+        let _ = SLSSpaceDestroy(
+            connection,
+            space
+        )
+    }
 
     func moveToLockScreen(
         _ window: NSWindow
@@ -105,12 +137,12 @@ public class WindowManager {
          3 = 0b0011 = Remove, Add (no animation)
         */
         if #available(macOS 16, *) { // 26 won't work idk why
-            let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
-                connection,
-                space,
-                [window.windowNumber] as CFArray,
-                3
-            )
+//            let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
+//                connection,
+//                space,
+//                [window.windowNumber] as CFArray,
+//                3
+//            )
         } else {
             // Keeping same for older version as it was working fine.
             let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
