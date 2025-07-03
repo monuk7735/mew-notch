@@ -83,8 +83,9 @@ struct ExpandedNotchView: View {
                 trailing: 8 + notchViewModel.extraNotchPadSize.width / 2
             )
         )
-        .offset(
-            y: notchViewModel.isExpanded ? 0 : -notchViewModel.notchSize.height * 3
+        .scaleEffect(
+            notchViewModel.isExpanded ? 1 : 0.3,
+            anchor: .top
         )
         .frame(
             width: notchViewModel.isExpanded ? nil : 0,
