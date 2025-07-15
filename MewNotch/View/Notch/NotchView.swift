@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct NotchView: View {
     
@@ -16,8 +17,7 @@ struct NotchView: View {
     @StateObject var notchDefaults = NotchDefaults.shared
     
     @StateObject var notchViewModel: NotchViewModel
-    
-    @State var isExpanded: Bool = false
+    @StateObject var expandedNotchViewModel: ExpandedNotchViewModel = .init()
     
     init(
         screen: NSScreen
@@ -45,6 +45,7 @@ struct NotchView: View {
                     ExpandedNotchView(
                         namespace: namespace,
                         notchViewModel: notchViewModel,
+                        expandedNotchViewModel: expandedNotchViewModel,
                         collapsedNotchView: collapsedNotchView
                     )
                     
@@ -72,6 +73,59 @@ struct NotchView: View {
                         shouldExpand: notchDefaults.expandOnHover
                     )
                 }
+                .dropDestination(
+                    for: URL.self,
+                    action: { fileURLs, _ in
+                        guard let groupModel = ShelfFileGroupModel(
+                            urls: fileURLs
+                        ) else {
+                            print("groupModel could not be initialized")
+                            return false
+                        }
+                        
+                        withAnimation {
+                            expandedNotchViewModel.shelfFileGroups.append(
+                                groupModel
+                            )
+                        }
+                        
+                        return true
+                    },
+                    isTargeted: {
+                        notchViewModel.isDropTarget = $0
+                    }
+                )
+                .onChange(
+                    of: notchViewModel.isDropTarget
+                ) { oldValue, newValue in
+                    guard oldValue != newValue else { return }
+                    
+                    if newValue {
+                        expandedNotchViewModel.currentView = .Shelf
+                        
+                        notchViewModel.onTap()
+                    } else {
+                        notchViewModel.onHover(
+                            notchViewModel.isHovered
+                        )
+                    }
+                }
+//                .onDrop(
+//                    of: [UTType.fileURL],
+//                    isTargeted: .init(
+//                        get: { isDropTarget },
+//                        set: {
+//                            isDropTarget = $0
+//                            
+//                            print("isDropTarget", isDropTarget)
+//                        }
+//                    )
+//                ) { items in
+//                    
+//                    print("items", items)
+//                    
+//                    return true
+//                }
                 .onTapGesture(
                     perform: notchViewModel.onTap
                 )

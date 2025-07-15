@@ -68,7 +68,9 @@ class NotchManager {
                     contentRect: .zero,
                     styleMask: [
                         .borderless,
-                        .nonactivatingPanel
+                        .nonactivatingPanel,
+                        .utilityWindow,
+                        .hudWindow
                     ],
                     backing: .buffered,
                     defer: true
@@ -86,13 +88,13 @@ class NotchManager {
             
             windows[screen] = panel
             
-            if addToSeparateSpace {
-                if notchDefaults.shownOnLockScreen {
-                    WindowManager.shared?.moveToLockScreen(panel)
-                } else {
-                    NotchSpaceManager.shared.notchSpace.windows.insert(panel)
-                }
-            }
+//            if addToSeparateSpace {
+//                if notchDefaults.shownOnLockScreen {
+//                    WindowManager.shared?.moveToLockScreen(panel)
+//                } else {
+//                    NotchSpaceManager.shared.notchSpace.windows.insert(panel)
+//                }
+//            }
         }
     }
     

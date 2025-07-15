@@ -16,64 +16,61 @@ struct ExpandedNotchView: View {
     @StateObject private var notchDefaults = NotchDefaults.shared
     
     @ObservedObject var notchViewModel: NotchViewModel
+    @ObservedObject var expandedNotchViewModel: ExpandedNotchViewModel
     
     var collapsedNotchView: CollapsedNotchView
     
-    @StateObject private var expandedNotchViewModel: ExpandedNotchViewModel = .init()
-    
     var body: some View {
         VStack {
-            HStack {
-                SettingsControlView(
+            HStack(
+                alignment: .top
+            ) {
+                GenericControlView(
                     notchViewModel: notchViewModel
+                ) {
+                    Text(" ")
+                }
+                
+                FileShelfControlView(
+                    notchViewModel: notchViewModel,
+                    expandedNotchViewModel: expandedNotchViewModel
                 )
                 
                 collapsedNotchView
                 .opacity(0)
                 .disabled(true)
                 
+                SettingsControlView(
+                    notchViewModel: notchViewModel
+                )
+                
                 PinControlView(
                     notchViewModel: notchViewModel
                 )
             }
+            .zIndex(5)
             
-            HStack(
-                spacing: 12
-            ) {
-                let items = Array(
-                    notchDefaults.expandedNotchItems.sorted {
-                        $0.rawValue < $1.rawValue
-                    }
+            ZStack {
+                NotchHomeView(
+                    namespace: namespace,
+                    notchViewModel: notchViewModel,
+                    expandedNotchViewModel: expandedNotchViewModel,
+                    collapsedNotchView: collapsedNotchView
+                )
+                .opacity(
+                    expandedNotchViewModel.currentView != .Home ? 0 : 1
                 )
                 
-                ForEach(
-                    0..<items.count,
-                    id: \.self
-                ) { index in
-                    
-                    let item = items[index]
-                    
-                    switch item {
-                    case .Mirror:
-                        MirrorView(
-                            notchViewModel: notchViewModel
-                        )
-                    case .NowPlaying:
-                        NowPlayingDetailView(
-                            namespace: namespace,
-                            notchViewModel: notchViewModel,
-                            nowPlayingModel: expandedNotchViewModel.nowPlayingMedia ?? .Placeholder
-                        )
-                    }
-                    
-                    if notchDefaults.showDividers && index != items.count - 1 {
-                        Divider()
-                    }
+                switch expandedNotchViewModel.currentView {
+                case .Home:
+                    EmptyView()
+                case .Shelf:
+                    FileShelfView(
+                        notchViewModel: notchViewModel,
+                        expandedNotchViewModel: expandedNotchViewModel
+                    )
                 }
             }
-            .frame(
-                height: notchViewModel.notchSize.height * 3
-            )
         }
         .padding(
             .init(
@@ -92,5 +89,14 @@ struct ExpandedNotchView: View {
             height: notchViewModel.isExpanded ? nil : 0
         )
         .opacity(notchViewModel.isExpanded ? 1 : 0)
+        .onChange(
+            of: notchViewModel.isExpanded
+        ) { old, new in
+            if old != new && !new {
+                withAnimation {
+                    expandedNotchViewModel.currentView = .Home
+                }
+            }
+        }
     }
 }

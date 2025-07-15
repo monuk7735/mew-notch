@@ -37,9 +37,7 @@ class MewPanel: NSPanel {
         ]
         
         canBecomeVisibleWithoutLogin = true
-        level = .init(
-            rawValue: .init(Int32.max - 2)
-        )
+        level = .mainMenu + 1
         
         hasShadow = false
     }

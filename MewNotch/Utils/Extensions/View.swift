@@ -32,4 +32,14 @@ extension View {
             )
         )
     }
+    
+    func onMultiDrag(
+        _ items: @escaping () -> [NSPasteboardWriting]
+    ) -> some View {
+        self.overlay(
+            DragSource(
+                items: items
+            )
+        )
+    }
 }

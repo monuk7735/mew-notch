@@ -9,7 +9,16 @@ import SwiftUI
 
 class ExpandedNotchViewModel: ObservableObject {
     
+    enum NotchViewType {
+        case Home
+        case Shelf
+    }
+    
+    @Published var currentView: NotchViewType = .Home
+    
     @Published var nowPlayingMedia: NowPlayingMediaModel?
+    
+    @Published var shelfFileGroups: [ShelfFileGroupModel] = []
     
     init() {
         self.startListeners()

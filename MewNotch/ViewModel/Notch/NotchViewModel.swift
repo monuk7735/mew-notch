@@ -28,6 +28,8 @@ class NotchViewModel: ObservableObject {
         height: 0
     )
     
+    @Published var isDropTarget: Bool = false
+    
     @Published var isHovered: Bool = false
     @Published var isExpanded: Bool = false
     
