@@ -23,17 +23,19 @@ struct ExpandedNotchView: View {
     var body: some View {
         VStack {
             HStack(
-                alignment: .top
+                alignment: .top,
+                spacing: 4
             ) {
-                GenericControlView(
-                    notchViewModel: notchViewModel
-                ) {
-                    Text(" ")
-                }
-                
-                FileShelfControlView(
+                NotchViewTypeControlView(
                     notchViewModel: notchViewModel,
-                    expandedNotchViewModel: expandedNotchViewModel
+                    expandedNotchViewModel: expandedNotchViewModel,
+                    notchViewType: .Home
+                )
+                
+                NotchViewTypeControlView(
+                    notchViewModel: notchViewModel,
+                    expandedNotchViewModel: expandedNotchViewModel,
+                    notchViewType: .Shelf
                 )
                 
                 collapsedNotchView

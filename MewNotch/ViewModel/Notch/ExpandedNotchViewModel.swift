@@ -9,9 +9,31 @@ import SwiftUI
 
 class ExpandedNotchViewModel: ObservableObject {
     
-    enum NotchViewType {
+    enum NotchViewType: String, CaseIterable, Identifiable {
+        var id: String {
+            self.rawValue
+        }
+        
         case Home
         case Shelf
+        
+        var imageSystemName: String {
+            switch self {
+            case .Home:
+                return "house.circle"
+            case .Shelf:
+                return "bookmark.circle"
+            }
+        }
+        
+        var imageSystemNameSelected: String {
+            switch self {
+            case .Home:
+                return "house.circle.fill"
+            case .Shelf:
+                return "bookmark.circle.fill"
+            }
+        }
     }
     
     @Published var currentView: NotchViewType = .Home
