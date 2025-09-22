@@ -44,7 +44,7 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
             withTimeInterval: 30,
             repeats: false
         ) { _ in
-            NotchManager.shared.refreshNotches()
+            NotchManager.shared.refreshNotches(killAllWindows: true)
         }
         
         NotchManager.shared.refreshNotches(

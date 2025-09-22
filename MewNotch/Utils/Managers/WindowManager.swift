@@ -39,118 +39,53 @@ public class WindowManager {
     private let SLSSpaceAddWindowsAndRemoveFromSpaces: @convention(c) (Int32, Int32, CFArray, Int32) -> Int32
 
     private init?() {
-        guard let bundle = CFBundleCreate(
-            kCFAllocatorDefault,
-            NSURL(
-                fileURLWithPath: "/System/Library/PrivateFrameworks/SkyLight.framework"
-            )
-        ) else {
-            return nil
-        }
+        guard let bundle = CFBundleCreate(kCFAllocatorDefault, NSURL(fileURLWithPath: "/System/Library/PrivateFrameworks/SkyLight.framework")) else { return nil }
         
         guard let SLSMainConnectionIDPointer = CFBundleGetFunctionPointerForName(bundle, "SLSMainConnectionID" as CFString) else { return nil }
         typealias SLSMainConnectionIDAlias = @convention(c) () -> Int32
-        SLSMainConnectionID = unsafeBitCast(
-            SLSMainConnectionIDPointer,
-            to: SLSMainConnectionIDAlias.self
-        )
+        SLSMainConnectionID = unsafeBitCast(SLSMainConnectionIDPointer, to: SLSMainConnectionIDAlias.self)
         
         guard let SLSSpaceCreatePointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceCreate" as CFString) else { return nil }
         typealias SLSSpaceCreateAlias = @convention(c) (Int32, Int32, Int32) -> Int32
-        SLSSpaceCreate = unsafeBitCast(
-            SLSSpaceCreatePointer,
-            to: SLSSpaceCreateAlias.self
-        )
+        SLSSpaceCreate = unsafeBitCast(SLSSpaceCreatePointer, to: SLSSpaceCreateAlias.self)
         
         guard let SLSSpaceDestroyPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceDestroy" as CFString) else { return nil }
         typealias SLSSpaceDestroyAlias = @convention(c) (Int32, Int32) -> Int32
-        SLSSpaceDestroy = unsafeBitCast(
-            SLSSpaceDestroyPointer,
-            to: SLSSpaceDestroyAlias.self
-        )
+        SLSSpaceDestroy = unsafeBitCast(SLSSpaceDestroyPointer, to: SLSSpaceDestroyAlias.self)
         
         guard let SLSSpaceSetAbsoluteLevelPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceSetAbsoluteLevel" as CFString) else { return nil }
         typealias SLSSpaceSetAbsoluteLevelAlias = @convention(c) (Int32, Int32, Int32) -> Int32
-        SLSSpaceSetAbsoluteLevel = unsafeBitCast(
-            SLSSpaceSetAbsoluteLevelPointer,
-            to: SLSSpaceSetAbsoluteLevelAlias.self
-        )
+        SLSSpaceSetAbsoluteLevel = unsafeBitCast(SLSSpaceSetAbsoluteLevelPointer, to: SLSSpaceSetAbsoluteLevelAlias.self)
         
         guard let SLSShowSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSShowSpaces" as CFString) else { return nil }
         typealias SLSShowSpacesAlias = @convention(c) (Int32, CFArray) -> Int32
-        SLSShowSpaces = unsafeBitCast(
-            SLSShowSpacesPointer,
-            to: SLSShowSpacesAlias.self
-        )
+        SLSShowSpaces = unsafeBitCast(SLSShowSpacesPointer, to: SLSShowSpacesAlias.self)
         
         guard let SLSHideSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSHideSpaces" as CFString) else { return nil }
         typealias SLSHideSpacesAlias = @convention(c) (Int32, CFArray) -> Int32
-        SLSHideSpaces = unsafeBitCast(
-            SLSHideSpacesPointer,
-            to: SLSHideSpacesAlias.self
-        )
+        SLSHideSpaces = unsafeBitCast(SLSHideSpacesPointer, to: SLSHideSpacesAlias.self)
         
         guard let SLSSpaceAddWindowsAndRemoveFromSpacesPointer = CFBundleGetFunctionPointerForName(bundle, "SLSSpaceAddWindowsAndRemoveFromSpaces" as CFString) else { return nil }
         typealias SLSSpaceAddWindowsAndRemoveFromSpacesAlias = @convention(c) (Int32, Int32, CFArray, Int32) -> Int32
-        SLSSpaceAddWindowsAndRemoveFromSpaces = unsafeBitCast(
-            SLSSpaceAddWindowsAndRemoveFromSpacesPointer,
-            to: SLSSpaceAddWindowsAndRemoveFromSpacesAlias.self
-        )
+        SLSSpaceAddWindowsAndRemoveFromSpaces = unsafeBitCast(SLSSpaceAddWindowsAndRemoveFromSpacesPointer, to: SLSSpaceAddWindowsAndRemoveFromSpacesAlias.self)
 
         connection = SLSMainConnectionID()
-        space = SLSSpaceCreate(
-            connection,
-            1,
-            0
-        )
+        space = SLSSpaceCreate(connection, 1, 0)
         
-        let _ = SLSSpaceSetAbsoluteLevel(
-            connection,
-            space,
-            CGSSpaceLevel.kSLSSpaceAbsoluteLevelNotificationCenterAtScreenLock.rawValue
-        )
+        let _ = SLSSpaceSetAbsoluteLevel(connection, space, CGSSpaceLevel.kSLSSpaceAbsoluteLevelNotificationCenterAtScreenLock.rawValue)
         
-        let _ = SLSShowSpaces(
-            connection,
-            [space] as CFArray
-        )
+        let _ = SLSShowSpaces(connection, [space] as CFArray)
     }
     
     deinit {
-        let _ = SLSHideSpaces(
-            connection,
-            [space] as CFArray
-        )
+        let _ = SLSHideSpaces(connection, [space] as CFArray)
         
-        let _ = SLSSpaceDestroy(
-            connection,
-            space
-        )
+        let _ = SLSSpaceDestroy(connection, space)
     }
 
     func moveToLockScreen(
         _ window: NSWindow
     ) {
-        /**
-         Last arg is a option for what to do (ig)
-         7 = 0b0111 = Remove, Add, Animate
-         3 = 0b0011 = Remove, Add (no animation)
-        */
-        if #available(macOS 16, *) { // 26 won't work idk why
-//            let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
-//                connection,
-//                space,
-//                [window.windowNumber] as CFArray,
-//                3
-//            )
-        } else {
-            // Keeping same for older version as it was working fine.
-            let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(
-                connection,
-                space,
-                [window.windowNumber] as CFArray,
-                7
-            )
-        }
+        let _ = SLSSpaceAddWindowsAndRemoveFromSpaces(connection, space, [window.windowNumber] as CFArray, 7)
     }
 }

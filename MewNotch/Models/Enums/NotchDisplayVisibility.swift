@@ -24,7 +24,7 @@ enum NotchDisplayVisibility: String, CaseIterable, Codable, Identifiable {
         case .NotchedDisplayOnly:
             return "Notched Displays Only"
         case .Custom:
-            return "Custom (Choose Yourself)"
+            return "Custom"
         }
     }
 }
