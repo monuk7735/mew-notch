@@ -45,6 +45,16 @@ class NotchDefaults: ObservableObject {
         }
     }
     
+    @PrimitiveUserDefault(
+        PREFIX + "resetViewOnCollapse",
+        defaultValue: true
+    )
+    var resetViewOnCollapse: Bool {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
     @CodableUserDefault(
         PREFIX + "HeightMode",
         defaultValue: NotchHeightMode.Match_Notch

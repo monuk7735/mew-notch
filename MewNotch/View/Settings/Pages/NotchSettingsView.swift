@@ -110,6 +110,32 @@ struct NotchSettingsView: View {
                             killAllWindows: true
                         )
                     }
+                    
+                    Toggle(
+                        isOn: $notchDefaults.resetViewOnCollapse
+                    ) {
+                        VStack(
+                            alignment: .leading
+                        ) {
+                            Text("Reset Selected View on Collapse")
+                            
+                            if notchDefaults.resetViewOnCollapse {
+                                Text("Notch resets to Home when Collapsed")
+                                    .font(.footnote)
+                            } else {
+                                Text("Notch will retain state when Collapsed")
+                                    .font(.footnote)
+                            }
+                        }
+                    }
+                    .onChange(
+                        of: notchDefaults.shownOnLockScreen
+                    ) {
+                        // Kill All Notch to move existing notches out of Lock Screen Space
+                        NotchManager.shared.refreshNotches(
+                            killAllWindows: true
+                        )
+                    }
                 },
                 header: {
                     Text("Displays")

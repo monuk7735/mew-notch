@@ -94,6 +94,7 @@ struct ExpandedNotchView: View {
         .onChange(
             of: notchViewModel.isExpanded
         ) { old, new in
+            guard notchDefaults.resetViewOnCollapse else { return }
             if old != new && !new {
                 withAnimation {
                     expandedNotchViewModel.currentView = .Home
