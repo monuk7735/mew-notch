@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NotchViewTypeControlView: View {
     
+    @Namespace private var namespace
+    
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var expandedNotchViewModel: ExpandedNotchViewModel
     
@@ -18,23 +20,30 @@ struct NotchViewTypeControlView: View {
         GenericControlView(
             notchViewModel: notchViewModel
         ) {
-            Image(systemName: expandedNotchViewModel.currentView == notchViewType ? notchViewType.imageSystemNameSelected : notchViewType.imageSystemName )
-                .resizable()
-                .scaledToFit()
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity
-                )
+            content()
                 .onTapGesture {
+                    guard notchViewType != expandedNotchViewModel.currentView else { return }
                     withAnimation {
-                        guard notchViewType != expandedNotchViewModel.currentView else { return }
-                        withAnimation {
-                            expandedNotchViewModel.currentView = notchViewType
-                        }
+                        expandedNotchViewModel.currentView = notchViewType
                     }
                 }
                 .opacity(expandedNotchViewModel.currentView == notchViewType ? 1 : 0.7)
                 .foregroundStyle(expandedNotchViewModel.currentView == notchViewType ? .blue : .primary)
+        }
+    }
+    
+    @ViewBuilder
+    private func content() -> some View {
+        if expandedNotchViewModel.currentView == notchViewType {
+            Image(systemName: notchViewType.imageSystemNameSelected)
+                .resizable()
+                .scaledToFit()
+                .matchedGeometryEffect(id: notchViewType, in: namespace)
+        } else {
+            Image(systemName: notchViewType.imageSystemName)
+                .resizable()
+                .scaledToFit()
+                .matchedGeometryEffect(id: notchViewType, in: namespace)
         }
     }
 }
