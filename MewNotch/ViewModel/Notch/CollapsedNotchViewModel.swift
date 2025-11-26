@@ -32,7 +32,9 @@ class CollapsedNotchViewModel: ObservableObject {
         self.startListeners()
         
         // Use existing model when Notch is refreshed
-        self.nowPlayingMedia = NowPlaying.shared.nowPlayingModel
+        if NowPlaying.shared.playing {
+            self.nowPlayingMedia = NowPlaying.shared.nowPlayingModel
+        }
     }
     
     deinit {
