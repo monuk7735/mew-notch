@@ -98,7 +98,8 @@ class NotchDefaults: ObservableObject {
     @CodableUserDefault(
         PREFIX + "ExpandedNotchItems",
         defaultValue: [
-            ExpandedNotchItem.Mirror
+            ExpandedNotchItem.Mirror,
+            ExpandedNotchItem.NowPlaying
         ]
     )
     var expandedNotchItems: Set<ExpandedNotchItem> {
