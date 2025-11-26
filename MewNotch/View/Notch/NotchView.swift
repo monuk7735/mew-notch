@@ -51,8 +51,14 @@ struct NotchView: View {
                     
                     collapsedNotchView
                 }
+                .glassEffect(when: notchDefaults.applyGlassEffect, in: NotchShape(
+                    topRadius: notchViewModel.cornerRadius.top,
+                    bottomRadius: notchViewModel.cornerRadius.bottom
+                ))
                 .background {
-                    Color.black
+                    if !notchDefaults.applyGlassEffect {
+                        Color.black
+                    }
                 }
                 .mask {
                     NotchShape(
@@ -70,7 +76,7 @@ struct NotchView: View {
                 .onHover {
                     notchViewModel.onHover(
                         $0,
-                        shouldExpand: notchDefaults.expandOnHover
+                        shouldExpand: notchDefaults.expandOnHover || notchDefaults.applyGlassEffect
                     )
                 }
                 .dropDestination(

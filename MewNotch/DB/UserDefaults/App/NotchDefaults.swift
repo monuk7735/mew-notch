@@ -66,6 +66,16 @@ class NotchDefaults: ObservableObject {
     }
     
     @PrimitiveUserDefault(
+        PREFIX + "GlassEffect",
+        defaultValue: false
+    )
+    var applyGlassEffect: Bool {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
+    @PrimitiveUserDefault(
         PREFIX + "ExpandOnHover",
         defaultValue: false
     )

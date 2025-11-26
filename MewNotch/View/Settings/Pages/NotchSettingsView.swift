@@ -170,6 +170,19 @@ struct NotchSettingsView: View {
                     ) {
                         Text("Height")
                     }
+                    
+                    if #available(macOS 26.0, *) {
+                        Toggle(isOn: $notchDefaults.applyGlassEffect) {
+                            VStack(
+                                alignment: .leading
+                            ) {
+                                Text("Apply glass effect")
+                                
+                                (Text("Forces ") + Text("Expand on Hover").bold() + Text(" to be enabled"))
+                                    .font(.footnote)
+                            }
+                        }
+                    }
                 },
                 header: {
                     Text("Interface")
@@ -179,7 +192,12 @@ struct NotchSettingsView: View {
             Section(
                 content: {
                     Toggle(
-                        isOn: $notchDefaults.expandOnHover
+                        isOn: .init(
+                            get: { notchDefaults.expandOnHover || notchDefaults.applyGlassEffect },
+                            set: {
+                                notchDefaults.expandOnHover = $0
+                            }
+                        )
                     ) {
                         VStack(
                             alignment: .leading
@@ -190,6 +208,7 @@ struct NotchSettingsView: View {
                                 .font(.footnote)
                         }
                     }
+                    .disabled(notchDefaults.applyGlassEffect)
                 },
                 header: {
                     Text("Interaction")
