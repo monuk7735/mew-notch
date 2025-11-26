@@ -10,6 +10,8 @@ import UniformTypeIdentifiers
 
 struct FileShelfView: View {
     
+    @StateObject var notchDefaults = NotchDefaults.shared
+    
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var expandedNotchViewModel: ExpandedNotchViewModel
     
@@ -65,7 +67,7 @@ struct FileShelfView: View {
                     spacing: 12
                 ) {
                     Image(
-                        systemName: "tray.and.arrow.down.fill"
+                        systemName: notchDefaults.shownOnLockScreen ? "exclamationmark.triangle.fill" : "tray.and.arrow.down.fill"
                     )
                     .resizable()
                     .scaledToFit()
@@ -73,7 +75,11 @@ struct FileShelfView: View {
                         maxWidth: 16
                     )
                     
-                    Text("Drop Files Here")
+                    if notchDefaults.shownOnLockScreen {
+                        Text("Incompatible with ") + Text("Show on Lockscreen").bold()
+                    } else {
+                        Text("Drop Files Here")
+                    }
                 }
                 .font(
                     .body.weight(

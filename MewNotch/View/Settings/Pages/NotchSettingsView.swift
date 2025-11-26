@@ -100,7 +100,15 @@ struct NotchSettingsView: View {
                     Toggle(
                         isOn: $notchDefaults.shownOnLockScreen
                     ) {
-                        Text("Show on Lock Screen")
+                        VStack(
+                            alignment: .leading
+                        ) {
+                            Text("Show on Lock Screen")
+                            
+                            Text("Incompatible with File Shelf feature")
+                                .font(.footnote)
+                        }
+                        
                     }
                     .onChange(
                         of: notchDefaults.shownOnLockScreen
