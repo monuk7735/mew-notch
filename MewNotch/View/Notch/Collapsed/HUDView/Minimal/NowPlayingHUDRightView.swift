@@ -46,7 +46,7 @@ struct NowPlayingHUDRightView: View {
                     if self.isHovered {
                         Button(
                             action: {
-                                MediaController.sharedInstance().togglePlayPause()
+                                NowPlaying.shared.togglePlayPause()
                             }
                         ) {
                             Image(

@@ -58,7 +58,6 @@ struct PowerHUDView<T: HUDDefaultsProtocol>: View {
             .padding(
                 .horizontal, notchViewModel.extraNotchPadSize.width / 2
             )
-            .background(.black)
             .frame(
                 width: notchViewModel.notchSize.width,
                 height: notchViewModel.notchSize.height

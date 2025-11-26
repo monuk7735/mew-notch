@@ -1,5 +1,5 @@
 {
-  "originHash" : "21342fb31d2e1351ccee7e95c495176e95cf1deb16970fba7caef78abec56004",
+  "originHash" : "d6d88a2310fa111c5dd45ceee6992421f926fc1c980ae70f3c5ba9d931f4f19e",
   "pins" : [
     {
       "identity" : "launchatlogin-modern",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "047aa81b77adcbf583a966dfef620d17650cc656",
         "version" : "4.5.1"
+      }
+    },
+    {
+      "identity" : "swiftyjson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
+      "state" : {
+        "revision" : "af76cf3ef710b6ca5f8c05f3a31307d44a3c5828",
+        "version" : "5.0.2"
       }
     }
   ],

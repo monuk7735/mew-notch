@@ -65,7 +65,7 @@ class NotchManager {
                 )
                 
                 panel = MewPanel(
-                    contentRect: .zero,
+                    contentRect: screen.frame,
                     styleMask: [
                         .borderless,
                         .nonactivatingPanel,

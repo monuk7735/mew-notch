@@ -44,6 +44,9 @@ class ExpandedNotchViewModel: ObservableObject {
     
     init() {
         self.startListeners()
+        
+        // Use existing model when Notch is refreshed
+        self.nowPlayingMedia = NowPlaying.shared.nowPlayingModel
     }
     
     deinit {
@@ -58,13 +61,6 @@ class ExpandedNotchViewModel: ObservableObject {
             name: NSNotification.Name.NowPlayingInfo,
             object: nil
         )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleNowPlayingMediaChanges),
-            name: NSNotification.Name.NowPlayingState,
-            object: nil
-        )
     }
     
     func stopListeners() {
@@ -72,39 +68,14 @@ class ExpandedNotchViewModel: ObservableObject {
     }
     
     @objc func handleNowPlayingMediaChanges() {
-        guard let appBundleIdentifier = NowPlaying.sharedInstance().appBundleIdentifier,
-              let appName = NowPlaying.sharedInstance().appName,
-              let appIcon = NowPlaying.sharedInstance().appIcon,
-              let albumArt = NowPlaying.sharedInstance().albumArt,
-              let album = NowPlaying.sharedInstance().album,
-              let artist = NowPlaying.sharedInstance().artist,
-              let title = NowPlaying.sharedInstance().title,
-              let elapsedTime = NowPlaying.sharedInstance().elapsedTime,
-              let totalDuration = NowPlaying.sharedInstance().totalDuration,
-              let playbackRate = NowPlaying.sharedInstance().playbackRate,
-              let refreshedAt = NowPlaying.sharedInstance().refreshedAt else {
+        guard let nowPlayingMedia = NowPlaying.shared.nowPlayingModel else {
             return
         }
         
-        withAnimation {
-            nowPlayingMedia = .init(
-                appBundleIdentifier: appBundleIdentifier,
-                appName: appName,
-                appIcon: .init(
-                    nsImage: appIcon
-                ),
-                albumArt: .init(
-                    nsImage: albumArt
-                ),
-                album: album,
-                artist: artist,
-                title: title,
-                elapsedTime: elapsedTime.doubleValue,
-                totalDuration: totalDuration.doubleValue,
-                playbackRate: playbackRate.doubleValue,
-                isPlaying: NowPlaying.sharedInstance().playing,
-                refreshedAt: refreshedAt
-            )
+        DispatchQueue.main.async {
+            withAnimation {
+                self.nowPlayingMedia = nowPlayingMedia
+            }
         }
     }
     

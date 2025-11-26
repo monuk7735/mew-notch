@@ -47,7 +47,7 @@ struct NotchView: View {
                         notchViewModel: notchViewModel,
                         expandedNotchViewModel: expandedNotchViewModel,
                         collapsedNotchView: collapsedNotchView
-                    )
+                    ).hide(when: !notchViewModel.isExpanded)
                     
                     collapsedNotchView
                 }

@@ -114,17 +114,17 @@ struct NowPlayingDetailView: View {
             
             VStack(
                 alignment: .leading,
-                spacing: 0
+                spacing: 4
             ) {
                 Text(nowPlayingModel.title)
                     .minimumScaleFactor(0.8)
                     .lineLimit(1)
                     .font(.title3.bold())
                 
-//                Text(nowPlayingModel.album)
-//                    .minimumScaleFactor(0.4)
-//                    .lineLimit(1)
-//                    .font(.footnote)
+                Text(nowPlayingModel.album)
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
+                    .font(.footnote)
                 
                 Text(nowPlayingModel.artist)
                     .minimumScaleFactor(0.8)
@@ -210,11 +210,12 @@ struct NowPlayingDetailView: View {
                 .frame(
                     maxHeight: .infinity
                 )
+                .hidden()
                 
                 HStack {
                     Button(
                         action: {
-                            MediaController.sharedInstance().previous()
+                            NowPlaying.shared.previousTrack()
                         }
                     ) {
                         Image(
@@ -248,7 +249,7 @@ struct NowPlayingDetailView: View {
                     
                     Button(
                         action: {
-                            MediaController.sharedInstance().togglePlayPause()
+                            NowPlaying.shared.togglePlayPause()
                         }
                     ) {
                         Image(
@@ -282,7 +283,7 @@ struct NowPlayingDetailView: View {
                     
                     Button(
                         action: {
-                            MediaController.sharedInstance().next()
+                            NowPlaying.shared.nextTrack()
                         }
                     ) {
                         Image(

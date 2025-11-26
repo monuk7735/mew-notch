@@ -38,7 +38,7 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
         AudioOutput.sharedInstance()
         Brightness.sharedInstance()
         PowerStatus.sharedInstance()
-        NowPlaying.sharedInstance()
+        NowPlaying.shared.startListener()
         
         timer = .scheduledTimer(
             withTimeInterval: 30,

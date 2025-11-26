@@ -167,6 +167,8 @@ struct MewSettingsView: View {
             
             window.toolbarStyle = .unified
             window.styleMask.insert(.resizable)
+            window.styleMask.insert(.miniaturizable)
+            window.styleMask.insert(.closable)
             
             NSApp.activate()
         }
