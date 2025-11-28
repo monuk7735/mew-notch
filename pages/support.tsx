@@ -1,53 +1,60 @@
 import HomeContainer from "@/components/home-container";
 import { ReactNode } from "react";
-import { FaBeer, FaGithub } from "react-icons/fa";
+import Head from "next/head";
+import { FaCoffee, FaHeart, FaStar } from "react-icons/fa";
 
 export default function Support() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] p-8 gap-8">
-      <div className="max-w-2xl text-center text-lg text-gray-300 flex flex-col gap-6">
-        <p className="pb-10">
-          <span className="text-2xl md:text-3xl font-extrabold text-blue-400 block mb-2">MewNotch is completely free and open source.</span>
-          <span className="text-xl font-semibold text-white block mb-2">You don&apos;t owe me anything for using it.</span>
-          <span className="text-base text-gray-400">No ads, no tracking, no paywalls, and no hidden catches—just a tool for the community.</span>
-        </p>
-        <p>
-          If you find MewNotch useful, the best way to support me is to <span className="text-blue-400 font-semibold">star the GitHub repo</span> and {" "}
-          <span className="inline-flex items-center gap-1 text-blue-400 font-semibold">
-            share it with your friends
-          </span>
-          {" "}by word of mouth or online.
-          <br/>
-          <br/>
-          Your feedback, bug reports, and contributions are always welcome!
-        </p>
-        <div className="flex flex-col items-center gap-2 pt-16">
-          <span className="text-gray-400">But if you really want to show appreciation...</span>
+    <>
+      <Head>
+        <title>Support - MewNotch</title>
+      </Head>
+      <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 py-20 max-w-3xl mx-auto w-full text-center">
 
-          <div className="flex items-center gap-4">
-            <a
-              href="https://coff.ee/monuk7735"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-black font-bold shadow transition-colors duration-200 text-lg mt-2"
-            >
-              <FaBeer className="text-lg" />
-              Buy me a beer
-            </a>
-
-            <a
-              href="https://github.com/sponsors/monuk7735"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#f6f8fa] hover:bg-[#b6b8ba] text-black font-bold shadow transition-colors duration-200 text-lg mt-2"
-            >
-              <FaGithub className="text-lg" />
-              Sponsor on GitHub
-            </a>
-          </div>
+        <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500 dark:text-red-400 text-4xl mb-8 animate-pulse" aria-hidden="true">
+          <FaHeart />
         </div>
+
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          Support MewNotch
+        </h1>
+
+        <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-12">
+          MewNotch is a labor of love, developed in my free time.
+          It is and always will be free to use.
+          <br /><br />
+          However, if you find it useful and want to support its continued development,
+          you can buy me a coffee. It&apos;s completely optional, but highly appreciated!
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md">
+          <a
+            href="https://www.buymeacoffee.com/monuk7735"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#FFDD00] text-black font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+          >
+            <FaCoffee className="text-xl" />
+            <span>Buy me a coffee</span>
+          </a>
+
+          <a
+            href="https://github.com/monuk7735/mew-notch"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gray-900 dark:bg-gray-800 text-white font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 border border-gray-700"
+          >
+            <FaStar className="text-yellow-400 group-hover:rotate-360 transition-transform duration-500" />
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+
+        <p className="mt-12 text-sm text-gray-600 dark:text-gray-400">
+          Even a simple star on GitHub helps the project grow! 🌟
+        </p>
+
       </div>
-    </div>
+    </>
   );
 }
 
