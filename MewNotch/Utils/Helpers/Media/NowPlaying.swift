@@ -182,6 +182,8 @@ final class NowPlaying {
             NotificationCenter.default.post(name: .NowPlayingInfo, object: nil)
         }
         
+        playing = payload[PayloadItem.playing.rawValue]?.boolValue ?? false
+        
         if !isDiff {
             nonDiffPaylaod = payload
         } else {
@@ -196,7 +198,6 @@ final class NowPlaying {
         totalDuration = nonDiffPaylaod[PayloadItem.duration.rawValue]?.doubleValue ?? totalDuration
         elapsedTime = nonDiffPaylaod[PayloadItem.elapsedTime.rawValue]?.doubleValue ?? elapsedTime
         playbackRate = nonDiffPaylaod[PayloadItem.playbackRate.rawValue]?.doubleValue ?? playbackRate
-        playing = nonDiffPaylaod[PayloadItem.playing.rawValue]?.boolValue ?? playing
         appBundleIdentifier = nonDiffPaylaod[PayloadItem.bundleIdentifier.rawValue]?.stringValue ?? appBundleIdentifier
         
         if let artworkDataString = nonDiffPaylaod[PayloadItem.artworkData.rawValue]?.stringValue, let data = Data(
