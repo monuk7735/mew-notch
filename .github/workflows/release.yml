@@ -1,0 +1,85 @@
+name: Build and Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build and sign app
+    permissions:
+      contents: write
+    runs-on: macos-26
+    environment: main
+    env:
+      projname: "MewNotch"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Resolve Swift packages
+        run: xcodebuild -resolvePackageDependencies -project ${{ env.projname }}.xcodeproj
+
+      - name: Install Apple certificate
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERT_PATH=$RUNNER_TEMP/build_certificate.p12
+          KC=$RUNNER_TEMP/app-signing.keychain-db
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode > "$CERT_PATH"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KC"
+          security set-keychain-settings -lut 21600 "$KC"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KC"
+          security import "$CERT_PATH" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KC"
+          security list-keychain -d user -s "$KC"
+          security find-identity -v -p codesigning
+
+      - name: Build with Xcode 26
+        run: xcodebuild -version
+
+      - name: Build and archive
+        run: |
+          xcodebuild clean archive \
+            -project ${{ env.projname }}.xcodeproj \
+            -scheme ${{ env.projname }} \
+            -archivePath ${{ env.projname }} \
+            -destination "generic/platform=macOS" \
+            ONLY_ACTIVE_ARCH=NO \
+            -allowProvisioningUpdates
+
+      - name: Export app
+        run: |
+          xcodebuild -exportArchive -archivePath "${{ env.projname }}.xcarchive" -exportPath Release -exportOptionsPlist ".github/exportOptions.plist"
+          
+          # Rename exported app to "Mew Notch.app" for DMG
+          mv "Release/MewNotch.app" "Release/Mew Notch.app"
+
+      - name: Create DMG
+        run: |
+          create-dmg \
+            --volname "MewNotch Installer" \
+            --volicon "MewNotch/Resources/Assets/MewAssets.xcassets/AppIcon.appiconset/MewNotch-1024.png" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --background ".github/res/Installer-Background.png" \
+            --icon-size 128 \
+            --icon "Mew Notch.app" 200 185 \
+            --hide-extension "Mew Notch.app" \
+            --app-drop-link 600 185 \
+            "MewNotch-${{ github.ref_name }}.dmg" \
+            "Release/Mew Notch.app"
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./MewNotch-${{ github.ref_name }}.dmg
+          asset_name: MewNotch-${{ github.ref_name }}.dmg
+          asset_content_type: application/x-apple-diskimage
