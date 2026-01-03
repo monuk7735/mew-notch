@@ -37,25 +37,59 @@ struct MirrorView: View {
     
     var body: some View {
         ZStack {
-            // Background Shape
             RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius)
-                .fill(Color.gray.opacity(0.2)) // Darker background for contrast
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(white: 0.15),
+                            Color(white: 0.05)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .overlay(
+                    LinearGradient(
+                        colors: [
+                            .white.opacity(0.0),
+                            .white.opacity(0.2),
+                            .white.opacity(0.0)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius))
+                )
             
             if cameraAuthStatus == .authorized {
                 if isCameraViewShown {
                     CameraPreviewView()
+                        .background {
+                            ProgressView()
+                        }
                         .clipShape(
                             RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius)
                         )
                         .transition(.opacity.combined(with: .scale(scale: 0.95)))
                 } else {
                     // Placeholder when camera is OFF but authorized
-                    Image(systemName: "person.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(32)
-                        .foregroundStyle(.white.opacity(0.8))
-                        .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                    VStack(spacing: 4) {
+                        Image(systemName: "person.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: notchViewModel.notchSize.height * 0.8) // Reduce icon size slightly to fit text
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.white.opacity(0.8), .white.opacity(0.4)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                        
+                        Text("Mirror")
+                            .font(.system(size: 10, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
                 }
             } else {
                 // Not Authorized / Denied / Not Determined State
@@ -74,7 +108,8 @@ struct MirrorView: View {
         .frame(
             width: notchViewModel.notchSize.height * 3
         )
-        .clipShape(RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius * notchViewModel.notchSize.height * 3 * 0.01))
+        .clipShape(RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius))
+        .shadow(color: .white.opacity(0.1), radius: 1, x: 0, y: 1) // Subtle rim lighting
         .onTapGesture {
             handleTap()
         }

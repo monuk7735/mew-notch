@@ -138,7 +138,7 @@ struct NotchSettingsView: View {
                 ) {
                     Slider(
                         value: $mirrorDefaults.cornerRadius,
-                        in: 5...50,
+                        in: 15...50,
                         step: 1
                     )
                 }
