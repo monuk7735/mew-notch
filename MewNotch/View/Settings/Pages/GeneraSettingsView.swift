@@ -15,48 +15,42 @@ struct GeneraSettingsView: View {
     
     var body: some View {
         Form {
-            Section(
-                content: {
-                    LaunchAtLogin.Toggle()
-                    
-                    Toggle(
-                        isOn: $appDefaults.showMenuIcon
-                    ) {
-                        VStack(
-                            alignment: .leading
-                        ) {
-                            Text("Status Icon")
-                            
-                            Text("Shown in Menu Bar for easy access")
-                                .font(.footnote)
-                        }
+            Section {
+                SettingsRow(
+                    title: "Launch at Login",
+                    subtitle: "Automatically start MewNotch when you log in",
+                    icon: "arrow.up.circle.fill",
+                    color: .blue
+                ) {
+                    LaunchAtLogin.Toggle {
+                        Text("")
                     }
-                },
-                header: {
-                    Text("App")
+                    .labelsHidden()
                 }
-            )
+                
+                SettingsRow(
+                    title: "Status Icon",
+                    subtitle: "Show icon in menu bar for easy access",
+                    icon: "menubar.rectangle",
+                    color: .gray
+                ) {
+                    Toggle("", isOn: $appDefaults.showMenuIcon)
+                }
+            } header: {
+                Text("App")
+            }
             
-            Section(
-                content: {
-                    VStack(alignment: .leading) {
-                        Toggle(
-                            isOn: $appDefaults.disableSystemHUD
-                        ) {
-                            VStack(
-                                alignment: .leading
-                            ) {
-                                Text("Disable system HUD")
-                            }
-                        }
-                        .onChange(
-                            of: appDefaults.disableSystemHUD
-                        ) { _, newValue in
+            Section {
+                SettingsRow(
+                    title: "Disable System HUD",
+                    subtitle: "Hide system volume and brightness overlays",
+                    icon: "eye.slash.fill",
+                    color: .red
+                ) {
+                    Toggle("", isOn: $appDefaults.disableSystemHUD)
+                        .onChange(of: appDefaults.disableSystemHUD) { _, newValue in
                             if newValue {
                                 if !AXIsProcessTrusted() {
-                                    // If not trusted, we can't block events.
-                                    // The MediaKeyManager will fail to start the tap.
-                                    // We should prompt the user.
                                     let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
                                     AXIsProcessTrustedWithOptions(options as CFDictionary)
                                 }
@@ -65,23 +59,25 @@ struct GeneraSettingsView: View {
                                 MediaKeyManager.shared.stop()
                             }
                         }
-                        
-                        if appDefaults.disableSystemHUD && !AXIsProcessTrusted() {
-                            Text("Accessibility permissions are required to hide the system HUD.")
-                                .font(.caption)
-                                .foregroundStyle(.red)
-                            
-                            Button("Open System Settings") {
-                                let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
-                                AXIsProcessTrustedWithOptions(options as CFDictionary)
-                            }
-                        }
-                    }
-                },
-                header: {
-                    Text("System")
                 }
-            )
+                
+                if appDefaults.disableSystemHUD && !AXIsProcessTrusted() {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Accessibility permissions are required.", systemImage: "exclamationmark.triangle.fill")
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                        
+                        Button("Open System Settings") {
+                            let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
+                            AXIsProcessTrustedWithOptions(options as CFDictionary)
+                        }
+                        .font(.caption)
+                    }
+                    .padding(.leading, 44) // Indent to align with text
+                }
+            } header: {
+                Text("System")
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("General")

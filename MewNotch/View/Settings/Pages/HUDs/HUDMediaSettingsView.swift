@@ -13,22 +13,16 @@ struct HUDMediaSettingsView: View {
     
     var body: some View {
         Form {
-            Section(
-                content: {
-                    Toggle(
-                        isOn: $mediaDefaults.isEnabled
-                    ) {
-                        VStack(
-                            alignment: .leading
-                        ) {
-                            Text("Enabled")
-                            
-                            Text("Shows media playing app with animation")
-                                .font(.footnote)
-                        }
-                    }
+            Section {
+                SettingsRow(
+                    title: "Enabled",
+                    subtitle: "Shows media playing app with animation",
+                    icon: "music.note",
+                    color: .pink
+                ) {
+                    Toggle("", isOn: $mediaDefaults.isEnabled)
                 }
-            )
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Media")

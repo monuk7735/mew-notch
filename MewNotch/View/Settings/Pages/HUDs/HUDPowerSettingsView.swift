@@ -13,22 +13,16 @@ struct HUDPowerSettingsView: View {
     
     var body: some View {
         Form {
-            Section(
-                content: {
-                    Toggle(
-                        isOn: $powerDefaults.isEnabled
-                    ) {
-                        VStack(
-                            alignment: .leading
-                        ) {
-                            Text("Enabled")
-                            
-                            Text("Shows power state when plugged in/out")
-                                .font(.footnote)
-                        }
-                    }
+            Section {
+                SettingsRow(
+                    title: "Enabled",
+                    subtitle: "Shows power state when plugged in/out",
+                    icon: "bolt.fill",
+                    color: .green
+                ) {
+                    Toggle("", isOn: $powerDefaults.isEnabled)
                 }
-            )
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Power")

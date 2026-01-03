@@ -13,43 +13,50 @@ struct HUDBrightnessSettingsView: View {
     
     var body: some View {
         Form {
-            Section(
-                content: {
-                    Toggle(isOn: $viewModel.defaults.isEnabled) {
-                        VStack(alignment: .leading) {
-                            Text("Enabled")
-                            Text("Shows brightness changes")
-                                .font(.footnote)
+            Section {
+                SettingsRow(
+                    title: "Enabled",
+                    subtitle: "Shows brightness changes",
+                    icon: "sun.max.fill",
+                    color: .yellow
+                ) {
+                    Toggle("", isOn: $viewModel.defaults.isEnabled)
+                }
+                
+                SettingsRow(
+                    title: "Style",
+                    icon: "paintbrush.fill",
+                    color: .blue
+                ) {
+                    Picker("", selection: $viewModel.defaults.style) {
+                        ForEach(HUDStyle.allCases) { style in
+                            Text(style.rawValue.capitalized).tag(style)
                         }
                     }
-
-                    Picker(
-                        selection: $viewModel.defaults.style,
-                        content: {
-                            ForEach(
-                                HUDStyle.allCases
-                            ) { style in
-                                Text(style.rawValue.capitalized)
-                                    .tag(style)
-                            }
-                        }
-
-                    ) {
-                        Text("Style")
-                    }
-                    .disabled(!viewModel.defaults.isEnabled)
-                    
-                    Toggle(
-                        "Show Auto Brightness Changes",
-                        isOn: $viewModel.defaults.showAutoBrightnessChanges
-                    )
-                    
-                    if viewModel.defaults.isEnabled {
-                        VStack(alignment: .leading) {
+                    .labelsHidden()
+                }
+                .disabled(!viewModel.defaults.isEnabled)
+                
+                SettingsRow(
+                    title: "Show Auto Brightness Changes",
+                    icon: "bolt.badge.automatic.fill",
+                    color: .green
+                ) {
+                    Toggle("", isOn: $viewModel.defaults.showAutoBrightnessChanges)
+                }
+                
+                if viewModel.defaults.isEnabled {
+                    HStack(alignment: .top, spacing: 16) {
+                        SettingsIcon(icon: "chart.bar.fill", color: .orange)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
                             HStack {
                                 Text("Step Size")
+                                    .font(.title3)
+                                    .fontWeight(.medium)
                                 Spacer()
                                 Text("\(Int(viewModel.localStep * 100))%")
+                                    .font(.body)
                                     .monospacedDigit()
                                     .bold()
                             }
@@ -61,11 +68,11 @@ struct HUDBrightnessSettingsView: View {
                             )
                         }
                     }
-                },
-                footer: {
-                    Text("Design to be used for HUD")
+                    .padding(.vertical, 8)
                 }
-            )
+            } footer: {
+               Text("Design to be used for HUD")
+            }
         }
         .formStyle(.grouped)
         .navigationTitle("Brightness")

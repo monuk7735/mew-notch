@@ -42,85 +42,67 @@ struct MewSettingsView: View {
                 ) {
                     Section(
                         content: {
-                            NavigationLink(
-                                destination: {
-                                    GeneraSettingsView()
+                            NavigationLink(destination: GeneraSettingsView()) {
+                                HStack(spacing: 12) {
+                                    SettingsIcon(icon: "gear", color: .gray)
+                                    Text("General")
+                                        .font(.headline)
+                                        .fontWeight(.medium)
                                 }
-                            ) {
-                                Label(
-                                    "General",
-                                    systemImage: "gear"
-                                )
                             }
                             .id(SettingsPages.General)
                             
-                            
-                            NavigationLink(
-                                destination: {
-                                    NotchSettingsView()
+                            NavigationLink(destination: NotchSettingsView()) {
+                                HStack(spacing: 12) {
+                                    SettingsIcon(icon: "macbook", color: .blue)
+                                    Text("Notch")
+                                        .font(.headline)
+                                        .fontWeight(.medium)
                                 }
-                            ) {
-                                Label(
-                                    title: {
-                                        Text("Notch")
-                                    },
-                                    icon: {
-                                        MewNotch.Assets.iconMenuBar
-                                            .renderingMode(.template)
-                                    }
-                                )
                             }
                             .id(SettingsPages.Notch)
                         }
                     )
                     
                     Section(
-                        content: {
-                            NavigationLink(
-                                destination: {
-                                    HUDBrightnessSettingsView()
+                         content: {
+                            NavigationLink(destination: HUDBrightnessSettingsView()) {
+                                HStack(spacing: 12) {
+                                    SettingsIcon(icon: "sun.max.fill", color: .yellow)
+                                    Text("Brightness")
+                                        .font(.headline)
+                                        .fontWeight(.medium)
                                 }
-                            ) {
-                                Label(
-                                    "Brightness",
-                                    systemImage: "rays"
-                                )
                             }
                             .id(SettingsPages.Brightness)
                             
-                            NavigationLink(
-                                destination: {
-                                    HUDAudioSettingsView()
+                            NavigationLink(destination: HUDAudioSettingsView()) {
+                                HStack(spacing: 12) {
+                                    SettingsIcon(icon: "speaker.wave.3.fill", color: .blue)
+                                    Text("Audio")
+                                        .font(.headline)
+                                        .fontWeight(.medium)
                                 }
-                            ) {
-                                Label(
-                                    "Audio",
-                                    systemImage: "waveform"
-                                )
                             }
                             .id(SettingsPages.Audio)
                             
-                            NavigationLink(
-                                destination: {
-                                    HUDPowerSettingsView()
+                            NavigationLink(destination: HUDPowerSettingsView()) {
+                                HStack(spacing: 12) {
+                                    SettingsIcon(icon: "bolt.fill", color: .green)
+                                    Text("Power")
+                                        .font(.headline)
+                                        .fontWeight(.medium)
                                 }
-                            ) {
-                                Label(
-                                    "Power",
-                                    systemImage: "powerplug"
-                                )
                             }
                             .id(SettingsPages.Power)
                             
-                            NavigationLink(
-                                destination: {
-                                    HUDMediaSettingsView()
+                            NavigationLink(destination: HUDMediaSettingsView()) {
+                                HStack(spacing: 12) {
+                                    SettingsIcon(icon: "music.note", color: .pink)
+                                    Text("Media")
+                                        .font(.headline)
+                                        .fontWeight(.medium)
                                 }
-                            ) {
-                                Label(
-                                    "Media",
-                                    systemImage: "music.note.list"
-                                )
                             }
                             .id(SettingsPages.Media)
                         },
@@ -130,15 +112,13 @@ struct MewSettingsView: View {
                     )
                     
                     Section {
-                        NavigationLink(
-                            destination: {
-                                AboutAppView()
+                        NavigationLink(destination: AboutAppView()) {
+                            HStack(spacing: 12) {
+                                SettingsIcon(icon: "info.circle", color: .gray)
+                                Text("About")
+                                    .font(.headline)
+                                    .fontWeight(.medium)
                             }
-                        ) {
-                            Label(
-                                "About",
-                                systemImage: "info.circle"
-                            )
                         }
                         .id(SettingsPages.About)
                     }

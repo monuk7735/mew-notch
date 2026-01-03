@@ -16,11 +16,6 @@ final class NotchSettingsViewModel: ObservableObject {
     
     init() {
         self.refreshNSScreens()
-        
-        NotchDefaults.shared.objectWillChange
-            .sink { [weak self] _ in
-            }
-            .store(in: &cancellables)
     }
     
     func refreshNSScreens() {
