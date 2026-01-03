@@ -93,14 +93,22 @@ struct MirrorView: View {
                 }
             } else {
                 // Not Authorized / Denied / Not Determined State
-                VStack(spacing: 6) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(.yellow)
+                VStack(spacing: 4) {
+                    Image(systemName: "video.slash.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 16)
+                        .foregroundStyle(.secondary)
                     
-                    Text(cameraAuthStatus == .notDetermined ? "Tap to Allow" : "No Access")
-                        .font(.caption2.bold())
+                    Text("Mirror")
+                        .font(.system(size: 10, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
+                    
+                    Text(cameraAuthStatus == .notDetermined ? "Tap to Allow Camera" : "Camera Access Required")
+                        .font(.system(size: 8))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 4)
                 }
                 .padding(8)
             }
