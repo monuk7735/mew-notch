@@ -77,5 +77,7 @@ struct MewNotchApp: App {
             MewSettingsView()
                 .modelContainer(sharedModelContainer)
         }
+        .windowResizability(.contentSize)
+        .environmentObject(updaterViewModel)
     }
 }

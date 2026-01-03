@@ -13,8 +13,6 @@ struct GeneraSettingsView: View {
     @StateObject var appDefaults = AppDefaults.shared
     @StateObject var notchDefaults = NotchDefaults.shared
     
-    @ObservedObject var settingsViewModel: SettingsViewModel = .init()
-    
     var body: some View {
         Form {
             Section(

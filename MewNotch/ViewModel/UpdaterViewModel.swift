@@ -23,4 +23,10 @@ final class UpdaterViewModel: ObservableObject {
     var canCheckForUpdates: Bool {
         updaterController.updater.canCheckForUpdates
     }
+    
+    var currentVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+        return "\(version) (\(build))"
+    }
 }

@@ -28,8 +28,7 @@ struct MewSettingsView: View {
         
         case About
     }
-    
-    @StateObject var settingsViewModel: SettingsViewModel = .init()
+
     
     @StateObject var defaultsManager = MewDefaultsManager.shared
     
@@ -45,9 +44,7 @@ struct MewSettingsView: View {
                         content: {
                             NavigationLink(
                                 destination: {
-                                    GeneraSettingsView(
-                                        settingsViewModel: settingsViewModel
-                                    )
+                                    GeneraSettingsView()
                                 }
                             ) {
                                 Label(
@@ -135,9 +132,7 @@ struct MewSettingsView: View {
                     Section {
                         NavigationLink(
                             destination: {
-                                AboutAppView(
-                                    settingsViewModel: settingsViewModel
-                                )
+                                AboutAppView()
                             }
                         ) {
                             Label(
@@ -151,11 +146,11 @@ struct MewSettingsView: View {
                 }
             },
             detail: {
-                GeneraSettingsView(
-                    settingsViewModel: settingsViewModel
-                )
+                GeneraSettingsView()
             }
         )
+        .frame(minWidth: 600, minHeight: 450)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .task {
             guard let window = NSApp.windows.first(
                 where: {
