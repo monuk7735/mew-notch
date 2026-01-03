@@ -26,29 +26,29 @@ struct ExpandedNotchView: View {
                 alignment: .top,
                 spacing: 4
             ) {
-                NotchViewTypeControlView(
-                    notchViewModel: notchViewModel,
-                    expandedNotchViewModel: expandedNotchViewModel,
-                    notchViewType: .Home
-                )
-                
-                NotchViewTypeControlView(
-                    notchViewModel: notchViewModel,
-                    expandedNotchViewModel: expandedNotchViewModel,
-                    notchViewType: .Shelf
-                )
+                HStack(spacing: 0) {
+                    NotchTabSwitcherView(
+                        notchViewModel: notchViewModel,
+                        expandedNotchViewModel: expandedNotchViewModel,
+                        spacing: 8
+                    )
+                }
                 
                 collapsedNotchView
                 .opacity(0)
                 .disabled(true)
                 
-                SettingsControlView(
-                    notchViewModel: notchViewModel
-                )
-                
-                PinControlView(
-                    notchViewModel: notchViewModel
-                )
+                HStack(
+                    spacing: 2
+                ) {
+                    SettingsControlView(
+                        notchViewModel: notchViewModel
+                    )
+                    
+                    PinControlView(
+                        notchViewModel: notchViewModel
+                    )
+                }
             }
             .zIndex(5)
             

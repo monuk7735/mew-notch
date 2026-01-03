@@ -20,18 +20,9 @@ class ExpandedNotchViewModel: ObservableObject {
         var imageSystemName: String {
             switch self {
             case .Home:
-                return "house.circle"
+                return "house"
             case .Shelf:
-                return "bookmark.circle"
-            }
-        }
-        
-        var imageSystemNameSelected: String {
-            switch self {
-            case .Home:
-                return "house.circle.fill"
-            case .Shelf:
-                return "bookmark.circle.fill"
+                return "folder"
             }
         }
     }

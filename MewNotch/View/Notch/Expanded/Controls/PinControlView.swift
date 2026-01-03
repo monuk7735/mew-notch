@@ -12,29 +12,15 @@ struct PinControlView: View {
     @ObservedObject var notchViewModel: NotchViewModel
     
     var body: some View {
-        GenericControlView(
-            notchViewModel: notchViewModel
+        NotchControlButton(
+            notchViewModel: notchViewModel,
+            icon: notchViewModel.isPinned ? "pin" : "pin",
+            isSelected: notchViewModel.isPinned
         ) {
-            Button(
-                action: {
-                    withAnimation {
-                        notchViewModel.isPinned.toggle()
-                    }
-                }
-            ) {
-                Image(
-                    systemName: notchViewModel.isPinned ? "pin.circle.fill" : "pin.circle"
-                )
-                .resizable()
-                .scaledToFit()
-                .rotationEffect(
-                    notchViewModel.isPinned ? .degrees(45) : .zero
-                )
+            withAnimation {
+                notchViewModel.isPinned.toggle()
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(
-                notchViewModel.isPinned ? .blue : .primary
-            )
         }
+        .rotationEffect(.degrees(notchViewModel.isPinned ? 25 : 0))
     }
 }

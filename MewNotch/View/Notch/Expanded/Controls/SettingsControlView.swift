@@ -14,19 +14,11 @@ struct SettingsControlView: View {
     @ObservedObject var notchViewModel: NotchViewModel
     
     var body: some View {
-        GenericControlView(
-            notchViewModel: notchViewModel
-        ) {
-            Button(
-                action: openSettings.callAsFunction
-            ) {
-                Image(
-                    systemName: "gear.circle.fill"
-                )
-                .resizable()
-                .scaledToFit()
-            }
-            .buttonStyle(.plain)
-        }
+        NotchControlButton(
+            notchViewModel: notchViewModel,
+            icon: "gear",
+            isSelected: false,
+            action: openSettings.callAsFunction
+        )
     }
 }

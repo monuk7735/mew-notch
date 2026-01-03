@@ -7,18 +7,45 @@
 
 import SwiftUI
 
-struct GenericControlView<Content: View>: View {
+struct NotchControlButton: View {
     
     @ObservedObject var notchViewModel: NotchViewModel
     
-    var content: () -> Content
+    var icon: String? = nil
+    var customIcon: Image? = nil
+    var isSelected: Bool = false
+    var padding: CGFloat = 3
+    var action: () -> Void
     
     var body: some View {
-        content()
-            .padding(notchViewModel.minimalHUDPadding * 1.2)
+        Button(action: action) {
+            Group {
+                if let customIcon = customIcon {
+                    customIcon
+                        .resizable()
+                } else if let icon = icon {
+                    Image(systemName: icon)
+                        .resizable()
+                }
+            }
+            .scaledToFit()
+            .bold()
+            .padding(5)
             .frame(
-                width: notchViewModel.notchSize.height,
-                height: notchViewModel.notchSize.height
+                width: notchViewModel.notchSize.height * 0.7,
+                height: notchViewModel.notchSize.height * 0.7
             )
+            .background {
+                Circle()
+                    .fill(
+                        isSelected ? Color.blue : .white.opacity(0.2)
+                    )
+            }
+            .foregroundStyle(
+                .white
+            )
+        }
+        .buttonStyle(.plain)
+        .padding(padding)
     }
 }
