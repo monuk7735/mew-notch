@@ -51,22 +51,20 @@ struct HUDBrightnessSettingsView: View {
                     )
                     
                     if brightnessDefaults.isEnabled {
-                        HStack {
-                            Text("Step Size")
-                            
-                            Text("\(Int(localStep * 100))%")
-                                .monospacedDigit()
-                                .bold()
-                            
-                            Spacer()
-                            
-                            Slider(
-                                value: $localStep,
-                                in: 0.01...0.10,
-                                step: 0.01
-                            )
-                            
-                        }
+                        Slider(
+                            value: $localStep,
+                            in: 0.01...0.10,
+                            step: 0.01,
+                            label: {
+                                HStack {
+                                    Text("Step Size")
+                                    
+                                    Text("\(Int(localStep * 100))%")
+                                        .monospacedDigit()
+                                        .bold()
+                                }
+                            }
+                        )
                     }
                 }
             )

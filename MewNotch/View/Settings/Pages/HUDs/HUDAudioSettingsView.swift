@@ -75,22 +75,20 @@ struct HUDAudioSettingsView: View {
                     .disabled(!audioOutputDefaults.isEnabled)
                     
                     if audioOutputDefaults.isEnabled {
-                        HStack {
-                            Text("Step Size: ")
-
-                            Text("\(Int(localVolumeStep))%")
-                                .monospacedDigit()
-                                .bold()
-
-                            Spacer()
-                            
-                            Slider(
-                                value: $localVolumeStep,
-                                in: 1...10,
-                                step: 1
-                            )
-                            
-                        }
+                        Slider(
+                            value: $localVolumeStep,
+                            in: 1...10,
+                            step: 1,
+                            label: {
+                                HStack {
+                                    Text("Step Size")
+                                    
+                                    Text("\(Int(localVolumeStep))%")
+                                        .monospacedDigit()
+                                        .bold()
+                                }
+                            }
+                        )
                     }
                 },
                 header: {
