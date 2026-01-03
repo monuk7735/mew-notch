@@ -13,5 +13,9 @@ enum NotchHeightMode: String, CaseIterable, Identifiable, Codable {
     case Match_Notch
     case Match_Menu_Bar
     case Manual
+    
+    var displayName: String {
+        return self.rawValue.replacingOccurrences(of: "_", with: " ")
+    }
 }
     

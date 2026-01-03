@@ -9,20 +9,22 @@ import SwiftUI
 
 struct HUDAudioSettingsView: View {
     
-    @StateObject var audioInputDefaults = HUDAudioInputDefaults.shared
-    @StateObject var audioOutputDefaults = HUDAudioOutputDefaults.shared
-    
-    @State private var localVolumeStep: Double = HUDAudioOutputDefaults.shared.step
-    @State private var debounceTask: Task<Void, Error>?
+    @StateObject private var viewModel = HUDAudioSettingsViewModel()
     
     var body: some View {
         Form {
             Section(
                 content: {
-                    Toggle("Enabled", isOn: $audioInputDefaults.isEnabled)
+                    Toggle(isOn: $viewModel.inputDefaults.isEnabled) {
+                        VStack(alignment: .leading) {
+                            Text("Enabled")
+                            Text("Shows volume changes")
+                                .font(.footnote)
+                        }
+                    }
 
                     Picker(
-                        selection: $audioInputDefaults.style,
+                        selection: $viewModel.inputDefaults.style,
                         content: {
                             ForEach(
                                 HUDStyle.allCases
@@ -32,28 +34,30 @@ struct HUDAudioSettingsView: View {
                             }
                         }
                     ) {
-                        VStack(
-                            alignment: .leading
-                        ) {
-                            Text("Style")
-
-                            Text("Design to be used for HUD")
-                                .font(.footnote)
-                        }
+                        Text("Style")
                     }
-                    .disabled(!audioInputDefaults.isEnabled)
+                    .disabled(!viewModel.inputDefaults.isEnabled)
                 },
                 header: {
                     Text("Input")
+                },
+                footer: {
+                    Text("Design to be used for HUD")
                 }
             )
             
             Section(
                 content: {
-                    Toggle("Enabled", isOn: $audioOutputDefaults.isEnabled)
+                    Toggle(isOn: $viewModel.outputDefaults.isEnabled) {
+                        VStack(alignment: .leading) {
+                            Text("Enabled")
+                            Text("Shows volume changes")
+                                .font(.footnote)
+                        }
+                    }
 
                     Picker(
-                        selection: $audioOutputDefaults.style,
+                        selection: $viewModel.outputDefaults.style,
                         content: {
                             ForEach(
                                 HUDStyle.allCases
@@ -62,54 +66,40 @@ struct HUDAudioSettingsView: View {
                                     .tag(style)
                             }
                         }
-                    ) {
-                        VStack(
-                            alignment: .leading
-                        ) {
-                            Text("Style")
 
-                            Text("Design to be used for HUD")
-                                .font(.footnote)
-                        }
+                    ) {
+                        Text("Style")
                     }
-                    .disabled(!audioOutputDefaults.isEnabled)
+                    .disabled(!viewModel.outputDefaults.isEnabled)
                     
-                    if audioOutputDefaults.isEnabled {
-                        Slider(
-                            value: $localVolumeStep,
-                            in: 1...10,
-                            step: 1,
-                            label: {
-                                HStack {
-                                    Text("Step Size")
-                                    
-                                    Text("\(Int(localVolumeStep))%")
-                                        .monospacedDigit()
-                                        .bold()
-                                }
+                    if viewModel.outputDefaults.isEnabled {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("Step Size")
+                                Spacer()
+                                Text("\(Int(viewModel.localVolumeStep))%")
+                                    .monospacedDigit()
+                                    .bold()
                             }
-                        )
+                            
+                            Slider(
+                                value: $viewModel.localVolumeStep,
+                                in: 1...10,
+                                step: 1
+                            )
+                        }
                     }
                 },
                 header: {
                     Text("Output")
+                },
+                footer: {
+                    Text("Design to be used for HUD")
                 }
             )
         }
         .formStyle(.grouped)
         .navigationTitle("Audio")
-        .onChange(of: localVolumeStep) { _, newValue in
-            debounceTask?.cancel()
-            debounceTask = Task {
-                try await Task.sleep(nanoseconds: 500_000_000) // 0.5s debounce
-                await MainActor.run {
-                    audioOutputDefaults.step = newValue
-                }
-            }
-        }
-        .onAppear {
-            localVolumeStep = audioOutputDefaults.step
-        }
     }
 }
 

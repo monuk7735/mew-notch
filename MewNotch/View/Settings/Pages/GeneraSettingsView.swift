@@ -69,7 +69,7 @@ struct GeneraSettingsView: View {
                         if appDefaults.disableSystemHUD && !AXIsProcessTrusted() {
                             Text("Accessibility permissions are required to hide the system HUD.")
                                 .font(.caption)
-                                .foregroundColor(.red)
+                                .foregroundStyle(.red)
                             
                             Button("Open System Settings") {
                                 let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
@@ -85,15 +85,6 @@ struct GeneraSettingsView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("General")
-        .toolbar {
-            ToolbarItem(
-                placement: .automatic
-            ) {
-                Button("Quit") {
-                    NSApplication.shared.terminate(nil)
-                }
-            }
-        }
     }
 }
 

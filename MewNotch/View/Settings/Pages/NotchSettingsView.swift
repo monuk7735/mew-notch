@@ -11,15 +11,9 @@ struct NotchSettingsView: View {
     
     @Environment(\.scenePhase) private var scenePhase
     
+    @StateObject private var viewModel = NotchSettingsViewModel()
+    
     @StateObject var notchDefaults = NotchDefaults.shared
-    
-    @State var screens: [NSScreen] = []
-    
-    func refreshNSScreens() {
-        withAnimation {
-            self.screens = NSScreen.screens
-        }
-    }
     
     var body: some View {
         Form {
@@ -46,7 +40,7 @@ struct NotchSettingsView: View {
                                 Spacer()
                                 Button(
                                     action: {
-                                        self.refreshNSScreens()
+                                        viewModel.refreshNSScreens()
                                     }
                                 ) {
                                     Text("Refresh List")
@@ -61,7 +55,7 @@ struct NotchSettingsView: View {
                                         spacing: 16
                                     ) {
                                         ForEach(
-                                            self.screens,
+                                            viewModel.screens,
                                             id: \.self
                                         ) { screen in
                                             Text(
@@ -72,11 +66,21 @@ struct NotchSettingsView: View {
                                                 minHeight: 100
                                             )
                                             .background {
-                                                if notchDefaults.shownOnDisplay[screen.localizedName] == true {
-                                                    Color.gray.opacity(0.5)
-                                                } else {
-                                                    Color.gray.opacity(0.1)
-                                                }
+                                                RoundedRectangle(cornerRadius: 16)
+                                                    .fill(
+                                                        notchDefaults.shownOnDisplay[screen.localizedName] == true
+                                                        ? Color.accentColor.opacity(0.2)
+                                                        : Color.clear
+                                                    )
+                                            }
+                                            .overlay {
+                                                RoundedRectangle(cornerRadius: 16)
+                                                    .stroke(
+                                                        notchDefaults.shownOnDisplay[screen.localizedName] == true
+                                                        ? Color.accentColor
+                                                        : Color.gray.opacity(0.2),
+                                                        lineWidth: 2
+                                                    )
                                             }
                                             .clipShape(
                                                 RoundedRectangle(
@@ -112,11 +116,8 @@ struct NotchSettingsView: View {
                     }
                     .onChange(
                         of: notchDefaults.shownOnLockScreen
-                    ) {
-                        // Kill All Notch to move existing notches out of Lock Screen Space
-                        NotchManager.shared.refreshNotches(
-                            killAllWindows: true
-                        )
+                    ) { _, _ in
+                        viewModel.refreshNotchesAndKillWindows()
                     }
                     
                     Toggle(
@@ -138,11 +139,8 @@ struct NotchSettingsView: View {
                     }
                     .onChange(
                         of: notchDefaults.shownOnLockScreen
-                    ) {
-                        // Kill All Notch to move existing notches out of Lock Screen Space
-                        NotchManager.shared.refreshNotches(
-                            killAllWindows: true
-                        )
+                    ) { _, _ in
+                        viewModel.refreshNotchesAndKillWindows()
                     }
                 },
                 header: {
@@ -155,25 +153,12 @@ struct NotchSettingsView: View {
                     Picker(
                         selection: $notchDefaults.heightMode,
                         content: {
-                            Text(
-                                NotchHeightMode.Match_Notch.rawValue.replacingOccurrences(
-                                    of: "_",
-                                    with: " "
-                                )
-                            )
-                            .tag(
-                                NotchHeightMode.Match_Notch
-                            )
-                            
-                            Text(
-                                NotchHeightMode.Match_Menu_Bar.rawValue.replacingOccurrences(
-                                    of: "_",
-                                    with: " "
-                                )
-                            )
-                            .tag(
-                                NotchHeightMode.Match_Menu_Bar
-                            )
+                            ForEach(
+                                NotchHeightMode.allCases
+                            ) { item in
+                                Text(item.displayName)
+                                .tag(item)
+                            }
                         }
                     ) {
                         Text("Height")
@@ -267,21 +252,21 @@ struct NotchSettingsView: View {
         .toolbarTitleDisplayMode(.inline)
         .onChange(
             of: notchDefaults.notchDisplayVisibility
-        ) {
-            NotchManager.shared.refreshNotches()
+        ) { _, _ in
+             viewModel.refreshNotches()
         }
         .onChange(
             of: notchDefaults.shownOnDisplay
-        ) {
-            NotchManager.shared.refreshNotches()
+        ) { _, _ in
+             viewModel.refreshNotches()
         }
         .onChange(
-            of: scenePhase
-        ) {
-            self.refreshNSScreens()
+             of: scenePhase
+        ) { _, _ in
+             viewModel.refreshNSScreens()
         }
         .onAppear {
-            self.refreshNSScreens()
+             viewModel.refreshNSScreens()
         }
     }
 }

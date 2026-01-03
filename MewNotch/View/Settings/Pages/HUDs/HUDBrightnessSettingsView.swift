@@ -9,22 +9,22 @@ import SwiftUI
 
 struct HUDBrightnessSettingsView: View {
     
-    @StateObject var brightnessDefaults = HUDBrightnessDefaults.shared
-    
-    @State private var localStep: Double = HUDBrightnessDefaults.shared.step
-    @State private var debounceTask: Task<Void, Error>?
+    @StateObject private var viewModel = HUDBrightnessSettingsViewModel()
     
     var body: some View {
         Form {
             Section(
                 content: {
-                    Toggle(
-                        "Enabled",
-                        isOn: $brightnessDefaults.isEnabled
-                    )
+                    Toggle(isOn: $viewModel.defaults.isEnabled) {
+                        VStack(alignment: .leading) {
+                            Text("Enabled")
+                            Text("Shows brightness changes")
+                                .font(.footnote)
+                        }
+                    }
 
                     Picker(
-                        selection: $brightnessDefaults.style,
+                        selection: $viewModel.defaults.style,
                         content: {
                             ForEach(
                                 HUDStyle.allCases
@@ -33,56 +33,42 @@ struct HUDBrightnessSettingsView: View {
                                     .tag(style)
                             }
                         }
-                    ) {
-                        VStack(
-                            alignment: .leading
-                        ) {
-                            Text("Style")
 
-                            Text("Design to be used for HUD")
-                                .font(.footnote)
-                        }
+                    ) {
+                        Text("Style")
                     }
-                    .disabled(!brightnessDefaults.isEnabled)
+                    .disabled(!viewModel.defaults.isEnabled)
                     
                     Toggle(
                         "Show Auto Brightness Changes",
-                        isOn: $brightnessDefaults.showAutoBrightnessChanges
+                        isOn: $viewModel.defaults.showAutoBrightnessChanges
                     )
                     
-                    if brightnessDefaults.isEnabled {
-                        Slider(
-                            value: $localStep,
-                            in: 0.01...0.10,
-                            step: 0.01,
-                            label: {
-                                HStack {
-                                    Text("Step Size")
-                                    
-                                    Text("\(Int(localStep * 100))%")
-                                        .monospacedDigit()
-                                        .bold()
-                                }
+                    if viewModel.defaults.isEnabled {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("Step Size")
+                                Spacer()
+                                Text("\(Int(viewModel.localStep * 100))%")
+                                    .monospacedDigit()
+                                    .bold()
                             }
-                        )
+                            
+                            Slider(
+                                value: $viewModel.localStep,
+                                in: 0.01...0.10,
+                                step: 0.01
+                            )
+                        }
                     }
+                },
+                footer: {
+                    Text("Design to be used for HUD")
                 }
             )
         }
         .formStyle(.grouped)
         .navigationTitle("Brightness")
-        .onChange(of: localStep) { _, newValue in
-            debounceTask?.cancel()
-            debounceTask = Task {
-                try await Task.sleep(nanoseconds: 500_000_000) // 0.5s debounce
-                await MainActor.run {
-                    brightnessDefaults.step = newValue
-                }
-            }
-        }
-        .onAppear {
-            localStep = brightnessDefaults.step
-        }
     }
 }
 
