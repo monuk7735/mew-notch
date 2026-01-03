@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AboutAppView: View {
     
-    @EnvironmentObject var updaterViewModel: UpdaterViewModel
+    @StateObject var updaterViewModel = UpdaterViewModel.shared
     
     var body: some View {
         VStack(spacing: 24) {
@@ -44,5 +44,4 @@ struct AboutAppView: View {
 
 #Preview {
     AboutAppView()
-        .environmentObject(UpdaterViewModel(updaterController: .init(startingUpdater: false, updaterDelegate: nil, userDriverDelegate: nil)))
 }

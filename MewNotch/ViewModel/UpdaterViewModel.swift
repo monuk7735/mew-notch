@@ -10,9 +10,11 @@ import Sparkle
 
 final class UpdaterViewModel: ObservableObject {
     
+    static let shared = UpdaterViewModel()
+    
     private let updaterController: SPUStandardUpdaterController
     
-    init(updaterController: SPUStandardUpdaterController) {
+    init(updaterController: SPUStandardUpdaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)) {
         self.updaterController = updaterController
     }
     

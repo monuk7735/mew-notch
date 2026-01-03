@@ -17,35 +17,6 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows volume changes",
-                    icon: MewNotch.Assets.icMicrophone,
-                    color: MewNotch.Colors.input
-                ) {
-                    Toggle("", isOn: $viewModel.inputDefaults.isEnabled)
-                }
-                
-                SettingsRow(
-                    title: "Style",
-                    icon: MewNotch.Assets.icPaintbrush,
-                    color: MewNotch.Colors.style
-                ) {
-                    Picker("", selection: $viewModel.inputDefaults.style) {
-                        ForEach(HUDStyle.allCases) { style in
-                            Text(style.rawValue.capitalized).tag(style)
-                        }
-                    }
-                    .labelsHidden()
-                }
-                .disabled(!viewModel.inputDefaults.isEnabled)
-            } header: {
-                Text("Input")
-            } footer: {
-                Text("Design to be used for HUD")
-            }
-            
-            Section {
-                SettingsRow(
-                    title: "Enabled",
-                    subtitle: "Shows volume changes",
                     icon: MewNotch.Assets.icSpeakerWave2,
                     color: MewNotch.Colors.output
                 ) {
@@ -93,6 +64,35 @@ struct HUDAudioSettingsView: View {
                 }
             } header: {
                 Text("Output")
+            } footer: {
+                Text("Design to be used for HUD")
+            }
+            
+            Section {
+                SettingsRow(
+                    title: "Enabled",
+                    subtitle: "Shows volume changes",
+                    icon: MewNotch.Assets.icMicrophone,
+                    color: MewNotch.Colors.input
+                ) {
+                    Toggle("", isOn: $viewModel.inputDefaults.isEnabled)
+                }
+                
+                SettingsRow(
+                    title: "Style",
+                    icon: MewNotch.Assets.icPaintbrush,
+                    color: MewNotch.Colors.style
+                ) {
+                    Picker("", selection: $viewModel.inputDefaults.style) {
+                        ForEach(HUDStyle.allCases) { style in
+                            Text(style.rawValue.capitalized).tag(style)
+                        }
+                    }
+                    .labelsHidden()
+                }
+                .disabled(!viewModel.inputDefaults.isEnabled)
+            } header: {
+                Text("Input")
             } footer: {
                 Text("Design to be used for HUD")
             }

@@ -15,8 +15,8 @@ struct NotchOptionsView: View {
     }
     
     @Environment(\.openSettings) private var openSettings
-    @EnvironmentObject var updaterViewModel: UpdaterViewModel
     
+    @StateObject var updaterViewModel: UpdaterViewModel = .shared
     @StateObject private var appDefaults = AppDefaults.shared
     
     var type: OptionsType = .ContextMenu
