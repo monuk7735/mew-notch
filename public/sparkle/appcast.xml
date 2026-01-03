@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Mew Notch</title>
+        <item>
+            <title>1.3.0</title>
+            <pubDate>Sat, 03 Jan 2026 12:54:51 +0000</pubDate>
+            <sparkle:version>130</sparkle:version>
+            <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/monuk7735/mew-notch/releases/download/1.3.0/MewNotch-1.3.0.dmg" length="6121484" type="application/octet-stream" sparkle:edSignature="nQFaxDJ4eSaw6jl3HG/IPtZC4Y0zjxivcP8bIeNUmTovL723+LjQhaKOI4Y/5GAxJtYGfgi1JKuGdMP0WVqFAw=="/>
+        </item>
+    </channel>
+</rss>
