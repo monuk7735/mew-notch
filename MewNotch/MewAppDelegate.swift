@@ -30,7 +30,7 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
         _ notification: Notification
     ) {
         if AppDefaults.shared.disableSystemHUD {
-            OSDUIManager.shared.stop()
+            MediaKeyManager.shared.start()
         }
         
         // Need to Initialise once to set system listeners
@@ -69,7 +69,7 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
         _ sender: NSApplication
     ) -> NSApplication.TerminateReply {
         timer?.invalidate()
-        OSDUIManager.shared.start()
+        MediaKeyManager.shared.stop()
         
         return .terminateNow
     }

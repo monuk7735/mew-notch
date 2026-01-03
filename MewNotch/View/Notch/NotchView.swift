@@ -116,22 +116,6 @@ struct NotchView: View {
                         )
                     }
                 }
-//                .onDrop(
-//                    of: [UTType.fileURL],
-//                    isTargeted: .init(
-//                        get: { isDropTarget },
-//                        set: {
-//                            isDropTarget = $0
-//                            
-//                            print("isDropTarget", isDropTarget)
-//                        }
-//                    )
-//                ) { items in
-//                    
-//                    print("items", items)
-//                    
-//                    return true
-//                }
                 .onTapGesture(
                     perform: notchViewModel.onTap
                 )

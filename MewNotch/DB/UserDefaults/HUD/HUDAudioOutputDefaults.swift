@@ -38,4 +38,16 @@ class HUDAudioOutputDefaults: HUDDefaultsProtocol {
             }
         }
     }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "Step",
+        defaultValue: 5.0
+    )
+    var step: Double {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }

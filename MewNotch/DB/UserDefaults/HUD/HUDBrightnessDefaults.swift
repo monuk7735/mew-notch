@@ -50,4 +50,16 @@ class HUDBrightnessDefaults: HUDDefaultsProtocol {
             }
         }
     }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "Step",
+        defaultValue: 0.05
+    )
+    var step: Double {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }

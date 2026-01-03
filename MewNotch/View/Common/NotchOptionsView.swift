@@ -26,12 +26,6 @@ struct NotchOptionsView: View {
             NotchManager.shared.refreshNotches()
         }
         
-        if appDefaults.disableSystemHUD {
-            Button("Fix System HUD") {
-                OSDUIManager.shared.reset()
-            }
-        }
-        
         Button("Settings") {
             openSettings()
         }
