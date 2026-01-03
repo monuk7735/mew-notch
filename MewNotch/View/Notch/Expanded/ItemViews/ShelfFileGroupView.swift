@@ -15,68 +15,59 @@ struct ShelfFileGroupView: View {
     @State private var isHovered: Bool = false
     
     var body: some View {
-        RoundedRectangle(
-            cornerRadius: 12
-        )
-        .stroke(
-            .white.opacity(
-                0.5
-            ),
-            lineWidth: 1
-        )
-        .aspectRatio(
-            1,
-            contentMode: .fit
-        )
-        .overlay {
-            VStack(
-                spacing: 8
-            ) {
-                Image(
-                    nsImage: shelfGroupModel.preview
-                )
-                .resizable()
-                .scaledToFit()
+        ZStack(alignment: .topTrailing) {
+            
+            VStack(spacing: 8) {
+                Image(nsImage: shelfGroupModel.preview)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 40)
                 
                 MarqueeTextView(
                     text: shelfGroupModel.groupName,
-                    font: .labelFont(
-                        ofSize: 12
-                    ),
+                    font: .systemFont(ofSize: 11, weight: .medium),
                     leftFade: 4,
                     rightFade: 4,
                     startDelay: 1
                 )
+                .foregroundStyle(.white)
             }
-            .font(
-                .body
-            )
-            .padding(4)
-        }
-        .onMultiDrag {
-            shelfGroupModel.files.map {
-                $0.fileURL as NSURL
+            .padding(8)
+            .frame(width: 80, height: 80)
+            .background {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(white: 0.2))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(.white.opacity(0.1), lineWidth: 1)
+                    }
             }
-        }
-        .overlay {
+            .onMultiDrag {
+                shelfGroupModel.files.map { $0.fileURL as NSURL }
+            }
+            
+            
             if isHovered {
-                Image(
-                    systemName: "xmark.circle.fill"
-                )
-                .onTapGesture {
+                Button {
                     self.onDelete()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(.white)
+                        .padding(6)
+                        .background(Circle().fill(Color.red.opacity(0.9)))
                 }
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topTrailing
-                )
+                .buttonStyle(.plain)
+                .offset(x: 4, y: -4)
+                .transition(.opacity.animation(.easeInOut(duration: 0.1)))
             }
         }
+        .padding(6)
         .onHover { isHovered in
-            withAnimation {
+            withAnimation(.easeInOut(duration: 0.2)) {
                 self.isHovered = isHovered
             }
         }
     }
 }
+

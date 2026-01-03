@@ -82,17 +82,21 @@ struct NotchView: View {
                 .dropDestination(
                     for: URL.self,
                     action: { fileURLs, _ in
-                        guard let groupModel = ShelfFileGroupModel(
-                            urls: fileURLs
-                        ) else {
-                            print("groupModel could not be initialized")
-                            return false
-                        }
-                        
-                        withAnimation {
-                            expandedNotchViewModel.shelfFileGroups.append(
-                                groupModel
-                            )
+                        DispatchQueue.global(qos: .utility).async {
+                            guard let groupModel = ShelfFileGroupModel(
+                                urls: fileURLs
+                            ) else {
+                                print("groupModel could not be initialized")
+                                return
+                            }
+                            
+                            DispatchQueue.main.async {
+                                withAnimation {
+                                    expandedNotchViewModel.shelfFileGroups.append(
+                                        groupModel
+                                    )
+                                }
+                            }
                         }
                         
                         return true

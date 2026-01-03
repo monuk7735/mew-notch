@@ -9,6 +9,7 @@
 class AirDrop: NSObject, NSSharingServiceDelegate {
     
     private let files: [URL]
+    private var completion: ((Error?) -> Void)?
     
     init(
         files: [URL]
@@ -18,13 +19,12 @@ class AirDrop: NSObject, NSSharingServiceDelegate {
         super.init()
     }
     
-    func begin() {
+    func begin(completion: ((Error?) -> Void)? = nil) {
+        self.completion = completion
         do {
             try send(files)
         } catch {
-            NSLog(
-                error.localizedDescription
-            )
+            completion?(error)
         }
     }
     
@@ -65,5 +65,15 @@ class AirDrop: NSObject, NSSharingServiceDelegate {
         service.perform(
             withItems: files
         )
+    }
+    
+    // MARK: - NSSharingServiceDelegate
+    
+    func sharingService(_ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error) {
+        completion?(error)
+    }
+    
+    func sharingService(_ sharingService: NSSharingService, didShareItems items: [Any]) {
+        completion?(nil)
     }
 }
