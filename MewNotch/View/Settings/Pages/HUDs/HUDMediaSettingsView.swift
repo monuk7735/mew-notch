@@ -17,8 +17,8 @@ struct HUDMediaSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows media playing app with animation",
-                    icon: "music.note",
-                    color: .pink
+                    icon: MewNotch.Assets.icMedia,
+                    color: MewNotch.Colors.nowPlaying
                 ) {
                     Toggle("", isOn: $mediaDefaults.isEnabled)
                 }

@@ -17,16 +17,16 @@ struct HUDBrightnessSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows brightness changes",
-                    icon: "sun.max.fill",
-                    color: .yellow
+                    icon: MewNotch.Assets.icBrightnessFill,
+                    color: MewNotch.Colors.brightness
                 ) {
                     Toggle("", isOn: $viewModel.defaults.isEnabled)
                 }
                 
                 SettingsRow(
                     title: "Style",
-                    icon: "paintbrush.fill",
-                    color: .blue
+                    icon: MewNotch.Assets.icPaintbrush,
+                    color: MewNotch.Colors.style
                 ) {
                     Picker("", selection: $viewModel.defaults.style) {
                         ForEach(HUDStyle.allCases) { style in
@@ -39,15 +39,15 @@ struct HUDBrightnessSettingsView: View {
                 
                 SettingsRow(
                     title: "Show Auto Brightness Changes",
-                    icon: "bolt.badge.automatic.fill",
-                    color: .green
+                    icon: MewNotch.Assets.icBoltBadgeAutomatic,
+                    color: MewNotch.Colors.autoBrightness
                 ) {
                     Toggle("", isOn: $viewModel.defaults.showAutoBrightnessChanges)
                 }
                 
                 if viewModel.defaults.isEnabled {
                     HStack(alignment: .top, spacing: 16) {
-                        SettingsIcon(icon: "chart.bar.fill", color: .orange)
+                        SettingsIcon(icon: MewNotch.Assets.icChartBar, color: MewNotch.Colors.stepSize)
                         
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {

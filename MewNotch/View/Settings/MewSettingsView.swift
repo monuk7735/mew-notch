@@ -17,14 +17,10 @@ struct MewSettingsView: View {
         case General
         case Notch
         
-        case Brightness
+        case Mirror
+        case NowPlaying
         
-        case Audio
-//        case AudioOutput
-//        case AudioInput
-        
-        case Media
-        case Power
+        case HUDs
         
         case About
     }
@@ -44,7 +40,7 @@ struct MewSettingsView: View {
                         content: {
                             NavigationLink(destination: GeneraSettingsView()) {
                                 HStack(spacing: 12) {
-                                    SettingsIcon(icon: "gear", color: .gray)
+                                    SettingsIcon(icon: MewNotch.Assets.icGeneral, color: MewNotch.Colors.general)
                                     Text("General")
                                         .font(.headline)
                                         .fontWeight(.medium)
@@ -54,7 +50,7 @@ struct MewSettingsView: View {
                             
                             NavigationLink(destination: NotchSettingsView()) {
                                 HStack(spacing: 12) {
-                                    SettingsIcon(icon: "macbook", color: .blue)
+                                    SettingsIcon(icon: MewNotch.Assets.icNotch, color: MewNotch.Colors.notch)
                                     Text("Notch")
                                         .font(.headline)
                                         .fontWeight(.medium)
@@ -66,55 +62,51 @@ struct MewSettingsView: View {
                     
                     Section(
                          content: {
-                            NavigationLink(destination: HUDBrightnessSettingsView()) {
+                            NavigationLink(destination: MirrorSettingsView()) {
                                 HStack(spacing: 12) {
-                                    SettingsIcon(icon: "sun.max.fill", color: .yellow)
-                                    Text("Brightness")
+                                    SettingsIcon(icon: MewNotch.Assets.icMirror, color: MewNotch.Colors.mirror)
+                                        .foregroundStyle(.white)
+                                    Text("Mirror")
                                         .font(.headline)
                                         .fontWeight(.medium)
                                 }
                             }
-                            .id(SettingsPages.Brightness)
-                            
-                            NavigationLink(destination: HUDAudioSettingsView()) {
+                            .id(SettingsPages.Mirror)
+                             
+                            NavigationLink(destination: NowPlayingSettingsView()) {
                                 HStack(spacing: 12) {
-                                    SettingsIcon(icon: "speaker.wave.3.fill", color: .blue)
-                                    Text("Audio")
+                                    SettingsIcon(icon: MewNotch.Assets.icNowPlaying, color: MewNotch.Colors.nowPlaying)
+                                        .foregroundStyle(.white)
+                                    Text("Now Playing")
                                         .font(.headline)
                                         .fontWeight(.medium)
                                 }
                             }
-                            .id(SettingsPages.Audio)
-                            
-                            NavigationLink(destination: HUDPowerSettingsView()) {
-                                HStack(spacing: 12) {
-                                    SettingsIcon(icon: "bolt.fill", color: .green)
-                                    Text("Power")
-                                        .font(.headline)
-                                        .fontWeight(.medium)
-                                }
-                            }
-                            .id(SettingsPages.Power)
-                            
-                            NavigationLink(destination: HUDMediaSettingsView()) {
-                                HStack(spacing: 12) {
-                                    SettingsIcon(icon: "music.note", color: .pink)
-                                    Text("Media")
-                                        .font(.headline)
-                                        .fontWeight(.medium)
-                                }
-                            }
-                            .id(SettingsPages.Media)
+                            .id(SettingsPages.NowPlaying)
                         },
                         header: {
-                            Text("HUD")
+                            Text("Expanded Items")
+                        }
+                    )
+                    
+                    Section(
+                         content: {
+                             NavigationLink(destination: HUDSettingsView()) {
+                                 HStack(spacing: 12) {
+                                     SettingsIcon(icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
+                                     Text("HUDs")
+                                         .font(.headline)
+                                         .fontWeight(.medium)
+                                 }
+                             }
+                             .id(SettingsPages.HUDs)
                         }
                     )
                     
                     Section {
                         NavigationLink(destination: AboutAppView()) {
                             HStack(spacing: 12) {
-                                SettingsIcon(icon: "info.circle", color: .gray)
+                                SettingsIcon(icon: MewNotch.Assets.icAbout, color: MewNotch.Colors.about)
                                 Text("About")
                                     .font(.headline)
                                     .fontWeight(.medium)
@@ -129,7 +121,7 @@ struct MewSettingsView: View {
                 GeneraSettingsView()
             }
         )
-        .frame(minWidth: 600, minHeight: 450)
+        .frame(minWidth: 800, minHeight: 450)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .task {
             guard let window = NSApp.windows.first(

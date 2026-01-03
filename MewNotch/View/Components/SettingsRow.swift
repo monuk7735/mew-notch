@@ -8,45 +8,15 @@
 import SwiftUI
 
 
-enum SettingsIconColor: String {
-    case blue
-    case red
-    case green
-    case orange
-    case yellow
-    case pink
-    case purple
-    case gray
-    case cyan
-    case indigo
-    case teal
-    
-    var color: Color {
-        switch self {
-        case .blue: return Color(red: 0.298, green: 0.686, blue: 0.969)  // Soft Blue
-        case .red: return Color(red: 1.0, green: 0.498, blue: 0.498)     // Soft Red
-        case .green: return Color(red: 0.353, green: 0.824, blue: 0.588) // Soft Green
-        case .orange: return Color(red: 1.0, green: 0.698, blue: 0.4)    // Soft Orange
-        case .yellow: return Color(red: 1.0, green: 0.843, blue: 0.0)    // Soft Yellow (Gold)
-        case .pink: return Color(red: 1.0, green: 0.627, blue: 0.784)    // Soft Pink
-        case .purple: return Color(red: 0.725, green: 0.518, blue: 0.933)// Soft Purple
-        case .gray: return Color(red: 0.663, green: 0.663, blue: 0.663)  // Soft Gray
-        case .cyan: return Color(red: 0.4, green: 0.9, blue: 0.95)       // Soft Cyan
-        case .indigo: return Color(red: 0.45, green: 0.5, blue: 0.85)    // Soft Indigo
-        case .teal: return Color(red: 0.4, green: 0.8, blue: 0.8)        // Soft Teal
-        }
-    }
-}
-
 struct SettingsIcon: View {
-    let icon: String
-    let color: SettingsIconColor
+    let icon: Image
+    let color: MewNotch.IconColor
     
     @ScaledMetric private var iconSize: CGFloat = 30 // Reverted to 30
     @ScaledMetric private var cornerRadius: CGFloat = 7 // Reverted to 7
     
     var body: some View {
-        Image(systemName: icon)
+        icon
             .font(.headline) // Reverted from .title3
             .foregroundStyle(.white)
             .frame(width: iconSize, height: iconSize)
@@ -61,8 +31,8 @@ struct SettingsIcon: View {
 struct SettingsRow<Content: View>: View {
     let title: String
     let subtitle: String?
-    let icon: String
-    let color: SettingsIconColor
+    let icon: Image
+    let color: MewNotch.IconColor
     let content: Content
     
     @ScaledMetric private var spacing: CGFloat = 16
@@ -70,8 +40,8 @@ struct SettingsRow<Content: View>: View {
     init(
         title: String,
         subtitle: String? = nil,
-        icon: String,
-        color: SettingsIconColor,
+        icon: Image,
+        color: MewNotch.IconColor,
         @ViewBuilder content: () -> Content
     ) {
         self.title = title
@@ -112,8 +82,8 @@ extension SettingsRow where Content == EmptyView {
     init(
         title: String,
         subtitle: String? = nil,
-        icon: String,
-        color: SettingsIconColor
+        icon: Image,
+        color: MewNotch.IconColor
     ) {
         self.title = title
         self.subtitle = subtitle
@@ -128,13 +98,13 @@ extension SettingsRow where Content == EmptyView {
         SettingsRow(
             title: "General Settings",
             subtitle: "Takes you to general settings",
-            icon: "gear",
+            icon: Image(systemName: "gear"),
             color: .gray
         )
         
         SettingsRow(
             title: "Enabled",
-            icon: "bolt.fill",
+            icon: Image(systemName: "bolt.fill"),
             color: .green
         ) {
             Toggle("", isOn: .constant(true))
@@ -142,7 +112,7 @@ extension SettingsRow where Content == EmptyView {
         
         SettingsRow(
             title: "Appearance",
-            icon: "paintpalette.fill",
+            icon: Image(systemName: "paintpalette.fill"),
             color: .blue
         ) {
             Picker("", selection: .constant(1)) {

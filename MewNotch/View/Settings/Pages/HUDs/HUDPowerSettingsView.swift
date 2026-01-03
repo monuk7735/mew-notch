@@ -17,8 +17,8 @@ struct HUDPowerSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows power state when plugged in/out",
-                    icon: "bolt.fill",
-                    color: .green
+                    icon: MewNotch.Assets.icPower,
+                    color: MewNotch.Colors.power
                 ) {
                     Toggle("", isOn: $powerDefaults.isEnabled)
                 }

@@ -19,8 +19,8 @@ struct GeneraSettingsView: View {
                 SettingsRow(
                     title: "Launch at Login",
                     subtitle: "Automatically start MewNotch when you log in",
-                    icon: "arrow.up.circle.fill",
-                    color: .blue
+                    icon: MewNotch.Assets.icLaunchAtLogin,
+                    color: MewNotch.Colors.style
                 ) {
                     LaunchAtLogin.Toggle {
                         Text("")
@@ -31,8 +31,8 @@ struct GeneraSettingsView: View {
                 SettingsRow(
                     title: "Status Icon",
                     subtitle: "Show icon in menu bar for easy access",
-                    icon: "menubar.rectangle",
-                    color: .gray
+                    icon: MewNotch.Assets.icStatusIcon,
+                    color: MewNotch.Colors.general
                 ) {
                     Toggle("", isOn: $appDefaults.showMenuIcon)
                 }
@@ -44,8 +44,8 @@ struct GeneraSettingsView: View {
                 SettingsRow(
                     title: "Disable System HUD",
                     subtitle: "Hide system volume and brightness overlays",
-                    icon: "eye.slash.fill",
-                    color: .red
+                    icon: MewNotch.Assets.icDisableSystemHud,
+                    color: MewNotch.Colors.systemHud
                 ) {
                     Toggle("", isOn: $appDefaults.disableSystemHUD)
                         .onChange(of: appDefaults.disableSystemHUD) { _, newValue in
@@ -63,7 +63,11 @@ struct GeneraSettingsView: View {
                 
                 if appDefaults.disableSystemHUD && !AXIsProcessTrusted() {
                     VStack(alignment: .leading, spacing: 8) {
-                        Label("Accessibility permissions are required.", systemImage: "exclamationmark.triangle.fill")
+                        Label {
+                            Text("Accessibility permissions are required.")
+                        } icon: {
+                            MewNotch.Assets.icWarning
+                        }
                             .font(.caption)
                             .foregroundStyle(.red)
                         

@@ -21,8 +21,8 @@ struct NotchSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Show Notch On",
-                    icon: "display",
-                    color: .blue
+                    icon: MewNotch.Assets.icDisplay,
+                    color: MewNotch.Colors.notch
                 ) {
                     Picker("", selection: $notchDefaults.notchDisplayVisibility) {
                         ForEach(NotchDisplayVisibility.allCases) { item in
@@ -79,8 +79,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Show on Lock Screen",
                     subtitle: "Incompatible with File Shelf feature",
-                    icon: "lock.fill",
-                    color: .gray
+                    icon: MewNotch.Assets.icLock,
+                    color: MewNotch.Colors.lock
                 ) {
                     Toggle("", isOn: $notchDefaults.shownOnLockScreen)
                         .onChange(of: notchDefaults.shownOnLockScreen) { _, _ in
@@ -91,8 +91,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Reset View on Collapse",
                     subtitle: notchDefaults.resetViewOnCollapse ? "Notch resets to Home when Collapsed" : "Notch will retain state when Collapsed",
-                    icon: "arrow.counterclockwise",
-                    color: .blue
+                    icon: MewNotch.Assets.icReset,
+                    color: MewNotch.Colors.notch
                 ) {
                     Toggle("", isOn: $notchDefaults.resetViewOnCollapse)
                 }
@@ -104,8 +104,8 @@ struct NotchSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Height",
-                    icon: "ruler.fill",
-                    color: .orange
+                    icon: MewNotch.Assets.icHeight,
+                    color: MewNotch.Colors.height
                 ) {
                     Picker("", selection: $notchDefaults.heightMode) {
                         ForEach(NotchHeightMode.allCases) { item in
@@ -119,8 +119,8 @@ struct NotchSettingsView: View {
                     SettingsRow(
                         title: "Apply Glass Effect",
                         subtitle: "Forces 'Expand on Hover' to be enabled",
-                        icon: "sparkles",
-                        color: .cyan
+                        icon: MewNotch.Assets.icGlass,
+                        color: MewNotch.Colors.glass
                     ) {
                         Toggle("", isOn: $notchDefaults.applyGlassEffect)
                     }
@@ -131,27 +131,10 @@ struct NotchSettingsView: View {
             
             Section {
                 SettingsRow(
-                    title: "Corner Radius",
-                    subtitle: "Adjust the shape of the mirror",
-                    icon: "person.crop.square.fill",
-                    color: .purple
-                ) {
-                    Slider(
-                        value: $mirrorDefaults.cornerRadius,
-                        in: 15...50,
-                        step: 1
-                    )
-                }
-            } header: {
-                Text("Mirror Settings")
-            }
-            
-            Section {
-                SettingsRow(
                     title: "Expand on Hover",
                     subtitle: "Expand notch when hovered > 500ms.\nDisables click interactions in all HUDs.",
-                    icon: "cursorarrow.rays",
-                    color: .indigo
+                    icon: MewNotch.Assets.icHover,
+                    color: MewNotch.Colors.hover
                 ) {
                     Toggle("", isOn: Binding(
                         get: { notchDefaults.expandOnHover || notchDefaults.applyGlassEffect },
@@ -166,36 +149,13 @@ struct NotchSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Separator between Items",
-                    icon: "line.3.horizontal",
-                    color: .gray
+                    icon: MewNotch.Assets.icSeparator,
+                    color: MewNotch.Colors.separator
                 ) {
                     Toggle("", isOn: $notchDefaults.showDividers)
                 }
             } header: {
                 Text("Expanded Notch")
-            }
-            
-            Section {
-                ForEach(ExpandedNotchItem.allCases) { item in
-                    SettingsRow(
-                        title: item.displayName,
-                        icon: "square.grid.2x2.fill", // Generic icon for items
-                        color: .green
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { notchDefaults.expandedNotchItems.contains(item) },
-                            set: { isEnabled in
-                                if isEnabled {
-                                    notchDefaults.expandedNotchItems.insert(item)
-                                } else {
-                                    notchDefaults.expandedNotchItems.remove(item)
-                                }
-                            }
-                        ))
-                    }
-                }
-            } header: {
-                Text("Expanded Notch Items")
             }
         }
         .formStyle(.grouped)

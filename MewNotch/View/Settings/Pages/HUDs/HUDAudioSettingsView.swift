@@ -17,16 +17,16 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows volume changes",
-                    icon: "mic.fill",
-                    color: .green
+                    icon: MewNotch.Assets.icMicrophone,
+                    color: MewNotch.Colors.input
                 ) {
                     Toggle("", isOn: $viewModel.inputDefaults.isEnabled)
                 }
                 
                 SettingsRow(
                     title: "Style",
-                    icon: "paintbrush.fill",
-                    color: .blue
+                    icon: MewNotch.Assets.icPaintbrush,
+                    color: MewNotch.Colors.style
                 ) {
                     Picker("", selection: $viewModel.inputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
@@ -46,16 +46,16 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows volume changes",
-                    icon: "speaker.wave.2.fill",
-                    color: .green
+                    icon: MewNotch.Assets.icSpeakerWave2,
+                    color: MewNotch.Colors.output
                 ) {
                     Toggle("", isOn: $viewModel.outputDefaults.isEnabled)
                 }
                 
                 SettingsRow(
                     title: "Style",
-                    icon: "paintbrush.fill",
-                    color: .blue
+                    icon: MewNotch.Assets.icPaintbrush,
+                    color: MewNotch.Colors.style
                 ) {
                     Picker("", selection: $viewModel.outputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
@@ -68,7 +68,7 @@ struct HUDAudioSettingsView: View {
                 
                 if viewModel.outputDefaults.isEnabled {
                     HStack(alignment: .top, spacing: 16) {
-                        SettingsIcon(icon: "chart.bar.fill", color: .orange)
+                        SettingsIcon(icon: MewNotch.Assets.icChartBar, color: MewNotch.Colors.stepSize)
                         
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {
