@@ -8,14 +8,23 @@
 import SwiftUI
 import Sparkle
 
-final class UpdaterViewModel: ObservableObject {
+final class UpdaterViewModel: NSObject, ObservableObject, SPUStandardUserDriverDelegate {
     
     static let shared = UpdaterViewModel()
     
-    private let updaterController: SPUStandardUpdaterController
+    private var updaterController: SPUStandardUpdaterController!
     
-    init(updaterController: SPUStandardUpdaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)) {
-        self.updaterController = updaterController
+    override init() {
+        super.init()
+        self.updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: self
+        )
+    }
+    
+    var supportsGentleScheduledUpdateReminders: Bool {
+        return true
     }
     
     func checkForUpdates() {
