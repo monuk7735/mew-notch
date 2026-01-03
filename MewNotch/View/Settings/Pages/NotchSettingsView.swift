@@ -14,6 +14,7 @@ struct NotchSettingsView: View {
     @StateObject private var viewModel = NotchSettingsViewModel()
     
     @StateObject var notchDefaults = NotchDefaults.shared
+    @StateObject var mirrorDefaults = MirrorDefaults.shared
     
     var body: some View {
         Form {
@@ -126,6 +127,23 @@ struct NotchSettingsView: View {
                 }
             } header: {
                 Text("Interface")
+            }
+            
+            Section {
+                SettingsRow(
+                    title: "Corner Radius",
+                    subtitle: "Adjust the shape of the mirror",
+                    icon: "person.crop.square.fill",
+                    color: .purple
+                ) {
+                    Slider(
+                        value: $mirrorDefaults.cornerRadius,
+                        in: 5...50,
+                        step: 1
+                    )
+                }
+            } header: {
+                Text("Mirror Settings")
             }
             
             Section {
