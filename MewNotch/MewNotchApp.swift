@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Sparkle
 
 @main
 struct MewNotchApp: App {
@@ -15,6 +16,8 @@ struct MewNotchApp: App {
     
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
+    
+    private let updaterViewModel: UpdaterViewModel
     
     @ObservedObject private var appDefaults = AppDefaults.shared
     
@@ -41,6 +44,9 @@ struct MewNotchApp: App {
     }()
     
     init() {
+        let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        self.updaterViewModel = UpdaterViewModel(updaterController: updaterController)
+        
         self._isMenuShown = .init(
             initialValue: self.appDefaults.showMenuIcon
         )
@@ -53,6 +59,7 @@ struct MewNotchApp: App {
                 Text("MewNotch")
                 
                 NotchOptionsView()
+                    .environmentObject(updaterViewModel)
             }
         ) {
             MewNotch.Assets.iconMenuBar

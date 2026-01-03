@@ -10,6 +10,7 @@
 		250A205B2ED4A2C800FBAF0C /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E284D432D8B2E8000ED8E89 /* MediaRemote.framework */; };
 		253243BE2E09A6220030EC15 /* DisplayServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E05A76E2D7D93A900980012 /* DisplayServices.framework */; };
 		253243C32E09A6240030EC15 /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 253243AF2E09A1AA0030EC15 /* SkyLight.framework */; };
+		258F12A22F01D5D100CA507F /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 258F12A12F01D5D100CA507F /* Sparkle */; };
 		25F325642ED64870001C93C0 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 25F325632ED64870001C93C0 /* LaunchAtLogin */; };
 		25F325662ED64885001C93C0 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 25F325652ED64885001C93C0 /* SwiftyJSON */; };
 		9E36AFAB2D78EB2100D53482 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9E36AFAA2D78EB2100D53482 /* Lottie */; };
@@ -76,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				25F325642ED64870001C93C0 /* LaunchAtLogin in Frameworks */,
+				258F12A22F01D5D100CA507F /* Sparkle in Frameworks */,
 				25F325662ED64885001C93C0 /* SwiftyJSON in Frameworks */,
 				9E36AFAB2D78EB2100D53482 /* Lottie in Frameworks */,
 				253243BE2E09A6220030EC15 /* DisplayServices.framework in Frameworks */,
@@ -138,6 +140,7 @@
 				9E36AFAA2D78EB2100D53482 /* Lottie */,
 				25F325632ED64870001C93C0 /* LaunchAtLogin */,
 				25F325652ED64885001C93C0 /* SwiftyJSON */,
+				258F12A12F01D5D100CA507F /* Sparkle */,
 			);
 			productName = MewNotch;
 			productReference = 9EA41D872D6DEACA00817679 /* MewNotch.app */;
@@ -172,6 +175,7 @@
 				9E36AFA92D78EB2100D53482 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				250A20722ED646CF00FBAF0C /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				250A20732ED646DB00FBAF0C /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
+				258F12A02F01D5D100CA507F /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9EA41D882D6DEACA00817679 /* Products */;
@@ -332,7 +336,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 130;
 				DEVELOPMENT_TEAM = 6GLWGGY9D7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -354,7 +358,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.monuk7735.mew.notch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -375,7 +379,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 130;
 				DEVELOPMENT_TEAM = 6GLWGGY9D7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -397,7 +401,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.monuk7735.mew.notch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -447,6 +451,14 @@
 				kind = branch;
 			};
 		};
+		258F12A02F01D5D100CA507F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.1;
+			};
+		};
 		9E36AFA92D78EB2100D53482 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -458,6 +470,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		258F12A12F01D5D100CA507F /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 258F12A02F01D5D100CA507F /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
 		25F325632ED64870001C93C0 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 250A20732ED646DB00FBAF0C /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;

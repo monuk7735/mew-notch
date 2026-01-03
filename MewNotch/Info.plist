@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>SUFeedURL</key>
+	<string>https://monuk7735.github.io/mew-notch/sparkle/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>KGcPcAdHIn451exwQ5H1o/17Op88Tzj+TtHCnLCUbg0=</string>
 	<key>NSCameraPortraitEffectEnabled</key>
 	<true/>
 	<key>NSCameraReactionEffectsEnabled</key>

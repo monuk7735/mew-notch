@@ -74,6 +74,26 @@ jobs:
             "MewNotch-${{ github.ref_name }}.dmg" \
             "Release/Mew Notch.app"
 
+      - name: Generate Sparkle Appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          chmod +x .github/generate_appcast
+          
+          mkdir -p ReleaseDist
+          cp "MewNotch-${{ github.ref_name }}.dmg" ReleaseDist/
+          
+          echo "$SPARKLE_PRIVATE_KEY" > sparkle_key.pem
+          
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/"
+          
+          .github/generate_appcast \
+            --ed-key-file sparkle_key.pem \
+            --download-url-prefix "$DOWNLOAD_URL" \
+            ReleaseDist/
+            
+          rm sparkle_key.pem
+          
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -83,3 +103,22 @@ jobs:
           asset_path: ./MewNotch-${{ github.ref_name }}.dmg
           asset_name: MewNotch-${{ github.ref_name }}.dmg
           asset_content_type: application/x-apple-diskimage
+          
+      - name: Publish Appcast to GitHub Pages
+        run: |
+          cp ReleaseDist/appcast.xml /tmp/appcast.xml
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git fetch origin gh-page
+          git checkout gh-page
+          
+          mkdir -p public/sparkle
+          
+          mv /tmp/appcast.xml public/sparkle/appcast.xml
+          
+          git add public/sparkle/appcast.xml
+          
+          git commit -m "Update Sparkle appcast for ${{ github.ref_name }}"
+          git push origin gh-page

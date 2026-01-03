@@ -15,6 +15,7 @@ struct NotchOptionsView: View {
     }
     
     @Environment(\.openSettings) private var openSettings
+    @EnvironmentObject var updaterViewModel: UpdaterViewModel
     
     @StateObject private var appDefaults = AppDefaults.shared
     
@@ -43,6 +44,13 @@ struct NotchOptionsView: View {
             AppManager.shared.kill()
         }
         .keyboardShortcut("R", modifiers: .command)
+        
+        Divider()
+        
+        Button("Check for Updates...") {
+            updaterViewModel.checkForUpdates()
+        }
+        .disabled(!updaterViewModel.canCheckForUpdates)
     }
 }
 
