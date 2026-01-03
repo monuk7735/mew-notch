@@ -56,7 +56,7 @@ class MewNotch {
         static let icAudio = Image(systemName: "speaker.wave.3.fill")
         static let icBrightnessFill = Image(systemName: "sun.max.fill")
         static let icPower = Image(systemName: "bolt.fill")
-        static let icMedia = Image(systemName: "music.note") // Reused
+        static let icMedia = Image(systemName: "music.note")
         static let icAbout = Image(systemName: "info.circle")
         
         static let icDisplay = Image(systemName: "display")
@@ -70,12 +70,14 @@ class MewNotch {
         
         static let icAlbumArt = Image(systemName: "photo")
         static let icArtist = Image(systemName: "music.mic")
+        static let icAlbumName = Image(systemName: "music.note.list")
+        static let icAppIcon = Image(systemName: "app.fill")
         
         // HUD Detail Icons
         static let icMicrophone = Image(systemName: "mic.fill")
         static let icPaintbrush = Image(systemName: "paintbrush.fill")
         static let icSpeakerWave2 = Image(systemName: "speaker.wave.2.fill")
-        static let icChartBar = Image(systemName: "chart.bar.fill") // Step Size
+        static let icChartBar = Image(systemName: "chart.bar.fill")
         static let icBoltBadgeAutomatic = Image(systemName: "bolt.badge.automatic.fill")
         
         // General Settings Icons
@@ -107,6 +109,8 @@ class MewNotch {
         
         static let albumArt = IconColor.blue
         static let artist = IconColor.green
+        static let albumName = IconColor.purple
+        static let appIcon = IconColor.orange
         
         static let input = IconColor.green
         static let style = IconColor.blue

@@ -18,10 +18,12 @@ struct NowPlayingDetailView: View {
     var namespace: Namespace.ID = Namespace().wrappedValue
     
     @ObservedObject var notchViewModel: NotchViewModel
+    @StateObject private var nowPlayingDefaults = NowPlayingDefaults.shared
     
     var nowPlayingModel: NowPlayingMediaModel
     
     @State private var hoveredItem: ButtonType? = nil
+    @State private var isAppIconHovered: Bool = false
     
     @State private var distanceTimer: Timer? = nil
     @State private var elapsedTime: TimeInterval = 0
@@ -57,49 +59,62 @@ struct NowPlayingDetailView: View {
                 )
                 .clipShape(
                     RoundedRectangle(
-                        cornerRadius: notchViewModel.cornerRadius.bottom - 10
+                        cornerRadius: nowPlayingDefaults.albumArtCornerRadius
                     )
                 )
                 .overlay {
-                    Button(
-                        action: {
-                            guard let url = NSWorkspace.shared.urlForApplication(
-                                withBundleIdentifier: nowPlayingModel.appBundleIdentifier
-                            ) else {
-                                return
+                    if nowPlayingDefaults.showAppIcon {
+                        Button(
+                            action: {
+                                guard let url = NSWorkspace.shared.urlForApplication(
+                                    withBundleIdentifier: nowPlayingModel.appBundleIdentifier
+                                ) else {
+                                    return
+                                }
+                                
+                                NSWorkspace.shared.openApplication(
+                                    at: url,
+                                    configuration: .init()
+                                )
                             }
-                            
-                            NSWorkspace.shared.openApplication(
-                                at: url,
-                                configuration: .init()
-                            )
+                        ) {
+                            nowPlayingModel.appIcon
+                                .resizable()
+                                .aspectRatio(
+                                    1,
+                                    contentMode: .fit
+                                )
+                                .frame(
+                                    width: 32,
+                                    height: 32
+                                )
+                                .scaleEffect(isAppIconHovered ? 1.1 : 1.0)
+                                .shadow(
+                                    color: .black.opacity(isAppIconHovered ? 0.5 : 0.2),
+                                    radius: isAppIconHovered ? 4 : 2,
+                                    x: 0,
+                                    y: 2
+                                )
+                                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAppIconHovered)
                         }
-                    ) {
-                        nowPlayingModel.appIcon
-                            .resizable()
-                            .aspectRatio(
-                                1,
-                                contentMode: .fit
-                            )
-                            .frame(
-                                width: 32,
-                                height: 32
-                            )
+                        .buttonStyle(.plain)
+                        .onHover { isHovered in
+                            isAppIconHovered = isHovered
+                        }
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity,
+                            alignment: .bottomTrailing
+                        )
+                        .padding(
+                            .bottom,
+                            -4
+                        )
+                        .padding(
+                            .trailing,
+                            -4
+                        )
                     }
-                    .buttonStyle(.plain)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .bottomTrailing
-                    )
-                    .padding(
-                        .bottom,
-                        -4
-                    )
-                    .padding(
-                        .trailing,
-                        -4
-                    )
                 }
                 .matchedGeometryEffect(
                     id: "NowPlayingAlbumArt",
@@ -119,20 +134,26 @@ struct NowPlayingDetailView: View {
                 Text(nowPlayingModel.title)
                     .minimumScaleFactor(0.8)
                     .lineLimit(1)
-                    .font(.title3.bold())
+                    .font(.headline)
                 
-                Text(nowPlayingModel.album)
-                    .minimumScaleFactor(0.8)
-                    .lineLimit(1)
-                    .font(.footnote)
+                if nowPlayingDefaults.showArtist {
+                    Text(nowPlayingModel.artist)
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
                 
-                Text(nowPlayingModel.artist)
-                    .minimumScaleFactor(0.8)
-                    .lineLimit(1)
-                    .font(.body.weight(.medium))
+                if nowPlayingDefaults.showAlbum {
+                    Text(nowPlayingModel.album)
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
                 
                 VStack(
-                    spacing: 2
+                    spacing: 6
                 ) {
                     HStack {
                         let elapsedTime = Int(
@@ -154,6 +175,7 @@ struct NowPlayingDetailView: View {
                                 elapsedSeconds
                             )
                         )
+                        .monospacedDigit()
                         
                         Spacer()
                         
@@ -175,146 +197,53 @@ struct NowPlayingDetailView: View {
                                 totalSeconds
                             )
                         )
+                        .monospacedDigit()
                     }
-                    .font(.footnote)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
                     
-                    Rectangle()
-                        .fill(
-                            .white.opacity(0.2)
-                        )
-                        .frame(
-                            height: 4
-                        )
-                        .overlay {
-                            GeometryReader { geometry in
-                                Rectangle()
-                                    .fill(
-                                        .white
-                                    )
-                                    .frame(
-                                        width: geometry.size.width * (
-                                            self.elapsedTime / max(1, nowPlayingModel.totalDuration)
-                                        ),
-                                        height: geometry.size.height
-                                    )
-                                    .frame(
-                                        width: geometry.size.width,
-                                        alignment: .leading
-                                    )
-                            }
-                        }
-                        .clipShape(
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
                             Capsule()
-                        )
+                                .fill(.white.opacity(0.2))
+                            
+                            Capsule()
+                                .fill(.white)
+                                .frame(
+                                    width: geometry.size.width * (
+                                        self.elapsedTime / max(1, nowPlayingModel.totalDuration)
+                                    )
+                                )
+                        }
+                    }
+                    .frame(height: 4)
                 }
-                .frame(
-                    maxHeight: .infinity
-                )
-                .hidden()
+                .padding(.vertical, 4)
                 
-                HStack {
-                    Button(
-                        action: {
-                            NowPlaying.shared.previousTrack()
-                        }
-                    ) {
-                        Image(
-                            systemName: "backward.end.fill"
-                        )
-                        .resizable()
-                        .scaledToFit()
-                        .padding(6)
-                        .frame(
-                            width: 24,
-                            height: 24
-                        )
-                        .background {
-                            if hoveredItem == .previous {
-                                Circle()
-                                    .fill(
-                                        Color.white.opacity(0.1)
-                                    )
-                            }
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .onHover { isHovered in
-                        withAnimation {
-                            hoveredItem = isHovered ? .previous : nil
-                        }
-                    }
-                    .frame(
-                        maxWidth: .infinity
+                HStack(spacing: 16) {
+                    MediaControlButton(
+                        iconName: "backward.end.fill",
+                        action: { NowPlaying.shared.previousTrack() },
+                        size: 24,
+                        isPrimary: false
                     )
                     
-                    Button(
-                        action: {
-                            NowPlaying.shared.togglePlayPause()
-                        }
-                    ) {
-                        Image(
-                            systemName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill"
-                        )
-                        .resizable()
-                        .scaledToFit()
-                        .padding(6)
-                        .frame(
-                            width: 24,
-                            height: 24
-                        )
-                        .background {
-                            if hoveredItem == .togglePlayPause {
-                                Circle()
-                                    .fill(
-                                        Color.white.opacity(0.1)
-                                    )
-                            }
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .onHover { isHovered in
-                        withAnimation {
-                            hoveredItem = isHovered ? .togglePlayPause : nil
-                        }
-                    }
-                    .frame(
-                        maxWidth: .infinity
+                    MediaControlButton(
+                        iconName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill",
+                        action: { NowPlaying.shared.togglePlayPause() },
+                        size: 36,
+                        isPrimary: true
                     )
                     
-                    Button(
-                        action: {
-                            NowPlaying.shared.nextTrack()
-                        }
-                    ) {
-                        Image(
-                            systemName: "forward.end.fill"
-                        )
-                        .resizable()
-                        .scaledToFit()
-                        .padding(6)
-                        .frame(
-                            width: 24,
-                            height: 24
-                        )
-                        .background {
-                            if hoveredItem == .next {
-                                Circle()
-                                    .fill(
-                                        Color.white.opacity(0.1)
-                                    )
-                            }
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .onHover { isHovered in
-                        withAnimation {
-                            hoveredItem = isHovered ? .next : nil
-                        }
-                    }
-                    .frame(
-                        maxWidth: .infinity
+                    MediaControlButton(
+                        iconName: "forward.end.fill",
+                        action: { NowPlaying.shared.nextTrack() },
+                        size: 24,
+                        isPrimary: false
                     )
                 }
+                .padding(.top, 4)
+                .padding(.bottom, 8)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -348,5 +277,35 @@ struct NowPlayingDetailView: View {
                 restart: false
             )
         }
+    }
+}
+
+struct MediaControlButton: View {
+    let iconName: String
+    let action: () -> Void
+    let size: CGFloat
+    let isPrimary: Bool
+    
+    @State private var isHovered = false
+    
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: iconName)
+                .resizable()
+                .scaledToFit()
+                .padding(isPrimary ? 8 : 6)
+                .frame(width: size, height: size)
+                .background {
+                    Circle()
+                        .fill(
+                            .white.opacity(
+                                isHovered ? 0.3 : 0.15
+                            )
+                        )
+                }
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+        .frame(maxWidth: .infinity)
     }
 }

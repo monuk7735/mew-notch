@@ -15,7 +15,7 @@ class NowPlayingDefaults: ObservableObject {
     
     private init() {}
     
-    @AppStorage(PREFIX + "ShowAlbumArt") var showAlbumArt: Bool = true {
+    @AppStorage(PREFIX + "AlbumArtCornerRadius") var albumArtCornerRadius: Double = 12.0 {
         didSet {
             withAnimation {
                 self.objectWillChange.send()
@@ -24,6 +24,22 @@ class NowPlayingDefaults: ObservableObject {
     }
     
     @AppStorage(PREFIX + "ShowArtist") var showArtist: Bool = true {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
+    @AppStorage(PREFIX + "ShowAlbum") var showAlbum: Bool = true {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
+    @AppStorage(PREFIX + "ShowAppIcon") var showAppIcon: Bool = true {
         didSet {
             withAnimation {
                 self.objectWillChange.send()
