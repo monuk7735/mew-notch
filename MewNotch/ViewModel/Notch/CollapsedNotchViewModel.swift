@@ -299,6 +299,10 @@ class CollapsedNotchViewModel: ObservableObject {
     }
     
     @objc private func handlePowerStatusChanges() {
+        if !HUDPowerDefaults.shared.showTimeRemaining {
+            return
+        }
+
         if lastPowerStatus == PowerStatus.sharedInstance().providingSource() {
             return
         }

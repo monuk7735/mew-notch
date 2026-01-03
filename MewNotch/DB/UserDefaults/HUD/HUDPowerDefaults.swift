@@ -38,4 +38,15 @@ class HUDPowerDefaults: HUDDefaultsProtocol {
             }
         }
     }
+    @CodableUserDefault(
+        PREFIX + "ShowTimeRemaining",
+        defaultValue: true
+    )
+    var showTimeRemaining: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }

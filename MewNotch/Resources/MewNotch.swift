@@ -58,6 +58,7 @@ class MewNotch {
         static let icPower = Image(systemName: "bolt.fill")
         static let icMedia = Image(systemName: "music.note")
         static let icAbout = Image(systemName: "info.circle")
+        static let icTimer = Image(systemName: "timer")
         
         static let icDisplay = Image(systemName: "display")
         static let icLock = Image(systemName: "lock.fill")
@@ -98,6 +99,7 @@ class MewNotch {
         static let audio = IconColor.blue
         static let brightness = IconColor.yellow
         static let power = IconColor.green
+        static let timer = IconColor.gray
         
         static let about = IconColor.gray
         
