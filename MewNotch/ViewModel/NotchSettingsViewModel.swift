@@ -15,12 +15,16 @@ final class NotchSettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        self.refreshNSScreens()
+        self.refreshNSScreens(animate: false)
     }
     
-    func refreshNSScreens() {
+    func refreshNSScreens(animate: Bool = true) {
         Task { @MainActor in
-            withAnimation {
+            if animate {
+                withAnimation {
+                    self.screens = NSScreen.screens
+                }
+            } else {
                 self.screens = NSScreen.screens
             }
         }

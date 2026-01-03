@@ -36,7 +36,7 @@ struct NotchSettingsView: View {
                     VStack(spacing: 8) {
                         HStack {
                             Text("Choose Displays to show notch on")
-                                .font(.caption)
+                                .font(.body)
                                 .foregroundStyle(.secondary)
                             Spacer()
                             Button("Refresh List") {
@@ -174,9 +174,6 @@ struct NotchSettingsView: View {
         .onChange(
              of: scenePhase
         ) { _, _ in
-             viewModel.refreshNSScreens()
-        }
-        .onAppear {
              viewModel.refreshNSScreens()
         }
     }
