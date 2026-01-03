@@ -13,7 +13,7 @@ struct NowPlayingMediaModel: Hashable {
     var appName: String
     var appIcon: Image
     
-    var albumArt: Image
+    var albumArt: Image?
     
     var album: String
     var artist: String

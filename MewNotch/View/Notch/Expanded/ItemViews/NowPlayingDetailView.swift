@@ -49,7 +49,7 @@ struct NowPlayingDetailView: View {
         HStack(
             spacing: 8
         ) {
-            nowPlayingModel.albumArt
+            (nowPlayingModel.albumArt ?? NowPlayingMediaModel.Placeholder.albumArt!)
                 .resizable()
                 .aspectRatio(
                     1,

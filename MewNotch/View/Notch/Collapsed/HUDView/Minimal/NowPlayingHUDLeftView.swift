@@ -25,7 +25,7 @@ struct NowPlayingHUDLeftView: View {
                 notchViewModel: notchViewModel,
                 variant: .left
             ) {
-                nowPlayingModel.albumArt
+                (nowPlayingModel.albumArt ?? nowPlayingModel.appIcon)
                     .resizable()
                     .aspectRatio(
                         1,

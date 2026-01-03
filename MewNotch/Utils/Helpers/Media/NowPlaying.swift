@@ -49,7 +49,6 @@ final class NowPlaying {
         guard let appBundleIdentifier = NowPlaying.shared.appBundleIdentifier,
               let appName = NowPlaying.shared.appName,
               let appIcon = NowPlaying.shared.appIcon,
-              let albumArt = NowPlaying.shared.albumArt,
               let album = NowPlaying.shared.album,
               let artist = NowPlaying.shared.artist,
               let title = NowPlaying.shared.title,
@@ -60,11 +59,16 @@ final class NowPlaying {
             return nil
         }
         
+        var albumArt: Image? = nil
+        if let nsAlbumArt = NowPlaying.shared.albumArt {
+            albumArt = .init(nsImage: nsAlbumArt)
+        }
+        
         return NowPlayingMediaModel(
             appBundleIdentifier: appBundleIdentifier,
             appName: appName,
             appIcon: .init(nsImage: appIcon),
-            albumArt: .init(nsImage: albumArt),
+            albumArt: albumArt,
             album: album,
             artist: artist,
             title: title,
@@ -75,8 +79,6 @@ final class NowPlaying {
             refreshedAt: refreshedAt
         )
     }
-    
-    private var nonDiffPaylaod: [String: JSON] = [:]
     
     private var appName: String?
     private var appIcon: NSImage?
@@ -147,7 +149,7 @@ final class NowPlaying {
         }
         
         process.executableURL = URL(fileURLWithPath: "/usr/bin/perl")
-        process.arguments = [scriptURL.path, frameworkPath, "stream"]
+        process.arguments = [scriptURL.path, frameworkPath, "stream", "--no-diff"]
         
         let pipeReader = JSONPipeReader()
         process.standardOutput = await pipeReader.getPipe()
@@ -174,7 +176,7 @@ final class NowPlaying {
     }
 
     private func handleAdapterUpdate(_ update: JSON) async {
-        guard let payload = update.dictionaryValue["payload"]?.dictionaryValue, let isDiff = update.dictionaryValue["diff"]?.boolValue else {
+        guard let payload = update.dictionaryValue["payload"]?.dictionaryValue else {
             return
         }
         
@@ -184,31 +186,25 @@ final class NowPlaying {
         
         playing = payload[PayloadItem.playing.rawValue]?.boolValue ?? false
         
-        if !isDiff {
-            nonDiffPaylaod = payload
-        } else {
-            payload.forEach { key, value in
-                nonDiffPaylaod[key] = payload[key] ?? nonDiffPaylaod[key]
-            }
-        }
+        title = payload[PayloadItem.title.rawValue]?.stringValue
+        artist = payload[PayloadItem.artist.rawValue]?.stringValue
+        album = payload[PayloadItem.album.rawValue]?.stringValue
+        totalDuration = payload[PayloadItem.duration.rawValue]?.doubleValue
+        elapsedTime = payload[PayloadItem.elapsedTime.rawValue]?.doubleValue
+        playbackRate = payload[PayloadItem.playbackRate.rawValue]?.doubleValue
+        appBundleIdentifier = payload[PayloadItem.bundleIdentifier.rawValue]?.stringValue
         
-        title = nonDiffPaylaod[PayloadItem.title.rawValue]?.stringValue ?? title
-        artist = nonDiffPaylaod[PayloadItem.artist.rawValue]?.stringValue ?? artist
-        album = nonDiffPaylaod[PayloadItem.album.rawValue]?.stringValue ?? album
-        totalDuration = nonDiffPaylaod[PayloadItem.duration.rawValue]?.doubleValue ?? totalDuration
-        elapsedTime = nonDiffPaylaod[PayloadItem.elapsedTime.rawValue]?.doubleValue ?? elapsedTime
-        playbackRate = nonDiffPaylaod[PayloadItem.playbackRate.rawValue]?.doubleValue ?? playbackRate
-        appBundleIdentifier = nonDiffPaylaod[PayloadItem.bundleIdentifier.rawValue]?.stringValue ?? appBundleIdentifier
-        
-        if let artworkDataString = nonDiffPaylaod[PayloadItem.artworkData.rawValue]?.stringValue, let data = Data(
+        if let artworkDataString = payload[PayloadItem.artworkData.rawValue]?.stringValue, let data = Data(
             base64Encoded: artworkDataString.trimmingCharacters(
                 in: .whitespacesAndNewlines
             )
         ), let nsImage = NSImage(data: data) {
             albumArt = nsImage
+        } else {
+            albumArt = nil
         }
         
-        if let timestamp = nonDiffPaylaod[PayloadItem.timestamp.rawValue]?.stringValue, let date = ISO8601DateFormatter().date(from: timestamp) {
+        if let timestamp = payload[PayloadItem.timestamp.rawValue]?.stringValue, let date = ISO8601DateFormatter().date(from: timestamp) {
             refreshedAt = date
         }
     }
