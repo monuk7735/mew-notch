@@ -34,14 +34,15 @@
 
 - **Brightness Display** - Displays brightness adjustments in real-time, including optional auto-brightness changes.
 - **Sound Level Display** - Shows input/output volume changes directly on the notch.
-- **Sound Device** - Shows current input/output device on notch, when changed.
-- **Power State** - Show current power source as well as left time on battery when available.
+- **System HUD Suppression** - Option to completely hide the stock macOS HUDs for a cleaner experience.
+- **File Shelf** - Drag and drop files to the notch for quick access. **Now with Persistence!** Files stay there even after restarts.
+- **Power State** - Show current power source. **New:** Toggle "Time Remaining" display for a cleaner look.
 - **Notch on Lock Screen** - The notch HUD is now visible even on the macOS lock screen.
-- **Now Playing** -  Control now playing media directly from notch. Expand notch for additional controls.
-- **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch.
-- **Minimal & Non-Intrusive** - A clean, lightweight alternative to the default system HUD.
+- **Now Playing** - Control now playing media directly from notch. Expand notch for additional controls.
+- **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch. Now with customizable corner radius.
+- **Auto Updates** - Built-in updater (Sparkle) to keep your app always up to date.
+- **Modern Settings UI** - Completely redesigned settings experience for easier customization.
 - **Fully Custom Notch Experience** - Choose the displays you want to see the notch on.
-- **Heavily Customizable** - Each HUD can be customised to have different styling.
 - **SwiftUI-based UI** - Smooth animations and modern macOS styling.
 
 ## Installation
@@ -79,7 +80,8 @@
 - [x] ~~Complete Control over which monitor shows the notch~~
 - [x] ~~Explore different options for Now Playing media support on macOS 15.4 and above.~~
 - [x] ~~Shelf for files in expanded notch view~~
-- [ ] Making shelf work on with **Show on Lockscreen** enabled.
+- [x] ~~Persist Shelf Files across restarts~~
+- [ ] Making shelf work with **Show on Lockscreen** enabled (Currently mutually exclusive for security).
 - [ ] HUD for displaying keyboard backlight changes.
 - [ ] Explore additional notch-based utilities.
 
@@ -87,6 +89,7 @@
 - [Lottie](https://github.com/airbnb/lottie-ios)
 - [LaunchAtLogin-Modern](https://github.com/sindresorhus/LaunchAtLogin-Modern)
 - [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
+- [Sparkle](https://github.com/sparkle-project/Sparkle)
 
 ## Contributing
 
@@ -107,4 +110,3 @@ This project is licensed under the [GPLv3 License](LICENSE).
   - [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow)
   - [EnergyBar](https://github.com/billziss-gh/EnergyBar)
   - [boring.notch](https://github.com/TheBoredTeam/boring.notch)
-
