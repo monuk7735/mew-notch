@@ -164,7 +164,11 @@ struct AirDropView: View {
             }
         }
         .buttonStyle(.plain)
-        .onHover { isHovered = $0 }
+        .onHover { hovered in
+            withAnimation {
+                isHovered = hovered
+            }
+        }
         .dropDestination(
             for: URL.self,
             action: { files, _ in
