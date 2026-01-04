@@ -31,13 +31,18 @@ class ExpandedNotchViewModel: ObservableObject {
     
     @Published var nowPlayingMedia: NowPlayingMediaModel?
     
-    @Published var shelfFileGroups: [ShelfFileGroupModel] = []
+    @Published var shelfFileGroups: [ShelfFileGroupModel] = [] {
+        didSet {
+            ShelfDefaults.shared.shelfFileGroups = shelfFileGroups
+        }
+    }
     
     init() {
         self.startListeners()
         
-        // Use existing model when Notch is refreshed
         self.nowPlayingMedia = NowPlaying.shared.nowPlayingModel
+        
+        self.shelfFileGroups = ShelfDefaults.shared.shelfFileGroups
     }
     
     deinit {
@@ -45,7 +50,6 @@ class ExpandedNotchViewModel: ObservableObject {
     }
     
     func startListeners() {
-        // MARK: Media Change Listeners
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleNowPlayingMediaChanges),
