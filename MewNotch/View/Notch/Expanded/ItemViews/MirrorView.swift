@@ -129,6 +129,10 @@ struct MirrorView: View {
         }
         .onAppear {
             updateCameraAuthorization(animate: false)
+            
+            if self.cameraAuthStatus == .authorized && mirrorDefaults.autoStart {
+                isCameraViewShown.toggle()
+            }
         }
     }
     

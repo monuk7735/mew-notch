@@ -59,6 +59,7 @@ class MewNotch {
         static let icMedia = Image(systemName: "music.note")
         static let icAbout = Image(systemName: "info.circle")
         static let icTimer = Image(systemName: "timer")
+        static let icVideo = Image(systemName: "video.fill")
         
         static let icDisplay = Image(systemName: "display")
         static let icLock = Image(systemName: "lock.fill")
@@ -120,6 +121,7 @@ class MewNotch {
         static let stepSize = IconColor.orange
         static let autoBrightness = IconColor.green
         static let systemHud = IconColor.red
+        static let video = IconColor.purple
     }
     
     class Lotties {

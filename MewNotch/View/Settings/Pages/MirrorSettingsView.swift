@@ -52,6 +52,19 @@ struct MirrorSettingsView: View {
                 } header: {
                     Text("Mirror Appearance")
                 }
+                
+                Section {
+                    SettingsRow(
+                        title: "Auto-Start Mirror",
+                        subtitle: "Automatically activate camera when Expanded Notch opens",
+                        icon: MewNotch.Assets.icVideo,
+                        color: MewNotch.Colors.video
+                    ) {
+                        Toggle("", isOn: $mirrorDefaults.autoStart)
+                    }
+                } header: {
+                    Text("Behavior")
+                }
             }
         }
         .formStyle(.grouped)

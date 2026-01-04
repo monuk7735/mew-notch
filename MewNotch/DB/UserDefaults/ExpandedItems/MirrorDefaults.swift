@@ -22,4 +22,12 @@ class MirrorDefaults: ObservableObject {
             }
         }
     }
+    
+    @AppStorage(PREFIX + "autoStart") var autoStart: Bool = false {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }
