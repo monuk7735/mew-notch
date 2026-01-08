@@ -57,9 +57,6 @@ jobs:
       - name: Export app
         run: |
           xcodebuild -exportArchive -archivePath "${{ env.projname }}.xcarchive" -exportPath Release -exportOptionsPlist ".github/exportOptions.plist"
-          
-          # Rename exported app to "Mew Notch.app" for DMG
-          mv "Release/MewNotch.app" "Release/Mew Notch.app"
 
       - name: Create DMG
         run: |
@@ -70,11 +67,11 @@ jobs:
             --window-size 800 400 \
             --background ".github/res/Installer-Background.png" \
             --icon-size 128 \
-            --icon "Mew Notch.app" 200 185 \
-            --hide-extension "Mew Notch.app" \
+            --icon "MewNotch.app" 200 185 \
+            --hide-extension "MewNotch.app" \
             --app-drop-link 600 185 \
             "MewNotch-${{ github.ref_name }}.dmg" \
-            "Release/Mew Notch.app"
+            "Release/MewNotch.app"
 
       - name: Generate Sparkle Appcast
         env:

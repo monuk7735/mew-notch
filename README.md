@@ -51,14 +51,32 @@
 2. Move the app to the Applications folder.
 3. Run the app and grant necessary permissions if prompted.
 
-> ### <span style="color: yellow">Note!</span>
-> I don't have an Apple Developer account yet, so the application will display a popup on the first launch. 
->
-> Click Okay, then navigate to **Settings > Privacy & Security**, scroll down, and click **Open Anyway**. 
-> 
-> This only needs to be done once.
+
+### ⚠️ "Damaged" or "Unidentified Developer" Error?
+
+> I don't have an Apple Developer account yet, so the application will display a popup on the first launch.
+
+**Option 1 (Recommended): Allow via System Settings**
+
+1. Open **System Settings** → **Privacy & Security**.
+2. Scroll down to the **Security** section.
+3. Look for "**MewNotch** was blocked..." and click **Open Anyway**.
+4. Click **Open** in the confirmation popup.
+
+**Option 2 (Advanced): Run this command in Terminal**
+
+```bash
+xattr -cr /Applications/MewNotch.app
+```
+
+This command simply removes the "quarantine" flag that macOS places on apps downloaded from the internet, resolving the false error.
+
+- `xattr` : The utility to modify file attributes.
+- `-c` : Clears all attributes (removes the "quarantine" flag).
+- `-r` : Recursive (applies to all files inside the app bundle).
 
 ## Usage
+
 
 1. Launch **MewNotch**.
 2. Re-launch to open settings, if required. Notch won't appear at first launch on non-notched devices.
