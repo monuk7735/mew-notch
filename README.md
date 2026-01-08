@@ -47,6 +47,14 @@
 
 ## Installation
 
+### Homebrew
+
+```bash
+brew install --cask monuk7735/tap/mew-notch --no-quarantine
+```
+
+### Manual Download
+
 1. Download the latest release from [GitHub Releases](https://github.com/monuk7735/mew-notch/releases).
 2. Move the app to the Applications folder.
 3. Run the app and grant necessary permissions if prompted.
