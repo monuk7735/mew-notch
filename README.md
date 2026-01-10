@@ -116,6 +116,7 @@ This command simply removes the "quarantine" flag that macOS places on apps down
 - [LaunchAtLogin-Modern](https://github.com/sindresorhus/LaunchAtLogin-Modern)
 - [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
 - [Sparkle](https://github.com/sparkle-project/Sparkle)
+- [MacroVisionKit](https://github.com/TheBoredTeam/MacroVisionKit)
 
 ## Contributing
 
