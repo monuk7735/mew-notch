@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		250A205B2ED4A2C800FBAF0C /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E284D432D8B2E8000ED8E89 /* MediaRemote.framework */; };
+		251798DC2F126FFF0050B370 /* MacroVisionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 251798DB2F126FFF0050B370 /* MacroVisionKit */; };
 		253243BE2E09A6220030EC15 /* DisplayServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E05A76E2D7D93A900980012 /* DisplayServices.framework */; };
 		253243C32E09A6240030EC15 /* SkyLight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 253243AF2E09A1AA0030EC15 /* SkyLight.framework */; };
 		258F12A22F01D5D100CA507F /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 258F12A12F01D5D100CA507F /* Sparkle */; };
@@ -76,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				251798DC2F126FFF0050B370 /* MacroVisionKit in Frameworks */,
 				25F325642ED64870001C93C0 /* LaunchAtLogin in Frameworks */,
 				258F12A22F01D5D100CA507F /* Sparkle in Frameworks */,
 				25F325662ED64885001C93C0 /* SwiftyJSON in Frameworks */,
@@ -141,6 +143,7 @@
 				25F325632ED64870001C93C0 /* LaunchAtLogin */,
 				25F325652ED64885001C93C0 /* SwiftyJSON */,
 				258F12A12F01D5D100CA507F /* Sparkle */,
+				251798DB2F126FFF0050B370 /* MacroVisionKit */,
 			);
 			productName = MewNotch;
 			productReference = 9EA41D872D6DEACA00817679 /* MewNotch.app */;
@@ -176,6 +179,7 @@
 				250A20722ED646CF00FBAF0C /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				250A20732ED646DB00FBAF0C /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 				258F12A02F01D5D100CA507F /* XCRemoteSwiftPackageReference "Sparkle" */,
+				251798DA2F126FFF0050B370 /* XCRemoteSwiftPackageReference "MacroVisionKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9EA41D882D6DEACA00817679 /* Products */;
@@ -451,6 +455,14 @@
 				kind = branch;
 			};
 		};
+		251798DA2F126FFF0050B370 /* XCRemoteSwiftPackageReference "MacroVisionKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TheBoredTeam/MacroVisionKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		258F12A02F01D5D100CA507F /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -470,6 +482,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		251798DB2F126FFF0050B370 /* MacroVisionKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 251798DA2F126FFF0050B370 /* XCRemoteSwiftPackageReference "MacroVisionKit" */;
+			productName = MacroVisionKit;
+		};
 		258F12A12F01D5D100CA507F /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 258F12A02F01D5D100CA507F /* XCRemoteSwiftPackageReference "Sparkle" */;

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MacroVisionKit
 
 class NotchManager {
     
@@ -15,12 +16,38 @@ class NotchManager {
     
     var windows: [NSScreen: NSWindow] = [:]
     
+    private var monitorTask: Task<Void, Never>?
+    
     private init() {
+        monitorTask = Task { @MainActor in
+            let stream = await FullScreenMonitor.shared.spaceChanges()
+            for await spaces in stream {
+                self.updateFullScreenStatus(with: spaces)
+            }
+        }
+        
         addListenerForScreenUpdates()
     }
     
     deinit {
+        monitorTask?.cancel()
         removeListenerForScreenUpdates()
+    }
+    
+    @MainActor
+    private func updateFullScreenStatus(with spaces: [MacroVisionKit.FullScreenMonitor.SpaceInfo]) {
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.6
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            
+            windows.forEach { $0.value.animator().alphaValue = 1 }
+        }
+        
+        for space in spaces {
+            if let screen = FullScreenMonitor.shared.screen(for: space) {
+                windows[screen]?.alphaValue = 0
+            }
+        }
     }
     
     @objc func refreshNotches(
@@ -95,6 +122,12 @@ class NotchManager {
                     NotchSpaceManager.shared.notchSpace.windows.insert(panel)
                 }
             }
+        }
+        
+        // Trigger manual update based on current state
+        Task { @MainActor in
+            let spaces = await FullScreenMonitor.shared.detectFullscreenApps()
+            self.updateFullScreenStatus(with: spaces)
         }
     }
     
