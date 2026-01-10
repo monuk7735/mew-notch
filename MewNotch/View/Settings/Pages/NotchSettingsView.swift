@@ -89,6 +89,18 @@ struct NotchSettingsView: View {
                 }
                 
                 SettingsRow(
+                    title: "Hide on Full Screen",
+                    subtitle: "Hides the notch when a full screen app is detected",
+                    icon: MewNotch.Assets.icDisplay,
+                    color: MewNotch.Colors.notch
+                ) {
+                    Toggle("", isOn: $notchDefaults.hideOnFullScreen)
+                        .onChange(of: notchDefaults.hideOnFullScreen) { _, _ in
+                            viewModel.refreshNotches()
+                        }
+                }
+                
+                SettingsRow(
                     title: "Reset View on Collapse",
                     subtitle: notchDefaults.resetViewOnCollapse ? "Notch resets to Home when Collapsed" : "Notch will retain state when Collapsed",
                     icon: MewNotch.Assets.icReset,

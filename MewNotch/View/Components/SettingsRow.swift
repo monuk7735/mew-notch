@@ -74,6 +74,7 @@ struct SettingsRow<Content: View>: View {
             content
         }
         .padding(.vertical, 8)
+        .padding(.horizontal, 8)
     }
 }
 

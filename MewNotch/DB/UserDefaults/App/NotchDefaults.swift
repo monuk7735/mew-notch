@@ -15,6 +15,16 @@ class NotchDefaults: ObservableObject {
     
     private init() {}
     
+    @PrimitiveUserDefault(
+        PREFIX + "HideOnFullScreen",
+        defaultValue: true
+    )
+    var hideOnFullScreen: Bool {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
     @CodableUserDefault(
         PREFIX + "NotchDisplayVisibility",
         defaultValue: NotchDisplayVisibility.NotchedDisplayOnly

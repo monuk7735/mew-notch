@@ -36,6 +36,8 @@ class NotchManager {
     
     @MainActor
     private func updateFullScreenStatus(with spaces: [MacroVisionKit.FullScreenMonitor.SpaceInfo]) {
+        guard notchDefaults.hideOnFullScreen else { return }
+        
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.6
             context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
