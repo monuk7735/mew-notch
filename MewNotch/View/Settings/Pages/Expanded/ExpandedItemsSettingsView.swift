@@ -11,10 +11,25 @@ struct ExpandedItemsSettingsView: View {
         VStack(spacing: 0) {
             // Unified Header Section
             VStack(alignment: .leading, spacing: 8) {
-                Text("Manage Items")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal)
+                HStack {
+                    Text("Manage and Order Items")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 8) {
+                        Text("Show Separator")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Toggle("", isOn: $notchDefaults.showDividers)
+                            .toggleStyle(.switch)
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .scaleEffect(0.8)
+                    }
+                }
+                .padding(.horizontal)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
@@ -72,6 +87,7 @@ struct ExpandedItemsSettingsView: View {
         }
         .navigationTitle("Expanded Items")
         .toolbarTitleDisplayMode(.inline)
+
     }
     
     private func toggleItem(_ item: ExpandedNotchItem) {
