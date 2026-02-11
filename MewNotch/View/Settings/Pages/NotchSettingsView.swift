@@ -7,11 +7,14 @@
 
 import SwiftUI
 
+
 struct NotchSettingsView: View {
     
     @Environment(\.scenePhase) private var scenePhase
     
     @StateObject private var viewModel = NotchSettingsViewModel()
+    
+
     
     @StateObject var notchDefaults = NotchDefaults.shared
     @StateObject var mirrorDefaults = MirrorDefaults.shared
@@ -158,17 +161,8 @@ struct NotchSettingsView: View {
                 Text("Interaction")
             }
             
-            Section {
-                SettingsRow(
-                    title: "Separator between Items",
-                    icon: MewNotch.Assets.icSeparator,
-                    color: MewNotch.Colors.separator
-                ) {
-                    Toggle("", isOn: $notchDefaults.showDividers)
-                }
-            } header: {
-                Text("Expanded Notch")
-            }
+
+
         }
         .formStyle(.grouped)
         .navigationTitle("Notch")

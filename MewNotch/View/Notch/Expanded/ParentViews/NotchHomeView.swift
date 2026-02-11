@@ -22,11 +22,7 @@ struct NotchHomeView: View {
         HStack(
             spacing: 12
         ) {
-            let items = Array(
-                notchDefaults.expandedNotchItems.sorted {
-                    $0.rawValue < $1.rawValue
-                }
-            )
+            let items = notchDefaults.expandedNotchItems
             
             ForEach(
                 0..<items.count,

@@ -112,7 +112,17 @@ class NotchDefaults: ObservableObject {
             ExpandedNotchItem.NowPlaying
         ]
     )
-    var expandedNotchItems: Set<ExpandedNotchItem> {
+    var expandedNotchItems: [ExpandedNotchItem] {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
+    @CodableUserDefault(
+        PREFIX + "ExpandedItemsOrder",
+        defaultValue: ExpandedNotchItem.allCases
+    )
+    var expandedItemsOrder: [ExpandedNotchItem] {
         didSet {
             self.objectWillChange.send()
         }

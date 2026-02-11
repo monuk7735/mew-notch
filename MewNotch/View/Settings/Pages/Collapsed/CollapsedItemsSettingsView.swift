@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HUDSettingsView: View {
+struct CollapsedItemsSettingsView: View {
     
     @State private var selectedTab: Int = 0
     
@@ -37,13 +37,13 @@ struct HUDSettingsView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .navigationTitle("HUDs")
+        .navigationTitle("Collapsed Items Settings")
         .toolbarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    HUDSettingsView()
+    CollapsedItemsSettingsView()
 }
 
 struct HudTabButton: View {

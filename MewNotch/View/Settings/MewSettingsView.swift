@@ -17,10 +17,8 @@ struct MewSettingsView: View {
         case General
         case Notch
         
-        case Mirror
-        case NowPlaying
-        
-        case HUDs
+        case ExpandedItems
+        case CollapsedItems
         
         case About
     }
@@ -58,48 +56,35 @@ struct MewSettingsView: View {
                             }
                             .id(SettingsPages.Notch)
                         }
+                            
+
                     )
                     
                     Section(
-                         content: {
-                            NavigationLink(destination: MirrorSettingsView()) {
+                        content: {
+                            NavigationLink(destination: CollapsedItemsSettingsView()) {
                                 HStack(spacing: 12) {
-                                    SettingsIcon(icon: MewNotch.Assets.icMirror, color: MewNotch.Colors.mirror)
-                                        .foregroundStyle(.white)
-                                    Text("Mirror")
+                                    SettingsIcon(icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
+                                    Text("Collapsed")
                                         .font(.headline)
                                         .fontWeight(.medium)
                                 }
                             }
-                            .id(SettingsPages.Mirror)
-                             
-                            NavigationLink(destination: NowPlayingSettingsView()) {
+                            .id(SettingsPages.CollapsedItems)
+                            
+                            NavigationLink(destination: ExpandedItemsSettingsView()) {
                                 HStack(spacing: 12) {
-                                    SettingsIcon(icon: MewNotch.Assets.icNowPlaying, color: MewNotch.Colors.nowPlaying)
+                                    SettingsIcon(icon: MewNotch.Assets.icMedia, color: MewNotch.Colors.nowPlaying)
                                         .foregroundStyle(.white)
-                                    Text("Now Playing")
+                                    Text("Expanded")
                                         .font(.headline)
                                         .fontWeight(.medium)
                                 }
                             }
-                            .id(SettingsPages.NowPlaying)
+                            .id(SettingsPages.ExpandedItems)
                         },
                         header: {
-                            Text("Expanded Items")
-                        }
-                    )
-                    
-                    Section(
-                         content: {
-                             NavigationLink(destination: HUDSettingsView()) {
-                                 HStack(spacing: 12) {
-                                     SettingsIcon(icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
-                                     Text("HUDs")
-                                         .font(.headline)
-                                         .fontWeight(.medium)
-                                 }
-                             }
-                             .id(SettingsPages.HUDs)
+                            Text("Notch Items")
                         }
                     )
                     

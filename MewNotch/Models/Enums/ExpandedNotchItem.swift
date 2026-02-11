@@ -22,4 +22,13 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
             return "Now Playing"
         }
     }
+    
+    var imageSystemName: String {
+        switch self {
+        case .Mirror:
+            return "video.fill"
+        case .NowPlaying:
+            return "music.note"
+        }
+    }
 }
