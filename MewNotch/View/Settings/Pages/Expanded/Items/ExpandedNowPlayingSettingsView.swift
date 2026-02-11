@@ -49,34 +49,8 @@ struct ExpandedNowPlayingSettingsView: View {
             } header: {
                 Text("General Settings")
             }
-            
-            Section {
-                HStack {
-                    Spacer()
-                    Toggle(notchDefaults.expandedNotchItems.contains(.NowPlaying) ? "Enabled" : "Disabled", isOn: Binding(
-                        get: { notchDefaults.expandedNotchItems.contains(.NowPlaying) },
-                        set: { _ in toggleNowPlaying() }
-                    ))
-                    .toggleStyle(.switch)
-                    .controlSize(.large)
-                    Spacer()
-                }
-            }
         }
         .formStyle(.grouped)
-    }
-    
-    private func toggleNowPlaying() {
-        if notchDefaults.expandedNotchItems.contains(.NowPlaying) {
-            notchDefaults.expandedNotchItems.removeAll { $0 == .NowPlaying }
-        } else {
-            notchDefaults.expandedNotchItems.append(.NowPlaying)
-            notchDefaults.expandedNotchItems.sort { a, b in
-                let indexA = notchDefaults.expandedItemsOrder.firstIndex(of: a) ?? 0
-                let indexB = notchDefaults.expandedItemsOrder.firstIndex(of: b) ?? 0
-                return indexA < indexB
-            }
-        }
     }
 }
 

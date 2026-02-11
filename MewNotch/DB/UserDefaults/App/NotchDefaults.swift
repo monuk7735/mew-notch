@@ -13,7 +13,17 @@ class NotchDefaults: ObservableObject {
     
     static let shared = NotchDefaults()
     
-    private init() {}
+    private init() {
+        var currentOrder = expandedItemsOrder
+        let allItems = ExpandedNotchItem.allCases
+        
+        let missingItems = allItems.filter { !currentOrder.contains($0) }
+        
+        if !missingItems.isEmpty {
+            currentOrder.append(contentsOf: missingItems)
+            expandedItemsOrder = currentOrder
+        }
+    }
     
     @PrimitiveUserDefault(
         PREFIX + "HideOnFullScreen",

@@ -57,6 +57,8 @@ struct ExpandedItemsSettingsView: View {
                         ExpandedMirrorSettingsView()
                     case .NowPlaying:
                         ExpandedNowPlayingSettingsView()
+                    case .Bash:
+                        ExpandedBashSettingsView()
                     }
                 } else {
                     ContentUnavailableView(
@@ -126,7 +128,7 @@ struct ExpandedItemTabButton: View {
                             .font(.system(size: 24))
                         
                         Text(item.displayName)
-                            .font(.headline.weight(.medium))
+                            .font(.caption.weight(.medium))
                     }
                     .padding(.top, 12)
                     .foregroundStyle(isSelected ? .white : .secondary)

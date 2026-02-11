@@ -43,34 +43,8 @@ struct ExpandedMirrorSettingsView: View {
             } header: {
                 Text("Behavior")
             }
-            
-            Section {
-                HStack {
-                    Spacer()
-                    Toggle(notchDefaults.expandedNotchItems.contains(.Mirror) ? "Enabled" : "Disabled", isOn: Binding(
-                        get: { notchDefaults.expandedNotchItems.contains(.Mirror) },
-                        set: { _ in toggleMirror() }
-                    ))
-                    .toggleStyle(.switch)
-                    .controlSize(.large)
-                    Spacer()
-                }
-            }
         }
         .formStyle(.grouped)
-    }
-    
-    private func toggleMirror() {
-        if notchDefaults.expandedNotchItems.contains(.Mirror) {
-            notchDefaults.expandedNotchItems.removeAll { $0 == .Mirror }
-        } else {
-            notchDefaults.expandedNotchItems.append(.Mirror)
-            notchDefaults.expandedNotchItems.sort { a, b in
-                let indexA = notchDefaults.expandedItemsOrder.firstIndex(of: a) ?? 0
-                let indexB = notchDefaults.expandedItemsOrder.firstIndex(of: b) ?? 0
-                return indexA < indexB
-            }
-        }
     }
 }
 

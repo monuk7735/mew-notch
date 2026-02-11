@@ -42,6 +42,8 @@ struct NotchHomeView: View {
                         notchViewModel: notchViewModel,
                         nowPlayingModel: expandedNotchViewModel.nowPlayingMedia ?? .Placeholder
                     )
+                case .Bash:
+                    BashView(notchViewModel: notchViewModel)
                 }
                 
                 if notchDefaults.showDividers && index != items.count - 1 {
