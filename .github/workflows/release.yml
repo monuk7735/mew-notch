@@ -92,6 +92,16 @@ jobs:
             ReleaseDist/
             
           rm sparkle_key.pem
+
+      - name: VirusTotal Scan
+        uses: cssnr/virustotal-action@v1
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          file_globs: |
+            MewNotch-${{ github.ref_name }}.dmg
+          update_release: true
+          release_heading: '### VirusTotal Analysis'
           
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
