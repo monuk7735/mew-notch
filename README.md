@@ -40,6 +40,8 @@
 - **Notch on Lock Screen** - The notch HUD is now visible even on the macOS lock screen.
 - **Now Playing** - Control now playing media directly from notch. Expand notch for additional controls.
 - **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch. Now with customizable corner radius.
+- **Bash Script View** - Run and display bash commands directly in the expanded notch.
+- **Custom Layout** - Reorder notch items to suit your workflow.
 - **Auto Updates** - Built-in updater (Sparkle) to keep your app always up to date.
 - **Modern Settings UI** - Completely redesigned settings experience for easier customization.
 - **Fully Custom Notch Experience** - Choose the displays you want to see the notch on.
