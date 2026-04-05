@@ -32,18 +32,19 @@
 
 ## Features
 
-- **Brightness Display** - Displays brightness adjustments in real-time, including optional auto-brightness changes.
-- **Sound Level Display** - Shows input/output volume changes directly on the notch.
+- **Brightness Display** - Displays brightness adjustments in real-time, including optional auto-brightness changes and custom step sizes.
+- **Sound Level Display** - Shows input/output volume changes directly on the notch with customizable step sizes.
 - **System HUD Suppression** - Option to completely hide the stock macOS HUDs for a cleaner experience.
 - **File Shelf** - Drag and drop files to the notch for quick access. **Now with Persistence!** Files stay there even after restarts.
-- **Power State** - Show current power source. **New:** Toggle "Time Remaining" display for a cleaner look.
+- **Power State** - Show current power source. Toggle "Time Remaining" display for a cleaner look.
 - **Notch on Lock Screen** - The notch HUD is now visible even on the macOS lock screen.
-- **Now Playing** - Control now playing media directly from notch. Expand notch for additional controls.
+- **Now Playing** - Control now playing media directly from notch. Shows title changes automatically with customizable pop-up timeouts.
 - **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch. Now with customizable corner radius.
 - **Bash Script View** - Run and display bash commands directly in the expanded notch.
+- **Customizable Interactions** - Tailor the notch exactly to your liking with adjustable hover expand delays and toggles for HUD animations.
 - **Custom Layout** - Reorder notch items to suit your workflow.
 - **Auto Updates** - Built-in updater (Sparkle) to keep your app always up to date.
-- **Modern Settings UI** - Completely redesigned settings experience for easier customization.
+- **Modern Settings UI** - Completely grouped and redesigned settings experience for beautifully categorized configuration across all HUDs.
 - **Fully Custom Notch Experience** - Choose the displays you want to see the notch on.
 - **SwiftUI-based UI** - Smooth animations and modern macOS styling.
 
