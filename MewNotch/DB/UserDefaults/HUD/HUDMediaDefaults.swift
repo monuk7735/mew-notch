@@ -38,4 +38,28 @@ class HUDMediaDefaults: HUDDefaultsProtocol {
             }
         }
     }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "Show_Title_Change",
+        defaultValue: true
+    )
+    var showTitleChange: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "Title_Change_Timeout",
+        defaultValue: 3.0
+    )
+    var titleChangeTimeout: Double {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }

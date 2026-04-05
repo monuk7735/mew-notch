@@ -45,31 +45,19 @@ struct HUDBrightnessSettingsView: View {
                     Toggle("", isOn: $viewModel.defaults.showAutoBrightnessChanges)
                 }
                 
-                if viewModel.defaults.isEnabled {
-                    HStack(alignment: .top, spacing: 16) {
-                        SettingsIcon(icon: MewNotch.Assets.icChartBar, color: MewNotch.Colors.stepSize)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Step Size")
-                                    .font(.title3)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Text("\(Int(viewModel.localStep * 100))%")
-                                    .font(.body)
-                                    .monospacedDigit()
-                                    .bold()
-                            }
-                            
-                            Slider(
-                                value: $viewModel.localStep,
-                                in: 0.01...0.10,
-                                step: 0.01
-                            )
-                        }
-                    }
-                    .padding(.vertical, 8)
+                SettingsRow(
+                    title: "Step Size",
+                    subtitle: "\(Int(viewModel.localStep * 100))%",
+                    icon: MewNotch.Assets.icChartBar,
+                    color: MewNotch.Colors.stepSize
+                ) {
+                    Slider(
+                        value: $viewModel.localStep,
+                        in: 0.01...0.10,
+                        step: 0.01
+                    )
                 }
+                .hide(when: !viewModel.defaults.isEnabled)
             } footer: {
                Text("Design to be used for HUD")
             }

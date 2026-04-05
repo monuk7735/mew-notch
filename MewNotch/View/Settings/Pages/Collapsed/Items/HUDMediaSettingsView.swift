@@ -22,6 +22,33 @@ struct HUDMediaSettingsView: View {
                 ) {
                     Toggle("", isOn: $mediaDefaults.isEnabled)
                 }
+                
+                SettingsRow(
+                    title: "Show Title",
+                    subtitle: "Shows new media name on change",
+                    icon: MewNotch.Assets.icAlbumName,
+                    color: MewNotch.Colors.albumName
+                ) {
+                    Toggle("", isOn: $mediaDefaults.showTitleChange)
+                }
+                .hide(when: !mediaDefaults.isEnabled)
+                
+                SettingsRow(
+                    title: "Visible For",
+                    subtitle: "Shows new media name for \(mediaDefaults.titleChangeTimeout.formatted()) seconds",
+                    icon: MewNotch.Assets.icTimer,
+                    color: MewNotch.Colors.timer
+                ) {
+                    Slider(
+                        value: $mediaDefaults.titleChangeTimeout,
+                        in: 1...10,
+                        step: 1.0
+                    )
+                }
+                .animation(nil, value: mediaDefaults.titleChangeTimeout)
+                .hide(when: !mediaDefaults.isEnabled || !mediaDefaults.showTitleChange)
+            } header: {
+                Text("General")
             }
         }
         .formStyle(.grouped)

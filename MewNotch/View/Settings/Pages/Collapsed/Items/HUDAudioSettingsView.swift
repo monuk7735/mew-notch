@@ -37,31 +37,19 @@ struct HUDAudioSettingsView: View {
                 }
                 .disabled(!viewModel.outputDefaults.isEnabled)
                 
-                if viewModel.outputDefaults.isEnabled {
-                    HStack(alignment: .top, spacing: 16) {
-                        SettingsIcon(icon: MewNotch.Assets.icChartBar, color: MewNotch.Colors.stepSize)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Step Size")
-                                    .font(.title3)
-                                    .fontWeight(.medium)
-                                Spacer()
-                                Text("\(Int(viewModel.localVolumeStep))%")
-                                    .font(.body)
-                                    .monospacedDigit()
-                                    .bold()
-                            }
-                            
-                            Slider(
-                                value: $viewModel.localVolumeStep,
-                                in: 1...10,
-                                step: 1
-                            )
-                        }
-                    }
-                    .padding(.vertical, 8)
+                SettingsRow(
+                    title: "Step Size",
+                    subtitle: "\(Int(viewModel.localVolumeStep))%",
+                    icon: MewNotch.Assets.icChartBar,
+                    color: MewNotch.Colors.stepSize
+                ) {
+                    Slider(
+                        value: $viewModel.localVolumeStep,
+                        in: 1...10,
+                        step: 1
+                    )
                 }
+                .hide(when: !viewModel.outputDefaults.isEnabled)
             } header: {
                 Text("Output")
             } footer: {

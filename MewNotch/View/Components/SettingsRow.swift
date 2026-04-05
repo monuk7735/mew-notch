@@ -57,13 +57,13 @@ struct SettingsRow<Content: View>: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.title3) // Increased to .title3
-                    .fontWeight(.medium) // Slightly bolder for title feel
+                    .font(.title3)
+                    .fontWeight(.medium)
                     .foregroundColor(.primary)
                 
                 if let subtitle = subtitle {
                     Text(subtitle)
-                        .font(.body) // Increased to .body
+                        .font(.body)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }

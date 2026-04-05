@@ -125,6 +125,11 @@ struct CollapsedNotchView: View {
                 hudModel: collapsedNotchViewModel.outputAudioDeviceHUD
             )
             
+            NowPlayingTextHUDView(
+                notchViewModel: notchViewModel,
+                hudModel: collapsedNotchViewModel.nowPlayingChangesHUD
+            )
+            
             // MARK: Progress Style Views
             ProgressHUDView(
                 notchViewModel: notchViewModel,

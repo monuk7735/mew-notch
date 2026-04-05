@@ -24,6 +24,7 @@ class CollapsedNotchViewModel: ObservableObject {
     @Published var powerStatusHUD: HUDPropertyModel?
     
     @Published var lockStatusHUD: HUDPropertyModel?
+    @Published var nowPlayingChangesHUD: HUDPropertyModel?
     
     @Published var lastPowerStatus: String = ""
     @Published var lastBrightness: Float = 0.0
@@ -67,6 +68,8 @@ class CollapsedNotchViewModel: ObservableObject {
             self.brightnessHUD = nil
             
             self.powerStatusHUD = nil
+            
+            self.nowPlayingChangesHUD = nil
         }
     }
     
@@ -354,9 +357,28 @@ class CollapsedNotchViewModel: ObservableObject {
             return
         }
         
+        let titleChanged = self.nowPlayingMedia?.title != nowPlayingMedia.title
+        
         DispatchQueue.main.async {
             withAnimation {
                 self.nowPlayingMedia = nowPlayingMedia
+                
+                if titleChanged && !nowPlayingMedia.title.isEmpty && HUDMediaDefaults.shared.isEnabled {
+                    self.nowPlayingChangesHUD = .init(
+                        lottie: nil,
+                        icon: MewNotch.Assets.iconSpeaker,
+                        name: nowPlayingMedia.title,
+                        value: 0.0,
+                        timeout: HUDMediaDefaults.shared.titleChangeTimeout,
+                        timer: self.nowPlayingChangesHUD?.timer
+                    )
+                    
+                    self.resetHUDTimer(&self.nowPlayingChangesHUD) {
+                        withAnimation {
+                            self.nowPlayingChangesHUD = nil
+                        }
+                    }
+                }
             }
         }
     }
