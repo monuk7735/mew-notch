@@ -88,7 +88,7 @@ class NotchViewModel: ObservableObject {
         if isHovered {
             if shouldExpand {
                 hoverTimer = .scheduledTimer(
-                    withTimeInterval: 0.4,
+                    withTimeInterval: NotchDefaults.shared.expandOnHoverDelay,
                     repeats: false
                 ) { _ in
 

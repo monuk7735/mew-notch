@@ -24,18 +24,18 @@ struct HUDMediaSettingsView: View {
                 }
                 
                 SettingsRow(
-                    title: "Show Title",
+                    title: "Show Title on Change",
                     subtitle: "Shows new media name on change",
-                    icon: MewNotch.Assets.icAlbumName,
-                    color: MewNotch.Colors.albumName
+                    icon: MewNotch.Assets.icMedia,
+                    color: MewNotch.Colors.nowPlaying
                 ) {
                     Toggle("", isOn: $mediaDefaults.showTitleChange)
                 }
                 .hide(when: !mediaDefaults.isEnabled)
                 
                 SettingsRow(
-                    title: "Visible For",
-                    subtitle: "Shows new media name for \(mediaDefaults.titleChangeTimeout.formatted()) seconds",
+                    title: "Title Change Timeout",
+                    subtitle: "\(mediaDefaults.titleChangeTimeout.formatted()) seconds.",
                     icon: MewNotch.Assets.icTimer,
                     color: MewNotch.Colors.timer
                 ) {
