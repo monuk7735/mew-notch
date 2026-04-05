@@ -77,23 +77,27 @@ class NotchViewModel: ObservableObject {
         _ isHovered: Bool,
         shouldExpand: Bool = true
     ) {
-        HapticsManager.shared.feedback(
-            pattern: .generic
-        )
-        
+        if NotchDefaults.shared.hapticFeedback {
+            HapticsManager.shared.feedback(
+                pattern: .generic
+            )
+        }
+
         hoverTimer?.invalidate()
-        
+
         if isHovered {
             if shouldExpand {
                 hoverTimer = .scheduledTimer(
                     withTimeInterval: 0.4,
                     repeats: false
                 ) { _ in
-                    
-                    HapticsManager.shared.feedback(
-                        pattern: .generic
-                    )
-                    
+
+                    if NotchDefaults.shared.hapticFeedback {
+                        HapticsManager.shared.feedback(
+                            pattern: .generic
+                        )
+                    }
+
                     self.onTap()
                 }
             }

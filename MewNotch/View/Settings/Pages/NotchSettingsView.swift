@@ -157,6 +157,15 @@ struct NotchSettingsView: View {
                     ))
                     .disabled(notchDefaults.applyGlassEffect)
                 }
+
+                SettingsRow(
+                    title: "Haptic Feedback",
+                    subtitle: "Play haptic feedback when hovering over the notch",
+                    icon: MewNotch.Assets.icHaptic,
+                    color: MewNotch.Colors.haptic
+                ) {
+                    Toggle("", isOn: $notchDefaults.hapticFeedback)
+                }
             } header: {
                 Text("Interaction")
             }
