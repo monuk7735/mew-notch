@@ -37,6 +37,9 @@ struct MinimalHUDRightView<T: HUDDefaultsProtocol>: View {
                     )
                     .foregroundStyle(Color.white)
                 }
+                .if(!defaults.animateChanges) { view in
+                    view.animation(nil, value: hud.value)
+                }
             }
         }
     }

@@ -38,6 +38,19 @@ class HUDPowerDefaults: HUDDefaultsProtocol {
             }
         }
     }
+    
+    @CodableUserDefault(
+        PREFIX + "AnimateChanges",
+        defaultValue: true
+    )
+    var animateChanges: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
     @CodableUserDefault(
         PREFIX + "ShowTimeRemaining",
         defaultValue: true

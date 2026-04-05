@@ -20,7 +20,7 @@ struct HUDBrightnessSettingsView: View {
                     icon: MewNotch.Assets.icBrightnessFill,
                     color: MewNotch.Colors.brightness
                 ) {
-                    Toggle("", isOn: $viewModel.defaults.isEnabled)
+                    Toggle("", isOn: |$viewModel.defaults.isEnabled)
                 }
                 
                 SettingsRow(
@@ -35,7 +35,17 @@ struct HUDBrightnessSettingsView: View {
                     }
                     .labelsHidden()
                 }
-                .disabled(!viewModel.defaults.isEnabled)
+                .hide(when: !viewModel.defaults.isEnabled)
+                
+                SettingsRow(
+                    title: "Animated",
+                    subtitle: "Animate value changes",
+                    icon: MewNotch.Assets.icVideo,
+                    color: MewNotch.Colors.video
+                ) {
+                    Toggle("", isOn: $viewModel.defaults.animateChanges)
+                }
+                .hide(when: !viewModel.defaults.isEnabled || viewModel.defaults.style != .Minimal)
                 
                 SettingsRow(
                     title: "Show Auto Brightness Changes",
@@ -44,6 +54,7 @@ struct HUDBrightnessSettingsView: View {
                 ) {
                     Toggle("", isOn: $viewModel.defaults.showAutoBrightnessChanges)
                 }
+                .hide(when: !viewModel.defaults.isEnabled)
                 
                 SettingsRow(
                     title: "Step Size",
@@ -58,8 +69,6 @@ struct HUDBrightnessSettingsView: View {
                     )
                 }
                 .hide(when: !viewModel.defaults.isEnabled)
-            } footer: {
-               Text("Design to be used for HUD")
             }
         }
         .formStyle(.grouped)

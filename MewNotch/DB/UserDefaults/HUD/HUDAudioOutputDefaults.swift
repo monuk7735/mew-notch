@@ -39,6 +39,18 @@ class HUDAudioOutputDefaults: HUDDefaultsProtocol {
         }
     }
     
+    @CodableUserDefault(
+        PREFIX + "AnimateChanges",
+        defaultValue: true
+    )
+    var animateChanges: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
     @PrimitiveUserDefault(
         PREFIX + "Step",
         defaultValue: 5.0

@@ -20,7 +20,7 @@ struct HUDAudioSettingsView: View {
                     icon: MewNotch.Assets.icSpeakerWave2,
                     color: MewNotch.Colors.output
                 ) {
-                    Toggle("", isOn: $viewModel.outputDefaults.isEnabled)
+                    Toggle("", isOn: |$viewModel.outputDefaults.isEnabled)
                 }
                 
                 SettingsRow(
@@ -35,7 +35,17 @@ struct HUDAudioSettingsView: View {
                     }
                     .labelsHidden()
                 }
-                .disabled(!viewModel.outputDefaults.isEnabled)
+                .hide(when: !viewModel.outputDefaults.isEnabled)
+                
+                SettingsRow(
+                    title: "Animated",
+                    subtitle: "Animate value changes",
+                    icon: MewNotch.Assets.icVideo,
+                    color: MewNotch.Colors.video
+                ) {
+                    Toggle("", isOn: $viewModel.outputDefaults.animateChanges)
+                }
+                .hide(when: !viewModel.outputDefaults.isEnabled || viewModel.outputDefaults.style != .Minimal)
                 
                 SettingsRow(
                     title: "Step Size",
@@ -52,8 +62,6 @@ struct HUDAudioSettingsView: View {
                 .hide(when: !viewModel.outputDefaults.isEnabled)
             } header: {
                 Text("Output")
-            } footer: {
-                Text("Design to be used for HUD")
             }
             
             Section {
@@ -63,7 +71,7 @@ struct HUDAudioSettingsView: View {
                     icon: MewNotch.Assets.icMicrophone,
                     color: MewNotch.Colors.input
                 ) {
-                    Toggle("", isOn: $viewModel.inputDefaults.isEnabled)
+                    Toggle("", isOn: |$viewModel.inputDefaults.isEnabled)
                 }
                 
                 SettingsRow(
@@ -78,11 +86,19 @@ struct HUDAudioSettingsView: View {
                     }
                     .labelsHidden()
                 }
-                .disabled(!viewModel.inputDefaults.isEnabled)
+                .hide(when: !viewModel.inputDefaults.isEnabled)
+                
+                SettingsRow(
+                    title: "Animated",
+                    subtitle: "Animate value changes",
+                    icon: MewNotch.Assets.icVideo,
+                    color: MewNotch.Colors.video
+                ) {
+                    Toggle("", isOn: $viewModel.inputDefaults.animateChanges)
+                }
+                .hide(when: !viewModel.inputDefaults.isEnabled || viewModel.inputDefaults.style != .Minimal)
             } header: {
                 Text("Input")
-            } footer: {
-                Text("Design to be used for HUD")
             }
         }
         .formStyle(.grouped)

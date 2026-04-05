@@ -43,7 +43,7 @@ struct ProgressHUDView<T: HUDDefaultsProtocol>: View {
                         ) { value in
                             Text(
                                 String(
-                                    format: "%02.0f %",
+                                    format: "%02.0f %%",
                                     value
                                 )
                             )
