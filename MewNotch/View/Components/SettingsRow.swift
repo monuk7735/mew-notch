@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-
 struct SettingsIcon: View {
+    
     let icon: Image
     let color: MewNotch.IconColor
     
-    @ScaledMetric private var iconSize: CGFloat = 30 // Reverted to 30
-    @ScaledMetric private var cornerRadius: CGFloat = 7 // Reverted to 7
+    @ScaledMetric private var iconSize: CGFloat = 30
+    @ScaledMetric private var cornerRadius: CGFloat = 7
     
     var body: some View {
         icon
-            .font(.headline) // Reverted from .title3
+            .font(.headline)
             .foregroundStyle(.white)
             .frame(width: iconSize, height: iconSize)
             .background(
@@ -28,7 +28,25 @@ struct SettingsIcon: View {
     }
 }
 
+struct SettingsSidebarRow: View {
+    
+    let title: String
+    let icon: Image
+    let color: MewNotch.IconColor
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            SettingsIcon(icon: icon, color: color)
+            Text(title)
+                .font(.headline)
+                .fontWeight(.medium)
+        }
+        .padding(.vertical, 2)
+    }
+}
+
 struct SettingsRow<Content: View>: View {
+    
     let title: String
     let subtitle: String?
     let icon: Image

@@ -37,22 +37,12 @@ struct MewSettingsView: View {
                     Section(
                         content: {
                             NavigationLink(destination: GeneraSettingsView()) {
-                                HStack(spacing: 12) {
-                                    SettingsIcon(icon: MewNotch.Assets.icGeneral, color: MewNotch.Colors.general)
-                                    Text("General")
-                                        .font(.headline)
-                                        .fontWeight(.medium)
-                                }
+                                SettingsSidebarRow(title: "General", icon: MewNotch.Assets.icGeneral, color: MewNotch.Colors.general)
                             }
                             .id(SettingsPages.General)
                             
                             NavigationLink(destination: NotchSettingsView()) {
-                                HStack(spacing: 12) {
-                                    SettingsIcon(icon: MewNotch.Assets.icNotch, color: MewNotch.Colors.notch)
-                                    Text("Notch")
-                                        .font(.headline)
-                                        .fontWeight(.medium)
-                                }
+                                SettingsSidebarRow(title: "Notch", icon: MewNotch.Assets.icNotch, color: MewNotch.Colors.notch)
                             }
                             .id(SettingsPages.Notch)
                         }
@@ -63,23 +53,12 @@ struct MewSettingsView: View {
                     Section(
                         content: {
                             NavigationLink(destination: CollapsedItemsSettingsView()) {
-                                HStack(spacing: 12) {
-                                    SettingsIcon(icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
-                                    Text("Collapsed")
-                                        .font(.headline)
-                                        .fontWeight(.medium)
-                                }
+                                SettingsSidebarRow(title: "Collapsed", icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
                             }
                             .id(SettingsPages.CollapsedItems)
                             
                             NavigationLink(destination: ExpandedItemsSettingsView()) {
-                                HStack(spacing: 12) {
-                                    SettingsIcon(icon: MewNotch.Assets.icMedia, color: MewNotch.Colors.nowPlaying)
-                                        .foregroundStyle(.white)
-                                    Text("Expanded")
-                                        .font(.headline)
-                                        .fontWeight(.medium)
-                                }
+                                SettingsSidebarRow(title: "Expanded", icon: MewNotch.Assets.icMedia, color: MewNotch.Colors.nowPlaying)
                             }
                             .id(SettingsPages.ExpandedItems)
                         },
@@ -90,12 +69,7 @@ struct MewSettingsView: View {
                     
                     Section {
                         NavigationLink(destination: AboutAppView()) {
-                            HStack(spacing: 12) {
-                                SettingsIcon(icon: MewNotch.Assets.icAbout, color: MewNotch.Colors.about)
-                                Text("About")
-                                    .font(.headline)
-                                    .fontWeight(.medium)
-                            }
+                            SettingsSidebarRow(title: "About", icon: MewNotch.Assets.icAbout, color: MewNotch.Colors.about)
                         }
                         .id(SettingsPages.About)
                     }
