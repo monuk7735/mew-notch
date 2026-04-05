@@ -4,6 +4,8 @@
 //
 //  Created by Monu Kumar on 23/03/25.
 //
+import SwiftUI
+import Combine
 
 @propertyWrapper
 public struct CodableUserDefault<T: Codable> {
@@ -44,6 +46,22 @@ public struct CodableUserDefault<T: Codable> {
             let encoded = try? JSONEncoder().encode(newValue)
             
             defaults?.set(encoded, forKey: key)
+        }
+    }
+    
+    public static subscript<EnclosingSelf: ObservableObject>(
+        _enclosingInstance object: EnclosingSelf,
+        wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, T>,
+        storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
+    ) -> T {
+        get {
+            object[keyPath: storageKeyPath].wrappedValue
+        }
+        set {
+            if let publisher = object.objectWillChange as? ObservableObjectPublisher {
+                publisher.send()
+            }
+            object[keyPath: storageKeyPath].wrappedValue = newValue
         }
     }
 }

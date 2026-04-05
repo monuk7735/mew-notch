@@ -14,8 +14,6 @@ struct NotchSettingsView: View {
     
     @StateObject private var viewModel = NotchSettingsViewModel()
     
-
-    
     @StateObject var notchDefaults = NotchDefaults.shared
     @StateObject var mirrorDefaults = MirrorDefaults.shared
     
@@ -27,7 +25,7 @@ struct NotchSettingsView: View {
                     icon: MewNotch.Assets.icDisplay,
                     color: MewNotch.Colors.notch
                 ) {
-                    Picker("", selection: $notchDefaults.notchDisplayVisibility) {
+                    Picker("", selection: ~$notchDefaults.notchDisplayVisibility) {
                         ForEach(NotchDisplayVisibility.allCases) { item in
                             Text(item.displayName).tag(item)
                         }
@@ -37,16 +35,10 @@ struct NotchSettingsView: View {
                 
                 if notchDefaults.notchDisplayVisibility == .Custom {
                     VStack(spacing: 8) {
-                        HStack {
-                            Text("Choose Displays to show notch on")
-                                .font(.body)
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Button("Refresh List") {
-                                viewModel.refreshNSScreens()
-                            }
-                            .font(.caption)
-                        }
+                        Text("Choose Displays to show notch on")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         ScrollView(.horizontal) {
                             LazyHStack(spacing: 12) {
@@ -123,7 +115,7 @@ struct NotchSettingsView: View {
                     color: MewNotch.Colors.height
                 ) {
                     Picker("", selection: $notchDefaults.heightMode) {
-                        ForEach(NotchHeightMode.allCases) { item in
+                        ForEach([NotchHeightMode.Match_Notch, NotchHeightMode.Match_Menu_Bar]) { item in
                             Text(item.displayName).tag(item)
                         }
                     }
@@ -137,7 +129,7 @@ struct NotchSettingsView: View {
                         icon: MewNotch.Assets.icGlass,
                         color: MewNotch.Colors.glass
                     ) {
-                        Toggle("", isOn: $notchDefaults.applyGlassEffect)
+                        Toggle("", isOn: ~$notchDefaults.applyGlassEffect)
                     }
                 }
             } header: {
@@ -153,7 +145,11 @@ struct NotchSettingsView: View {
                 ) {
                     Toggle("", isOn: Binding(
                         get: { notchDefaults.expandOnHover || notchDefaults.applyGlassEffect },
-                        set: { notchDefaults.expandOnHover = $0 }
+                        set: { newValue in
+                            withAnimation {
+                                notchDefaults.expandOnHover = newValue
+                            }
+                        }
                     ))
                 }
                 .disabled(notchDefaults.applyGlassEffect)
@@ -170,7 +166,6 @@ struct NotchSettingsView: View {
                         step: 0.1
                     )
                 }
-                .animation(nil, value: notchDefaults.expandOnHoverDelay)
                 .hide(when: !notchDefaults.expandOnHover && !notchDefaults.applyGlassEffect)
 
                 SettingsRow(
@@ -184,27 +179,14 @@ struct NotchSettingsView: View {
             } header: {
                 Text("Interaction")
             }
-            
-
-
         }
         .formStyle(.grouped)
         .navigationTitle("Notch")
         .toolbarTitleDisplayMode(.inline)
         .onChange(
-            of: notchDefaults.notchDisplayVisibility
-        ) { _, _ in
-             viewModel.refreshNotches()
-        }
-        .onChange(
             of: notchDefaults.shownOnDisplay
         ) { _, _ in
              viewModel.refreshNotches()
-        }
-        .onChange(
-             of: scenePhase
-        ) { _, _ in
-             viewModel.refreshNSScreens()
         }
     }
 }

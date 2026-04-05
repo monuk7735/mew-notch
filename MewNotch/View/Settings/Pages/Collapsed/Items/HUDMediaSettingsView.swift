@@ -20,21 +20,39 @@ struct HUDMediaSettingsView: View {
                     icon: MewNotch.Assets.icMedia,
                     color: MewNotch.Colors.nowPlaying
                 ) {
-                    Toggle("", isOn: $mediaDefaults.isEnabled)
+                    Toggle("", isOn: ~$mediaDefaults.isEnabled)
                 }
+            } header: {
+                Text("General")
+            }
                 
+            Section {
                 SettingsRow(
-                    title: "Show Title on Change",
+                    title: "Animated",
+                    subtitle: "Animate value changes",
+                    icon: MewNotch.Assets.icVideo,
+                    color: MewNotch.Colors.video
+                ) {
+                    Toggle("", isOn: ~$mediaDefaults.animateChanges)
+                }
+                .hide(when: !mediaDefaults.isEnabled)
+            } header: {
+                Text("Appearance")
+            }
+                
+            Section {
+                SettingsRow(
+                    title: "Show title on change",
                     subtitle: "Shows new media name on change",
                     icon: MewNotch.Assets.icMedia,
                     color: MewNotch.Colors.nowPlaying
                 ) {
-                    Toggle("", isOn: $mediaDefaults.showTitleChange)
+                    Toggle("", isOn: ~$mediaDefaults.showTitleChange)
                 }
                 .hide(when: !mediaDefaults.isEnabled)
                 
                 SettingsRow(
-                    title: "Title Change Timeout",
+                    title: "Show new title for",
                     subtitle: "\(mediaDefaults.titleChangeTimeout.formatted()) seconds.",
                     icon: MewNotch.Assets.icTimer,
                     color: MewNotch.Colors.timer
@@ -45,10 +63,9 @@ struct HUDMediaSettingsView: View {
                         step: 1.0
                     )
                 }
-                .animation(nil, value: mediaDefaults.titleChangeTimeout)
                 .hide(when: !mediaDefaults.isEnabled || !mediaDefaults.showTitleChange)
             } header: {
-                Text("General")
+                Text("Behavior")
             }
         }
         .formStyle(.grouped)

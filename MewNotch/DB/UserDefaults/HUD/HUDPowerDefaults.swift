@@ -19,47 +19,23 @@ class HUDPowerDefaults: HUDDefaultsProtocol {
         PREFIX + "Enabled",
         defaultValue: true
     )
-    var isEnabled: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var isEnabled: Bool
     
     @CodableUserDefault(
         PREFIX + "Style",
         defaultValue: HUDStyle.Minimal
     )
-    var style: HUDStyle {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var style: HUDStyle
     
-    @CodableUserDefault(
+    @PrimitiveUserDefault(
         PREFIX + "AnimateChanges",
         defaultValue: true
     )
-    var animateChanges: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var animateChanges: Bool
     
-    @CodableUserDefault(
+    @PrimitiveUserDefault(
         PREFIX + "ShowTimeRemaining",
         defaultValue: true
     )
-    var showTimeRemaining: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var showTimeRemaining: Bool
 }

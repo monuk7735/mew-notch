@@ -19,59 +19,29 @@ class HUDMediaDefaults: HUDDefaultsProtocol {
         PREFIX + "Enabled",
         defaultValue: true
     )
-    var isEnabled: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var isEnabled: Bool
     
     @CodableUserDefault(
         PREFIX + "Style",
         defaultValue: HUDStyle.Minimal
     )
-    var style: HUDStyle {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var style: HUDStyle
     
     @PrimitiveUserDefault(
         PREFIX + "ShowTitleOnChange",
         defaultValue: true
     )
-    var showTitleChange: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var showTitleChange: Bool
     
-    @CodableUserDefault(
+    @PrimitiveUserDefault(
         PREFIX + "AnimateChanges",
         defaultValue: true
     )
-    var animateChanges: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var animateChanges: Bool
     
     @PrimitiveUserDefault(
         PREFIX + "ShowTitleOnChangeTimeout",
         defaultValue: 3.0
     )
-    var titleChangeTimeout: Double {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var titleChangeTimeout: Double
 }
