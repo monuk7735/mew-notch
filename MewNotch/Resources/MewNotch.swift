@@ -67,6 +67,7 @@ class MewNotch {
         static let icHeight = Image(systemName: "ruler.fill")
         static let icGlass = Image(systemName: "sparkles")
         static let icHover = Image(systemName: "cursorarrow.rays")
+        static let icHaptic = Image(systemName: "hand.tap.fill")
         static let icCornerRadius = Image(systemName: "app.dashed")
         static let icSeparator = Image(systemName: "line.3.horizontal")
         
@@ -108,6 +109,7 @@ class MewNotch {
         static let height = IconColor.orange
         static let glass = IconColor.cyan
         static let hover = IconColor.indigo
+        static let haptic = IconColor.teal
         static let separator = IconColor.gray
         
         static let albumArt = IconColor.blue
