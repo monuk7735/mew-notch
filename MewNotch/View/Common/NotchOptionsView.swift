@@ -22,8 +22,8 @@ struct NotchOptionsView: View {
     var type: OptionsType = .ContextMenu
     
     var body: some View {
-        Button("Fix Notch") {
-            NotchManager.shared.refreshNotches()
+        Button("Refresh Notch") {
+            NotchManager.shared.refreshNotches(killAllWindows: true)
         }
         
         Button("Settings") {

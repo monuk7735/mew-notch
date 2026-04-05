@@ -49,6 +49,17 @@ struct AboutAppView: View {
                 }
                 .controlSize(.large)
                 .disabled(!updaterViewModel.canCheckForUpdates)
+                
+                Button(action: {
+                    if let url = URL(string: "https://github.com/monuk7735/mew-notch") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }) {
+                    Text("View on GitHub")
+                        .font(.system(size: 13, weight: .medium))
+                        .frame(maxWidth: 160)
+                }
+                .controlSize(.large)
             }
         }
         .padding(40)
