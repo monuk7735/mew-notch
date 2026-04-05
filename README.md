@@ -53,7 +53,7 @@
 ### Homebrew
 
 ```bash
-brew install --cask monuk7735/tap/mew-notch --no-quarantine
+brew install --cask monuk7735/tap/mew-notch
 ```
 
 ### Manual Download
