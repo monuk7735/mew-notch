@@ -40,7 +40,7 @@ class HUDMediaDefaults: HUDDefaultsProtocol {
     }
     
     @PrimitiveUserDefault(
-        PREFIX + "Show_Title_Change",
+        PREFIX + "ShowTitleOnChange",
         defaultValue: true
     )
     var showTitleChange: Bool {
@@ -52,7 +52,7 @@ class HUDMediaDefaults: HUDDefaultsProtocol {
     }
     
     @PrimitiveUserDefault(
-        PREFIX + "Title_Change_Timeout",
+        PREFIX + "ShowTitleOnChangeTimeout",
         defaultValue: 3.0
     )
     var titleChangeTimeout: Double {

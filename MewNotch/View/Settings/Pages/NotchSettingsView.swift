@@ -147,7 +147,7 @@ struct NotchSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Expand on Hover",
-                    subtitle: "Expand notch when hovered > 500ms.\nDisables click interactions in all HUDs.",
+                    subtitle: "Expand notch when hovered.\nDisables click interactions in all HUDs.",
                     icon: MewNotch.Assets.icHover,
                     color: MewNotch.Colors.hover
                 ) {
@@ -155,8 +155,23 @@ struct NotchSettingsView: View {
                         get: { notchDefaults.expandOnHover || notchDefaults.applyGlassEffect },
                         set: { notchDefaults.expandOnHover = $0 }
                     ))
-                    .disabled(notchDefaults.applyGlassEffect)
                 }
+                .disabled(notchDefaults.applyGlassEffect)
+                
+                SettingsRow(
+                    title: "Hover Delay",
+                    subtitle: "\(notchDefaults.expandOnHoverDelay.formatted()) seconds.\n",
+                    icon: MewNotch.Assets.icTimer,
+                    color: MewNotch.Colors.timer
+                ) {
+                    Slider(
+                        value: $notchDefaults.expandOnHoverDelay,
+                        in: 0.1...2.0,
+                        step: 0.1
+                    )
+                }
+                .animation(nil, value: notchDefaults.expandOnHoverDelay)
+                .hide(when: !notchDefaults.expandOnHover && !notchDefaults.applyGlassEffect)
 
                 SettingsRow(
                     title: "Haptic Feedback",

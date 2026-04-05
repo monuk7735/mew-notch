@@ -5,7 +5,7 @@
 //  Created by Monu Kumar on 23/03/25.
 //
 
-import Foundation
+import SwiftUI
 
 class NotchDefaults: ObservableObject {
     
@@ -100,6 +100,18 @@ class NotchDefaults: ObservableObject {
         defaultValue: false
     )
     var expandOnHover: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
+    @PrimitiveUserDefault(
+        PREFIX + "ExpandOnHoverDelay",
+        defaultValue: 0.5
+    )
+    var expandOnHoverDelay: Double {
         didSet {
             self.objectWillChange.send()
         }
