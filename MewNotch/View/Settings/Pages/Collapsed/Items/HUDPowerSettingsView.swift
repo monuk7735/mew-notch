@@ -20,9 +20,13 @@ struct HUDPowerSettingsView: View {
                     icon: MewNotch.Assets.icPower,
                     color: MewNotch.Colors.power
                 ) {
-                    Toggle("", isOn: $powerDefaults.isEnabled)
+                    Toggle("", isOn: ~$powerDefaults.isEnabled)
                 }
+            } header: {
+                Text("General")
+            }
                 
+            Section {
                 SettingsRow(
                     title: "Show Time Remaining",
                     subtitle: "Displays estimated time remaining on battery",
@@ -31,7 +35,9 @@ struct HUDPowerSettingsView: View {
                 ) {
                     Toggle("", isOn: $powerDefaults.showTimeRemaining)
                 }
-                .disabled(!powerDefaults.isEnabled)
+                .hide(when: !powerDefaults.isEnabled)
+            } header: {
+                Text("Details")
             }
         }
         .formStyle(.grouped)

@@ -75,7 +75,7 @@ struct NowPlayingHUDLeftView: View {
                     }
                     .onHover { isHovered in
                         withAnimation {
-                            self.isHovered = isHovered && !notchDefaults.expandOnHover
+                            self.isHovered = isHovered && !notchDefaults.expandOnHover && notchDefaults.applyGlassEffect
                         }
                     }
             }

@@ -20,15 +20,19 @@ struct HUDAudioSettingsView: View {
                     icon: MewNotch.Assets.icSpeakerWave2,
                     color: MewNotch.Colors.output
                 ) {
-                    Toggle("", isOn: |$viewModel.outputDefaults.isEnabled)
+                    Toggle("", isOn: ~$viewModel.outputDefaults.isEnabled)
                 }
+            } header: {
+                Text("Output General")
+            }
                 
+            Section {
                 SettingsRow(
                     title: "Style",
                     icon: MewNotch.Assets.icPaintbrush,
                     color: MewNotch.Colors.style
                 ) {
-                    Picker("", selection: $viewModel.outputDefaults.style) {
+                    Picker("", selection: ~$viewModel.outputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
                             Text(style.rawValue.capitalized).tag(style)
                         }
@@ -46,7 +50,11 @@ struct HUDAudioSettingsView: View {
                     Toggle("", isOn: $viewModel.outputDefaults.animateChanges)
                 }
                 .hide(when: !viewModel.outputDefaults.isEnabled || viewModel.outputDefaults.style != .Minimal)
+            } header: {
+                Text("Output Appearance")
+            }
                 
+            Section {
                 SettingsRow(
                     title: "Step Size",
                     subtitle: "\(Int(viewModel.localVolumeStep))%",
@@ -61,7 +69,7 @@ struct HUDAudioSettingsView: View {
                 }
                 .hide(when: !viewModel.outputDefaults.isEnabled)
             } header: {
-                Text("Output")
+                Text("Output Details")
             }
             
             Section {
@@ -71,15 +79,19 @@ struct HUDAudioSettingsView: View {
                     icon: MewNotch.Assets.icMicrophone,
                     color: MewNotch.Colors.input
                 ) {
-                    Toggle("", isOn: |$viewModel.inputDefaults.isEnabled)
+                    Toggle("", isOn: ~$viewModel.inputDefaults.isEnabled)
                 }
+            } header: {
+                Text("Input General")
+            }
                 
+            Section {
                 SettingsRow(
                     title: "Style",
                     icon: MewNotch.Assets.icPaintbrush,
                     color: MewNotch.Colors.style
                 ) {
-                    Picker("", selection: $viewModel.inputDefaults.style) {
+                    Picker("", selection: ~$viewModel.inputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
                             Text(style.rawValue.capitalized).tag(style)
                         }
@@ -98,7 +110,7 @@ struct HUDAudioSettingsView: View {
                 }
                 .hide(when: !viewModel.inputDefaults.isEnabled || viewModel.inputDefaults.style != .Minimal)
             } header: {
-                Text("Input")
+                Text("Input Appearance")
             }
         }
         .formStyle(.grouped)

@@ -20,15 +20,19 @@ struct HUDBrightnessSettingsView: View {
                     icon: MewNotch.Assets.icBrightnessFill,
                     color: MewNotch.Colors.brightness
                 ) {
-                    Toggle("", isOn: |$viewModel.defaults.isEnabled)
+                    Toggle("", isOn: ~$viewModel.defaults.isEnabled)
                 }
+            } header: {
+                Text("General")
+            }
                 
+            Section {
                 SettingsRow(
                     title: "Style",
                     icon: MewNotch.Assets.icPaintbrush,
                     color: MewNotch.Colors.style
                 ) {
-                    Picker("", selection: $viewModel.defaults.style) {
+                    Picker("", selection: ~$viewModel.defaults.style) {
                         ForEach(HUDStyle.allCases) { style in
                             Text(style.rawValue.capitalized).tag(style)
                         }
@@ -46,13 +50,17 @@ struct HUDBrightnessSettingsView: View {
                     Toggle("", isOn: $viewModel.defaults.animateChanges)
                 }
                 .hide(when: !viewModel.defaults.isEnabled || viewModel.defaults.style != .Minimal)
+            } header: {
+                Text("Appearance")
+            }
                 
+            Section {
                 SettingsRow(
                     title: "Show Auto Brightness Changes",
                     icon: MewNotch.Assets.icBoltBadgeAutomatic,
                     color: MewNotch.Colors.autoBrightness
                 ) {
-                    Toggle("", isOn: $viewModel.defaults.showAutoBrightnessChanges)
+                    Toggle("", isOn: ~$viewModel.defaults.showAutoBrightnessChanges)
                 }
                 .hide(when: !viewModel.defaults.isEnabled)
                 
@@ -69,6 +77,8 @@ struct HUDBrightnessSettingsView: View {
                     )
                 }
                 .hide(when: !viewModel.defaults.isEnabled)
+            } header: {
+                Text("Details")
             }
         }
         .formStyle(.grouped)

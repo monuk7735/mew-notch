@@ -19,47 +19,23 @@ class HUDAudioOutputDefaults: HUDDefaultsProtocol {
         PREFIX + "Enabled",
         defaultValue: true
     )
-    var isEnabled: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var isEnabled: Bool
     
     @CodableUserDefault(
         PREFIX + "Style",
         defaultValue: HUDStyle.Minimal
     )
-    var style: HUDStyle {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var style: HUDStyle
     
     @CodableUserDefault(
         PREFIX + "AnimateChanges",
         defaultValue: true
     )
-    var animateChanges: Bool {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var animateChanges: Bool
     
     @PrimitiveUserDefault(
         PREFIX + "Step",
         defaultValue: 5.0
     )
-    var step: Double {
-        didSet {
-            withAnimation {
-                self.objectWillChange.send()
-            }
-        }
-    }
+    var step: Double
 }

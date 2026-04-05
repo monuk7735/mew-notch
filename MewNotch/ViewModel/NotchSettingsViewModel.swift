@@ -10,23 +10,35 @@ import Combine
 
 final class NotchSettingsViewModel: ObservableObject {
     
-    @Published var screens: [NSScreen] = []
+    @Published var screens: [NSScreen] = NSScreen.screens
     
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        self.refreshNSScreens(animate: false)
+        addListenerForScreenUpdates()
     }
     
-    func refreshNSScreens(animate: Bool = true) {
-        Task { @MainActor in
-            if animate {
-                withAnimation {
-                    self.screens = NSScreen.screens
-                }
-            } else {
-                self.screens = NSScreen.screens
-            }
+    deinit {
+        removeListenerForScreenUpdates()
+    }
+    
+    func addListenerForScreenUpdates() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refreshScreens),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+    }
+    
+    func removeListenerForScreenUpdates() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc
+    func refreshScreens() {
+        DispatchQueue.main.async {
+            self.screens = NSScreen.screens
         }
     }
     

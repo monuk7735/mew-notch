@@ -21,8 +21,8 @@ extension Binding {
     }
 }
 
-prefix operator |
+prefix operator ~
 
-public prefix func | <Value>(binding: Binding<Value>) -> Binding<Value> {
+public prefix func ~ <Value>(binding: Binding<Value>) -> Binding<Value> {
     return binding.animated
 }
