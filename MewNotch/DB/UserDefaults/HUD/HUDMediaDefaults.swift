@@ -51,6 +51,18 @@ class HUDMediaDefaults: HUDDefaultsProtocol {
         }
     }
     
+    @CodableUserDefault(
+        PREFIX + "AnimateChanges",
+        defaultValue: true
+    )
+    var animateChanges: Bool {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
     @PrimitiveUserDefault(
         PREFIX + "ShowTitleOnChangeTimeout",
         defaultValue: 3.0

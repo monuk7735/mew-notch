@@ -10,7 +10,7 @@ import Combine
 
 final class HUDBrightnessSettingsViewModel: ObservableObject {
     
-    @ObservedObject var defaults = HUDBrightnessDefaults.shared
+    @Published var defaults = HUDBrightnessDefaults.shared
     
     @Published var localStep: Double
     

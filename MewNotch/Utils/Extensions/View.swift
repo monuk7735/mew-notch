@@ -58,4 +58,16 @@ extension View {
     ) -> some View {
         modifier(ConditionalLiquidGlass(enabled: enabled, shape: shape))
     }
+    
+    @ViewBuilder
+    func `if`<T: View>(
+        _ enabled: Bool,
+        modifier: (Self) -> T
+    ) -> some View {
+        if enabled {
+            modifier(self)
+        } else {
+            self
+        }
+    }
 }

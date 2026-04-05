@@ -10,8 +10,8 @@ import Combine
 
 final class HUDAudioSettingsViewModel: ObservableObject {
     
-    @ObservedObject var inputDefaults = HUDAudioInputDefaults.shared
-    @ObservedObject var outputDefaults = HUDAudioOutputDefaults.shared
+    @Published var inputDefaults = HUDAudioInputDefaults.shared
+    @Published var outputDefaults = HUDAudioOutputDefaults.shared
     
     @Published var localVolumeStep: Double
     

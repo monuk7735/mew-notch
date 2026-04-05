@@ -13,4 +13,5 @@ protocol HUDDefaultsProtocol: ObservableObject {
     
     var isEnabled: Bool { get set }
     var style: HUDStyle { get set }
+    var animateChanges: Bool { get }
 }
