@@ -56,9 +56,7 @@ struct NotchView: View {
                     bottomRadius: notchViewModel.cornerRadius.bottom
                 ))
                 .background {
-                    if !notchDefaults.applyGlassEffect {
-                        Color.black
-                    }
+                    Color.black
                 }
                 .mask {
                     NotchShape(

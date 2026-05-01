@@ -44,6 +44,14 @@ struct NotchHomeView: View {
                     )
                 case .Bash:
                     BashView(notchViewModel: notchViewModel)
+                case .Calendar:
+                    CalendarQuickView()
+                case .Clipboard:
+                    ClipboardQuickView()
+                case .Files:
+                    FilesQuickView(
+                        expandedNotchViewModel: expandedNotchViewModel
+                    )
                 }
                 
                 if notchDefaults.showDividers && index != items.count - 1 {

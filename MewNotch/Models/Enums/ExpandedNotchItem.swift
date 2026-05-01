@@ -14,6 +14,9 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
     case Mirror
     case NowPlaying
     case Bash
+    case Calendar
+    case Clipboard
+    case Files
     
     var displayName: String {
         switch self {
@@ -23,6 +26,12 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
             return "Now Playing"
         case .Bash:
             return "Bash Command"
+        case .Calendar:
+            return "Calendar"
+        case .Clipboard:
+            return "Clipboard"
+        case .Files:
+            return "Files"
         }
     }
     
@@ -34,6 +43,12 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
             return "music.note"
         case .Bash:
             return "terminal"
+        case .Calendar:
+            return "calendar"
+        case .Clipboard:
+            return "clipboard"
+        case .Files:
+            return "folder.fill"
         }
     }
 }

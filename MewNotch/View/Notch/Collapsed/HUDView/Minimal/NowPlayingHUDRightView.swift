@@ -18,6 +18,12 @@ struct NowPlayingHUDRightView: View {
     var nowPlayingModel: NowPlayingMediaModel?
     
     @State private var isHovered: Bool = false
+    @State private var shouldShowMomentarily: Bool = false
+    @State private var autoHideTask: Task<Void, Never>?
+    
+    private var shouldShowIndicator: Bool {
+        isHovered || shouldShowMomentarily
+    }
     
     var body: some View {
         if let nowPlayingModel {
@@ -63,6 +69,45 @@ struct NowPlayingHUDRightView: View {
             .onHover { isHovered in
                 withAnimation {
                     self.isHovered = isHovered && !notchDefaults.expandOnHover && !notchDefaults.applyGlassEffect
+                }
+            }
+            .hide(
+                when: !shouldShowIndicator
+            )
+            .onAppear {
+                scheduleAutoHide()
+            }
+            .onDisappear {
+                autoHideTask?.cancel()
+            }
+            .onChange(of: nowPlayingModel.title) { _, _ in
+                scheduleAutoHide()
+            }
+            .onChange(of: nowPlayingModel.artist) { _, _ in
+                scheduleAutoHide()
+            }
+            .onChange(of: nowPlayingModel.album) { _, _ in
+                scheduleAutoHide()
+            }
+            .onChange(of: nowPlayingModel.isPlaying) { _, _ in
+                scheduleAutoHide()
+            }
+        }
+    }
+    
+    private func scheduleAutoHide() {
+        autoHideTask?.cancel()
+        
+        withAnimation {
+            shouldShowMomentarily = true
+        }
+        
+        autoHideTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(3))
+            
+            if !Task.isCancelled {
+                withAnimation {
+                    shouldShowMomentarily = false
                 }
             }
         }
