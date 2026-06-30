@@ -43,26 +43,7 @@ struct NotchSettingsView: View {
                         ScrollView(.horizontal) {
                             LazyHStack(spacing: 12) {
                                 ForEach(viewModel.screens, id: \.self) { screen in
-                                    let isSelected = notchDefaults.shownOnDisplay[screen.localizedName] == true
-                                    Text(screen.localizedName)
-                                        .font(.subheadline)
-                                        .frame(minHeight: 50)
-                                        .padding(12)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .fill(isSelected ? Color.blue.opacity(0.15) : Color.gray.opacity(0.1))
-                                        )
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 2)
-                                                .padding(1)
-                                        )
-                                        .onTapGesture {
-                                            let old = notchDefaults.shownOnDisplay[screen.localizedName] ?? false
-                                            withAnimation(.easeInOut(duration: 0.2)) {
-                                                notchDefaults.shownOnDisplay[screen.localizedName] = !old
-                                            }
-                                        }
+                                    ScreenSelectionCard(screen: screen, notchDefaults: notchDefaults)
                                 }
                             }
                             .padding(.vertical, 4)
@@ -188,6 +169,37 @@ struct NotchSettingsView: View {
         ) { _, _ in
              viewModel.refreshNotches()
         }
+    }
+}
+
+struct ScreenSelectionCard: View {
+    let screen: NSScreen
+    @ObservedObject var notchDefaults: NotchDefaults
+    
+    private var isSelected: Bool {
+        notchDefaults.shownOnDisplay[screen.localizedName] == true
+    }
+    
+    var body: some View {
+        Text(screen.localizedName)
+            .font(.subheadline)
+            .frame(minHeight: 50)
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? Color.blue.opacity(0.15) : Color.gray.opacity(0.1))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 2)
+                    .padding(1)
+            )
+            .onTapGesture {
+                let old = notchDefaults.shownOnDisplay[screen.localizedName] ?? false
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    notchDefaults.shownOnDisplay[screen.localizedName] = !old
+                }
+            }
     }
 }
 
