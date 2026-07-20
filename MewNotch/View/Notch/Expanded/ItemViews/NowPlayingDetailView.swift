@@ -21,6 +21,8 @@ struct NowPlayingDetailView: View {
     
     @State private var distanceTimer: Timer? = nil
     @State private var elapsedTime: TimeInterval = 0
+    @State private var isEditingSlider: Bool = false
+    @State private var lastSeekTime: Date? = nil
     
     func resetElapsedTimeTimer(
         restart: Bool = true
@@ -35,6 +37,9 @@ struct NowPlayingDetailView: View {
             withTimeInterval: 0.5,
             repeats: true
         ) { _ in
+            if isEditingSlider { return }
+            if let lastSeek = lastSeekTime, Date().timeIntervalSince(lastSeek) < 1.5 { return }
+            
             self.elapsedTime = nowPlayingModel.elapsedTime + nowPlayingModel.refreshedAt.distance(
                 to: .now
             )
@@ -65,7 +70,12 @@ struct NowPlayingDetailView: View {
         .onChange(
             of: self.nowPlayingModel
         ) {
-            self.elapsedTime = $1.elapsedTime
+            if !isEditingSlider {
+                let shouldIgnore = lastSeekTime != nil && Date().timeIntervalSince(lastSeekTime!) < 1.5
+                if !shouldIgnore {
+                    self.elapsedTime = $1.elapsedTime
+                }
+            }
             
             self.resetElapsedTimeTimer(
                 restart: $1.isPlaying
@@ -93,31 +103,19 @@ struct NowPlayingDetailView: View {
     
     @ViewBuilder
     func detailsView() -> some View {
-        VStack(
-            alignment: .leading,
-            spacing: 4
-        ) {
-            Spacer()
-            
+        VStack(alignment: .leading, spacing: 4) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(nowPlayingModel.title)
                     .minimumScaleFactor(0.8)
                     .lineLimit(1)
                     .font(.headline)
                 
-                if nowPlayingDefaults.showArtist {
-                    Text(nowPlayingModel.artist)
+                let subtitle = subtitleText
+                if !subtitle.isEmpty {
+                    Text(subtitle)
                         .minimumScaleFactor(0.8)
                         .lineLimit(1)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                
-                if nowPlayingDefaults.showAlbum {
-                    Text(nowPlayingModel.album)
-                        .minimumScaleFactor(0.8)
-                        .lineLimit(1)
-                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -156,72 +154,37 @@ struct NowPlayingDetailView: View {
             }
             .contentShape(Rectangle())
             
-            VStack(
-                spacing: 2
-            ) {
-                HStack {
-                    let elapsedTime = Int(
-                        min(
-                            self.elapsedTime,
-                            nowPlayingModel.totalDuration
-                        )
-                    )
-                    let elapsedHours = elapsedTime / 3600
-                    let elapsedMinutes = (elapsedTime % 3600) / 60
-                    let elapsedSeconds = elapsedTime % 60
-                    
-                    Text(
-                        elapsedHours > 0 ? "\(elapsedHours):" : ""
-                        +
-                        String(
-                            format: "%02d:%02d",
-                            elapsedMinutes,
-                            elapsedSeconds
-                        )
-                    )
-                    .monospacedDigit()
-                    
-                    Spacer()
-                    
-                    let totalDuration = Int(nowPlayingModel.totalDuration)
-                    let totalHours = totalDuration / 3600
-                    let totalMinutes = (totalDuration % 3600) / 60
-                    let totalSeconds = totalDuration % 60
-                    
-                    Text(
-                        totalHours > 0
-                        ? String(
-                            format: "%02d:%02d:%02d",
-                            totalHours,
-                            totalMinutes,
-                            totalSeconds
-                        ) : String(
-                            format: "%02d:%02d",
-                            totalMinutes,
-                            totalSeconds
-                        )
-                    )
-                    .monospacedDigit()
-                }
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                
-                Spacer()
-                
-                Slider(
-                    value: $elapsedTime,
-                    in: 0...nowPlayingModel.totalDuration,
-                    onEditingChanged: { editing in
-                        if !editing {
-//                            NowPlaying.shared.seek(to: elapsedTime)
-                        }
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: 4)
+            
+            if nowPlayingDefaults.enableSeekbar {
+                VStack(spacing: 2) {
+                    HStack {
+                        Text(timeString(time: elapsedTime))
+                        Spacer()
+                        Text("-" + timeString(time: nowPlayingModel.totalDuration - elapsedTime))
                     }
-                )
-                .controlSize(.mini)
-                .disabled(true)
-                .padding(.vertical, 2)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+                    
+                    Slider(
+                        value: $elapsedTime,
+                        in: 0...nowPlayingModel.totalDuration,
+                        onEditingChanged: { editing in
+                            isEditingSlider = editing
+                            if !editing {
+                                lastSeekTime = Date()
+                                NowPlaying.shared.seek(to: elapsedTime)
+                            }
+                        }
+                    )
+                    .controlSize(.mini)
+                    .padding(.vertical, 2)
+                }
+                .padding(.vertical, 4)
             }
-            .padding(.vertical, 4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .onHover { isHovered in
@@ -229,73 +192,110 @@ struct NowPlayingDetailView: View {
         }
     }
     
+    private func timeString(time: Double) -> String {
+        let totalSeconds = Int(max(0, time))
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+    
+    private var subtitleText: String {
+        var subtitle = ""
+        let artist = nowPlayingModel.artist
+        let album = nowPlayingModel.album
+        
+        if nowPlayingDefaults.showArtist && !artist.isEmpty {
+            subtitle += artist
+        }
+        if nowPlayingDefaults.showAlbum && !album.isEmpty {
+            if !subtitle.isEmpty {
+                subtitle += " — "
+            }
+            subtitle += album
+        }
+        return subtitle
+    }
+    
     @ViewBuilder
     func albumArtView() -> some View {
-        (nowPlayingModel.albumArt ?? NowPlayingMediaModel.Placeholder.albumArt!)
-            .resizable()
-            .aspectRatio(
-                1,
-                contentMode: .fit
-            )
-            .clipShape(
-                RoundedRectangle(
-                    cornerRadius: nowPlayingDefaults.albumArtCornerRadius
-                )
-            )
-            .overlay {
-                if nowPlayingDefaults.showAppIcon {
-                    Button(
-                        action: {
-                            guard let url = NSWorkspace.shared.urlForApplication(
-                                withBundleIdentifier: nowPlayingModel.appBundleIdentifier
-                            ) else {
-                                return
-                            }
-                            
-                            NSWorkspace.shared.openApplication(
-                                at: url,
-                                configuration: .init()
-                            )
-                        }
-                    ) {
-                        nowPlayingModel.appIcon
-                            .resizable()
-                            .aspectRatio(
-                                1,
-                                contentMode: .fit
-                            )
-                            .frame(
-                                width: 32,
-                                height: 32
-                            )
-                            .scaleEffect(isAppIconHovered ? 1.1 : 1.0)
-                            .shadow(
-                                color: .black.opacity(isAppIconHovered ? 0.5 : 0.2),
-                                radius: isAppIconHovered ? 4 : 2,
-                                x: 0,
-                                y: 2
-                            )
-                            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAppIconHovered)
-                    }
-                    .buttonStyle(.plain)
-                    .onHover { isHovered in
-                        isAppIconHovered = isHovered
-                    }
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .bottomTrailing
-                    )
-                    .padding(
-                        .bottom,
-                        -4
-                    )
-                    .padding(
-                        .trailing,
-                        -4
-                    )
-                }
+        if nowPlayingModel.appBundleIdentifier.isEmpty {
+            ZStack {
+                RoundedRectangle(cornerRadius: nowPlayingDefaults.albumArtCornerRadius)
+                    .fill(Color.gray.opacity(0.3))
+                Image(systemName: "music.note")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.gray)
             }
+            .aspectRatio(1, contentMode: .fit)
+        } else {
+            (nowPlayingModel.albumArt ?? NowPlayingMediaModel.Placeholder.albumArt!)
+                .resizable()
+                .aspectRatio(
+                    1,
+                    contentMode: .fit
+                )
+                .clipShape(
+                    RoundedRectangle(
+                        cornerRadius: nowPlayingDefaults.albumArtCornerRadius
+                    )
+                )
+                .overlay {
+                    if nowPlayingDefaults.showAppIcon {
+                        Button(
+                            action: {
+                                guard let url = NSWorkspace.shared.urlForApplication(
+                                    withBundleIdentifier: nowPlayingModel.appBundleIdentifier
+                                ) else {
+                                    return
+                                }
+                                
+                                NSWorkspace.shared.openApplication(
+                                    at: url,
+                                    configuration: .init()
+                                )
+                            }
+                        ) {
+                            nowPlayingModel.appIcon
+                                .resizable()
+                                .aspectRatio(
+                                    1,
+                                    contentMode: .fit
+                                )
+                                .frame(
+                                    width: 28,
+                                    height: 28
+                                )
+                                .scaleEffect(isAppIconHovered ? 1.1 : 1.0)
+                                .shadow(
+                                    color: .black.opacity(isAppIconHovered ? 0.5 : 0.2),
+                                    radius: isAppIconHovered ? 4 : 2,
+                                    x: 0,
+                                    y: 2
+                                )
+                                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAppIconHovered)
+                        }
+                        .buttonStyle(.plain)
+                        .onHover { isHovered in
+                            isAppIconHovered = isHovered
+                        }
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity,
+                            alignment: .bottomTrailing
+                        )
+                        .padding(.bottom, 2)
+                        .padding(.trailing, 2)
+                    }
+                }
+        }
     }
 }
 
@@ -313,6 +313,7 @@ struct MediaControlButton: View {
                 .resizable()
                 .scaledToFit()
                 .padding(isPrimary ? 8 : 6)
+                .offset(x: iconName == "play.fill" ? 1.5 : 0)
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1, contentMode: .fit)
                 .frame(maxHeight: size)

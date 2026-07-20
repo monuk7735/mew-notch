@@ -107,6 +107,21 @@ final class NowPlaying {
         Task {
             await self.setupNowPlayingObserver()
         }
+        
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { [weak self] notification in
+            guard let self = self,
+                  let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else { return }
+            
+            if app.bundleIdentifier == self.appBundleIdentifier {
+                self.playing = false
+                self.title = nil
+                self.artist = nil
+                self.album = nil
+                self.albumArt = nil
+                self.appBundleIdentifier = nil
+                NotificationCenter.default.post(name: .NowPlayingInfo, object: nil)
+            }
+        }
     }
     
     private func sendCommand(_ command: MRCommand) {
@@ -136,6 +151,53 @@ final class NowPlaying {
 
     func previousTrack() {
         sendCommand(.MRPreviousTrack)
+    }
+    
+    func seek(to position: Double) {
+        guard let scriptURL = Bundle.main.url(forResource: "mediaremote-adapter", withExtension: "pl"),
+            let frameworkPath = Bundle.main.privateFrameworksPath?.appending("/MediaRemoteAdapter.framework") else {
+            return
+        }
+        
+        let positionInMicros = Int(position * 1_000_000)
+        let bundleId = NowPlaying.shared.appBundleIdentifier
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/usr/bin/perl")
+            process.arguments = [scriptURL.path, frameworkPath, "seek", "\(positionInMicros)"]
+            
+            do {
+                try process.run()
+            } catch {
+                NSLog("Command could not be sent through mediaremote-adapter: \(error.localizedDescription)")
+            }
+            
+            // Fallback to AppleScript for known players that ignore MediaRemote seek commands
+            if let bundleId = bundleId {
+                var script = ""
+                if bundleId == "com.apple.Music" {
+                    script = "tell application \"Music\" to set player position to \(position)"
+                } else if bundleId == "com.spotify.client" {
+                    script = "tell application \"Spotify\" to set player position to \(position)"
+                }
+                
+                if !script.isEmpty {
+                    let osascript = Process()
+                    osascript.executableURL = URL(fileURLWithPath: "/usr/usr/bin/osascript")
+                    osascript.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+                    osascript.arguments = ["-e", script]
+                    try? osascript.run()
+                }
+            }
+        }
+        
+        // Manually update the state so the UI doesn't wait (or snap back if no event is emitted)
+        self.elapsedTime = position
+        self.refreshedAt = Date()
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .NowPlayingInfo, object: nil)
+        }
     }
     
     private func setupNowPlayingObserver() async {

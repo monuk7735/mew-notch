@@ -46,4 +46,12 @@ class NowPlayingDefaults: ObservableObject {
             }
         }
     }
+    
+    @AppStorage(PREFIX + "EnableSeekbar") var enableSeekbar: Bool = true {
+        didSet {
+            withAnimation {
+                self.objectWillChange.send()
+            }
+        }
+    }
 }
