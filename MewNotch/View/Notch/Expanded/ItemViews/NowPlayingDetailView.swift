@@ -105,18 +105,26 @@ struct NowPlayingDetailView: View {
     func detailsView() -> some View {
         VStack(alignment: .leading, spacing: 4) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(nowPlayingModel.title)
-                    .minimumScaleFactor(0.8)
-                    .lineLimit(1)
-                    .font(.headline)
+                MarqueeTextView(
+                    text: nowPlayingModel.title,
+                    font: NSFont.preferredFont(forTextStyle: .headline),
+                    leftFade: 12,
+                    rightFade: 12,
+                    startDelay: 2,
+                    alignment: .leading
+                )
                 
                 let subtitle = subtitleText
                 if !subtitle.isEmpty {
-                    Text(subtitle)
-                        .minimumScaleFactor(0.8)
-                        .lineLimit(1)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    MarqueeTextView(
+                        text: subtitle,
+                        font: NSFont.preferredFont(forTextStyle: .subheadline),
+                        leftFade: 12,
+                        rightFade: 12,
+                        startDelay: 2,
+                        alignment: .leading
+                    )
+                    .foregroundStyle(.secondary)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

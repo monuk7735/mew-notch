@@ -49,13 +49,7 @@ final class NowPlaying {
         guard let appBundleIdentifier = NowPlaying.shared.appBundleIdentifier,
               let appName = NowPlaying.shared.appName,
               let appIcon = NowPlaying.shared.appIcon,
-              let album = NowPlaying.shared.album,
-              let artist = NowPlaying.shared.artist,
-              let title = NowPlaying.shared.title,
-              let elapsedTime = NowPlaying.shared.elapsedTime,
-              let totalDuration = NowPlaying.shared.totalDuration,
-              let playbackRate = NowPlaying.shared.playbackRate,
-              let refreshedAt = NowPlaying.shared.refreshedAt else {
+              let title = NowPlaying.shared.title else {
             return nil
         }
         
@@ -69,14 +63,14 @@ final class NowPlaying {
             appName: appName,
             appIcon: .init(nsImage: appIcon),
             albumArt: albumArt,
-            album: album,
-            artist: artist,
+            album: NowPlaying.shared.album ?? "",
+            artist: NowPlaying.shared.artist ?? "",
             title: title,
-            elapsedTime: elapsedTime,
-            totalDuration: totalDuration,
-            playbackRate: playbackRate,
+            elapsedTime: NowPlaying.shared.elapsedTime ?? 0.0,
+            totalDuration: NowPlaying.shared.totalDuration ?? 0.0,
+            playbackRate: NowPlaying.shared.playbackRate ?? 1.0,
             isPlaying: playing,
-            refreshedAt: refreshedAt
+            refreshedAt: NowPlaying.shared.refreshedAt ?? Date()
         )
     }
     
