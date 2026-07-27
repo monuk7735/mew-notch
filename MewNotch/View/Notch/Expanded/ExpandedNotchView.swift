@@ -78,7 +78,7 @@ struct ExpandedNotchView: View {
             .init(
                 top: 0,
                 leading: 8 + notchViewModel.extraNotchPadSize.width / 2,
-                bottom: 12,
+                bottom: 8,
                 trailing: 8 + notchViewModel.extraNotchPadSize.width / 2
             )
         )

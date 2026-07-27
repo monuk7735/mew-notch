@@ -37,8 +37,10 @@ struct NowPlayingDetailView: View {
             withTimeInterval: 0.5,
             repeats: true
         ) { _ in
-            if isEditingSlider { return }
-            if let lastSeek = lastSeekTime, Date().timeIntervalSince(lastSeek) < 1.5 { return }
+            guard !isEditingSlider,
+                  lastSeekTime == nil || Date().timeIntervalSince(lastSeekTime!) >= 1.5 else {
+                return
+            }
             
             self.elapsedTime = nowPlayingModel.elapsedTime + nowPlayingModel.refreshedAt.distance(
                 to: .now
@@ -70,11 +72,9 @@ struct NowPlayingDetailView: View {
         .onChange(
             of: self.nowPlayingModel
         ) {
-            if !isEditingSlider {
-                let shouldIgnore = lastSeekTime != nil && Date().timeIntervalSince(lastSeekTime!) < 1.5
-                if !shouldIgnore {
-                    self.elapsedTime = $1.elapsedTime
-                }
+            if !isEditingSlider,
+               lastSeekTime == nil || Date().timeIntervalSince(lastSeekTime!) >= 1.5 {
+                self.elapsedTime = $1.elapsedTime
             }
             
             self.resetElapsedTimeTimer(
