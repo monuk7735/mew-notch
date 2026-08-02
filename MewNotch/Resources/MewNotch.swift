@@ -75,6 +75,7 @@ class MewNotch {
         static let icArtist = Image(systemName: "music.mic")
         static let icAlbumName = Image(systemName: "music.note.list")
         static let icAppIcon = Image(systemName: "app.fill")
+        static let icSeekbar = Image(systemName: "slider.horizontal.3")
         
         // HUD Detail Icons
         static let icMicrophone = Image(systemName: "mic.fill")
@@ -116,6 +117,7 @@ class MewNotch {
         static let artist = IconColor.green
         static let albumName = IconColor.purple
         static let appIcon = IconColor.orange
+        static let seekbar = IconColor.red
         
         static let input = IconColor.green
         static let style = IconColor.blue

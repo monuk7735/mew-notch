@@ -46,6 +46,14 @@ struct ExpandedNowPlayingSettingsView: View {
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showAppIcon)
                 }
+                
+                SettingsRow(
+                    title: "Enable Seekbar",
+                    icon: MewNotch.Assets.icSeekbar,
+                    color: MewNotch.Colors.seekbar
+                ) {
+                    Toggle("", isOn: $nowPlayingDefaults.enableSeekbar)
+                }
             } header: {
                 Text("General Settings")
             }

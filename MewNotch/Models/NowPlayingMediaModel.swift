@@ -29,13 +29,13 @@ struct NowPlayingMediaModel: Hashable {
     
     static var Placeholder: NowPlayingMediaModel {
         return .init(
-            appBundleIdentifier: "<App Bundle Identifier Here>",
-            appName: "<App Name Here>",
+            appBundleIdentifier: "",
+            appName: "",
             appIcon: Image(systemName: "app.fill"),
-            albumArt: Image(systemName: "square.fill"),
-            album: "<Album Here>",
-            artist: "<Artist Here>",
-            title: "<Music Title Here>",
+            albumArt: Image(systemName: "music.note"),
+            album: "",
+            artist: "Play media to show details",
+            title: "Nothing is playing",
             elapsedTime: 0,
             totalDuration: 0,
             playbackRate: 1,
