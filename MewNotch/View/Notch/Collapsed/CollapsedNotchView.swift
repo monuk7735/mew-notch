@@ -129,6 +129,9 @@ struct CollapsedNotchView: View {
                 notchViewModel: notchViewModel,
                 hudModel: collapsedNotchViewModel.nowPlayingChangesHUD
             )
+            .hide(
+                when: notchViewModel.isExpanded
+            )
             
             // MARK: Progress Style Views
             ProgressHUDView(
