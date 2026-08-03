@@ -29,6 +29,9 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(
         _ notification: Notification
     ) {
+        UserDefaults.standard.removeObject(forKey: "NSWindow Frame com_apple_SwiftUI_Settings_window")
+        UserDefaults.standard.removeObject(forKey: "NSSplitView Subview Frames com_apple_SwiftUI_Settings_window, SidebarNavigationSplitView")
+        
         if AppDefaults.shared.disableSystemHUD {
             MediaKeyManager.shared.start()
         }

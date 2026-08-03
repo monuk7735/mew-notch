@@ -58,11 +58,9 @@ struct ExpandedItemsSettingsView: View {
                     .padding(.horizontal)
                     .padding(.vertical, 8)
                 }
-                
-                Divider()
             }
             .padding(.top)
-            .background(Color(NSColor.windowBackgroundColor))
+            .padding(.bottom, 8)
             
             // Content View
             Group {
@@ -142,12 +140,13 @@ struct ExpandedItemTabButton: View {
                     VStack(spacing: 12) {
                         Image(systemName: item.imageSystemName)
                             .font(.system(size: 24))
+                            .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                         
                         Text(item.displayName)
                             .font(.caption.weight(.medium))
+                            .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                     }
                     .padding(.top, 12)
-                    .foregroundStyle(isSelected ? .white : .secondary)
                     
                     // Bottom: Arrows + Toggle
                     HStack(spacing: 8) {
@@ -155,9 +154,9 @@ struct ExpandedItemTabButton: View {
                         Button(action: onMoveLeft) {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 14, weight: .bold))
-                                .foregroundStyle(isSelected ? .white : .secondary)
+                                .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                                 .frame(width: 24, height: 24)
-                                .background(Color.white.opacity(0.2))
+                                .background(Color.primary.opacity(0.08))
                                 .clipShape(Circle())
                                 .opacity(showLeftArrow ? 1.0 : 0.3)
                         }
@@ -177,9 +176,9 @@ struct ExpandedItemTabButton: View {
                         Button(action: onMoveRight) {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 14, weight: .bold))
-                                .foregroundStyle(isSelected ? .white : .secondary)
+                                .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                                 .frame(width: 24, height: 24)
-                                .background(Color.white.opacity(0.2))
+                                .background(Color.primary.opacity(0.08))
                                 .clipShape(Circle())
                                 .opacity(showRightArrow ? 1.0 : 0.3)
                         }
@@ -190,8 +189,28 @@ struct ExpandedItemTabButton: View {
                 }
                 .padding(8)
                 .padding(.horizontal, 4)
-                .background(isSelected ? Color.blue : Color.gray.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .background(
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.ultraThinMaterial)
+                        if isSelected {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.primary.opacity(0.08))
+                        }
+                    }
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(
+                            Color.white.opacity(isSelected ? 0.2 : 0.1),
+                            lineWidth: isSelected ? 1.0 : 0.5
+                        )
+                )
+                .shadow(
+                    color: Color.black.opacity(isSelected ? 0.08 : 0.04),
+                    radius: 2,
+                    y: 1
+                )
             }
             .buttonStyle(.plain)
         }

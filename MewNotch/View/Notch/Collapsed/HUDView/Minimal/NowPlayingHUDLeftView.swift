@@ -33,7 +33,7 @@ struct NowPlayingHUDLeftView: View {
                     )
                     .clipShape(
                         RoundedRectangle(
-                            cornerRadius: 8
+                            cornerRadius: 5
                         )
                     )
                     .matchedGeometryEffect(
