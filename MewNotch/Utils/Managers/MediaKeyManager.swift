@@ -172,6 +172,6 @@ class MediaKeyManager {
         let current = Brightness.sharedInstance().brightness
         var newBright = current + change
         newBright = max(0, min(1, newBright))
-        Brightness.sharedInstance().brightness = newBright
+        Brightness.sharedInstance().setBrightness(newBright, smooth: HUDBrightnessDefaults.shared.animateChanges)
     }
 }
