@@ -13,6 +13,10 @@
 @interface Brightness : NSObject
 + (Brightness*) sharedInstance;
 @property (getter=brightness, setter=setBrightness:) float brightness;
+@property (nonatomic, readonly) float targetBrightness;
+@property (nonatomic, readonly) BOOL isAnimating;
+
+- (void)setBrightness:(float)value smooth:(BOOL)smooth;
 @end
 
 extern NSString *BrightnessNotification;
