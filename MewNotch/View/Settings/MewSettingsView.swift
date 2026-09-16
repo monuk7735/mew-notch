@@ -102,20 +102,6 @@ struct MewSettingsView: View {
                 window.minSize = NSSize(width: 800, height: 500)
                 window.setContentSize(NSSize(width: 800, height: 500))
                 window.center()
-                
-                NSApp.activate()
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { notification in
-            guard let window = notification.object as? NSWindow,
-                  window.identifier?.rawValue == "com_apple_SwiftUI_Settings_window" ||
-                  (window.styleMask.contains(.titled) && window.styleMask.contains(.closable)) else {
-                return
-            }
-            if window.frame.width > 820 {
-                window.minSize = NSSize(width: 800, height: 500)
-                window.setContentSize(NSSize(width: 800, height: 500))
-                window.center()
             }
         }
     }

@@ -71,16 +71,14 @@ struct HudTabButton: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(
-                ZStack {
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.ultraThinMaterial)
+                if isSelected {
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.primary.opacity(0.08))
-                    }
+                        .fill(Color.primary.opacity(0.08))
                 }
-            )
+            }
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
                     .strokeBorder(
