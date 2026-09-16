@@ -31,6 +31,9 @@ struct NotchSettingsView: View {
                         }
                     }
                     .labelsHidden()
+                    .onChange(of: notchDefaults.notchDisplayVisibility) { _, _ in
+                        viewModel.refreshNotches()
+                    }
                 }
                 
                 if notchDefaults.notchDisplayVisibility == .Custom {
