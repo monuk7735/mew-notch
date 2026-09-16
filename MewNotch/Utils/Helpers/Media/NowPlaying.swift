@@ -194,6 +194,21 @@ final class NowPlaying {
         }
     }
     
+    private func clearNowPlaying() {
+        playing = false
+
+        title = nil
+        artist = nil
+        album = nil
+        albumArt = nil
+
+        totalDuration = nil
+        elapsedTime = nil
+        playbackRate = nil
+
+        appBundleIdentifier = nil
+    }
+
     private func setupNowPlayingObserver() async {
         let process = Process()
         guard
@@ -239,7 +254,14 @@ final class NowPlaying {
         defer {
             NotificationCenter.default.post(name: .NowPlayingInfo, object: nil)
         }
-        
+
+        if MediaFilterDefaults.shared.shouldHide(
+            duration: payload[PayloadItem.duration.rawValue]?.doubleValue
+        ) {
+            clearNowPlaying()
+            return
+        }
+
         playing = payload[PayloadItem.playing.rawValue]?.boolValue ?? false
         
         title = payload[PayloadItem.title.rawValue]?.stringValue

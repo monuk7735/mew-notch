@@ -11,6 +11,7 @@ struct ExpandedNowPlayingSettingsView: View {
     
     @StateObject private var nowPlayingDefaults = NowPlayingDefaults.shared
     @StateObject private var notchDefaults = NotchDefaults.shared
+    @StateObject private var mediaFilterDefaults = MediaFilterDefaults.shared
     
     var body: some View {
         Form {
@@ -56,6 +57,37 @@ struct ExpandedNowPlayingSettingsView: View {
                 }
             } header: {
                 Text("General Settings")
+            }
+
+            Section {
+                SettingsRow(
+                    title: "Hide Short Media",
+                    subtitle: "Skips clips shorter than the limit, like Shorts and Reels",
+                    icon: MewNotch.Assets.icTimer,
+                    color: MewNotch.Colors.timer
+                ) {
+                    Toggle("", isOn: $mediaFilterDefaults.hideShortMedia)
+                }
+
+                SettingsRow(
+                    title: "Minimum Length",
+                    subtitle: "\(Int(mediaFilterDefaults.minimumDuration)) seconds",
+                    icon: MewNotch.Assets.icTimer,
+                    color: MewNotch.Colors.stepSize
+                ) {
+                    Slider(
+                        value: $mediaFilterDefaults.minimumDuration,
+                        in: 15...600,
+                        step: 15
+                    )
+                }
+                .hide(when: !mediaFilterDefaults.hideShortMedia)
+            } header: {
+                Text("Length Filter")
+            } footer: {
+                Text("Live streams report no duration and are always shown.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
