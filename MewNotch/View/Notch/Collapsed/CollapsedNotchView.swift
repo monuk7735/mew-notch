@@ -177,7 +177,9 @@ struct CollapsedNotchView: View {
         ) {
             collapsedNotchViewModel.hideHUDs()
             
-            notchViewModel.refreshNotchSize()
+            DispatchQueue.main.async {
+                notchViewModel.refreshNotchSize()
+            }
         }
     }
 }

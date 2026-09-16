@@ -62,11 +62,14 @@ class NotchManager {
         let shouldShowOnScreen: (NSScreen) -> Bool = { [weak self] screen in
             guard let self else { return false }
             
-            if self.notchDefaults.notchDisplayVisibility != .Custom {
+            switch self.notchDefaults.notchDisplayVisibility {
+            case .AllDisplays:
                 return true
+            case .NotchedDisplayOnly:
+                return NotchUtils.shared.hasNotch(screen: screen)
+            case .Custom:
+                return shownOnDisplays.contains(screen.localizedName)
             }
-            
-            return shownOnDisplays.contains(screen.localizedName)
         }
         
         windows.forEach { screen, window in
