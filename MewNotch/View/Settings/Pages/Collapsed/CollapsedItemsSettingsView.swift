@@ -63,17 +63,33 @@ struct HudTabButton: View {
             VStack(spacing: 8) {
                 icon
                     .font(.system(size: 20))
-                    .foregroundStyle(isSelected ? .white : .secondary)
+                    .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                 
                 Text(title)
                     .font(.caption.weight(.medium))
-                    .foregroundStyle(isSelected ? .white : .secondary)
+                    .foregroundStyle(isSelected ? Color.primary : Color.secondary)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(
+            .background {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue : Color.gray.opacity(0.1))
+                    .fill(.ultraThinMaterial)
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.primary.opacity(0.08))
+                }
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(
+                        Color.white.opacity(isSelected ? 0.2 : 0.1),
+                        lineWidth: isSelected ? 1.0 : 0.5
+                    )
+            )
+            .shadow(
+                color: Color.black.opacity(isSelected ? 0.08 : 0.04),
+                radius: 2,
+                y: 1
             )
         }
         .buttonStyle(.plain)
