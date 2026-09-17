@@ -127,7 +127,7 @@ struct NowPlayingDetailView: View {
                     .foregroundStyle(.secondary)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
             .blur(radius: isDetailsHovered ? 4.0 : 0)
             .animation(.easeInOut(duration: 0.2), value: isDetailsHovered)
             .overlay {
@@ -321,7 +321,7 @@ struct MediaControlButton: View {
                 .resizable()
                 .scaledToFit()
                 .padding(isPrimary ? 8 : 6)
-                .offset(x: iconName == "play.fill" ? 1.5 : 0)
+                .offset(x: iconName == "play.fill" ? 1.5 : (iconName == "pause.fill" ? 0.8 : 0))
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1, contentMode: .fit)
                 .frame(maxHeight: size)

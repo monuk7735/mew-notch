@@ -27,7 +27,7 @@ struct NotchTabSwitcherView: View {
                 .fill(Color.primary.opacity(0.2))
         }
         .clipShape(Capsule())
-        .frame(height: notchViewModel.notchSize.height * 0.8)
+        .padding(3)
     }
     
     @ViewBuilder
