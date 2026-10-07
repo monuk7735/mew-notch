@@ -30,7 +30,7 @@ struct SettingsIcon: View {
 
 struct SettingsSidebarRow: View {
     
-    let title: String
+    let title: LocalizedStringKey
     let icon: Image
     let color: MewNotch.IconColor
     
@@ -47,8 +47,8 @@ struct SettingsSidebarRow: View {
 
 struct SettingsRow<Content: View>: View {
     
-    let title: String
-    let subtitle: String?
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey?
     let icon: Image
     let color: MewNotch.IconColor
     let content: Content
@@ -56,8 +56,8 @@ struct SettingsRow<Content: View>: View {
     @ScaledMetric private var spacing: CGFloat = 16
     
     init(
-        title: String,
-        subtitle: String? = nil,
+        title: LocalizedStringKey,
+        subtitle: LocalizedStringKey? = nil,
         icon: Image,
         color: MewNotch.IconColor,
         @ViewBuilder content: () -> Content
@@ -99,8 +99,8 @@ struct SettingsRow<Content: View>: View {
 // Convenience init for no content (just label)
 extension SettingsRow where Content == EmptyView {
     init(
-        title: String,
-        subtitle: String? = nil,
+        title: LocalizedStringKey,
+        subtitle: LocalizedStringKey? = nil,
         icon: Image,
         color: MewNotch.IconColor
     ) {

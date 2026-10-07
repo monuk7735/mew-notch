@@ -34,7 +34,7 @@ struct HUDAudioSettingsView: View {
                 ) {
                     Picker("", selection: ~$viewModel.outputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
-                            Text(style.rawValue.capitalized).tag(style)
+                            Text(style.displayName).tag(style)
                         }
                     }
                     .labelsHidden()
@@ -57,7 +57,7 @@ struct HUDAudioSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Step Size",
-                    subtitle: "\(Int(viewModel.localVolumeStep))%",
+                    subtitle: viewModel.localVolumeStep.localizedPercentageKey(isRatio: false),
                     icon: MewNotch.Assets.icChartBar,
                     color: MewNotch.Colors.stepSize
                 ) {
@@ -93,7 +93,7 @@ struct HUDAudioSettingsView: View {
                 ) {
                     Picker("", selection: ~$viewModel.inputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
-                            Text(style.rawValue.capitalized).tag(style)
+                            Text(style.displayName).tag(style)
                         }
                     }
                     .labelsHidden()

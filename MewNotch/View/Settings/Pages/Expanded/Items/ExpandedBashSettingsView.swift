@@ -51,7 +51,7 @@ struct ExpandedBashSettingsView: View {
                 
                 SettingsRow(
                     title: "Width Multiplier",
-                    subtitle: "\(String(format: "%.1f", bashDefaults.widthMultiplier))x",
+                    subtitle: bashDefaults.widthMultiplier.localizedMultiplierKey(),
                     icon: Image(systemName: "text.alignleft"),
                     color: .purple
                 ) {
@@ -73,7 +73,7 @@ struct ExpandedBashSettingsView: View {
                 
                 SettingsRow(
                     title: "Refresh Interval",
-                    subtitle: "\(Int(bashDefaults.refreshInterval))s",
+                    subtitle: bashDefaults.refreshInterval.localizedSecondsKey(width: .wide, maxFractionalDigits: 0),
                     icon: Image(systemName: "clock.arrow.circlepath"),
                     color: .green
                 ) {

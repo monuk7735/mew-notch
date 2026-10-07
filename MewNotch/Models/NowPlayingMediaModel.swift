@@ -5,6 +5,7 @@
 //  Created by Monu Kumar on 19/03/25.
 //
 
+import Foundation
 import SwiftUI
 
 struct NowPlayingMediaModel: Hashable {
@@ -34,8 +35,8 @@ struct NowPlayingMediaModel: Hashable {
             appIcon: Image(systemName: "app.fill"),
             albumArt: Image(systemName: "music.note"),
             album: "",
-            artist: "Play media to show details",
-            title: "Nothing is playing",
+            artist: String(localized: "Play media to show details", comment: "Placeholder artist text when no media is playing"),
+            title: String(localized: "Nothing is playing", comment: "Placeholder title text when no media is playing"),
             elapsedTime: 0,
             totalDuration: 0,
             playbackRate: 1,

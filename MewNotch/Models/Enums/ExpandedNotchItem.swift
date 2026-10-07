@@ -6,6 +6,8 @@
 //
 
 
+import Foundation
+
 enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
     var id: String {
         self.rawValue
@@ -18,11 +20,11 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
     var displayName: String {
         switch self {
         case .Mirror:
-            return "Mirror"
+            return String(localized: "Mirror", comment: "Label for mirror feature item in expanded notch")
         case .NowPlaying:
-            return "Now Playing"
+            return String(localized: "Now Playing", comment: "Label for now playing media item in expanded notch")
         case .Bash:
-            return "Bash Command"
+            return String(localized: "Bash Command", comment: "Label for bash command output item in expanded notch")
         }
     }
     
