@@ -20,9 +20,7 @@ struct ProgressHUDView<T: HUDDefaultsProtocol>: View {
         if let hud = hudModel, defaults.isEnabled, defaults.style == .Progress && !notchViewModel.isExpanded {
             VStack {
                 HStack {
-                    Text(
-                        "000 %"
-                    )
+                    Text(String("000 %"))
                     .font(.title3.bold())
                     .opacity(0)
                     .overlay {
@@ -32,9 +30,7 @@ struct ProgressHUDView<T: HUDDefaultsProtocol>: View {
                     
                     Spacer()
                     
-                    Text(
-                        "000 %"
-                    )
+                    Text(String("000 %"))
                     .font(.title3.bold())
                     .opacity(0)
                     .overlay {

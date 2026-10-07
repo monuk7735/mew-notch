@@ -23,22 +23,8 @@ struct PowerHUDView<T: HUDDefaultsProtocol>: View {
                 Spacer()
                 
                 if hud.value.isFinite {
-                    let value = Int(hud.value)
-                    
-                    let hour = value / 3600
-                    let min = (value % 3600) / 60
-                    
-                    (
-                        Text(hour > 0 ? "\(hour)" : "")
-                        +
-                        Text(hour > 0 ? "h " : "")
-                        +
-                        Text(min > 0 ? "\(min)" : "")
-                        +
-                        Text(min > 0 ? "m " : "")
-                        +
-                        Text("Left")
-                    )
+                    let formattedDuration = hud.value.formattedDuration(allowedUnits: [.hours, .minutes], width: .narrow)
+                    Text("\(formattedDuration) Left", comment: "Time remaining for battery HUD")
                 } else {
                     Text(
                         hud.name

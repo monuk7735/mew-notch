@@ -53,7 +53,7 @@ struct HUDMediaSettingsView: View {
                 
                 SettingsRow(
                     title: "Show new title for",
-                    subtitle: "\(mediaDefaults.titleChangeTimeout.formatted()) seconds",
+                    subtitle: mediaDefaults.titleChangeTimeout.localizedSecondsKey(),
                     icon: MewNotch.Assets.icTimer,
                     color: MewNotch.Colors.timer
                 ) {

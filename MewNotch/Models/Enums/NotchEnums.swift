@@ -17,11 +17,11 @@ enum NotchHeightMode: String, CaseIterable, Identifiable, Codable {
     var displayName: String {
         switch self {
         case .Match_Notch:
-            return NSLocalizedString("Match Notch", comment: "")
+            return String(localized: "Match Notch", comment: "Option to set notch height matching hardware notch")
         case .Match_Menu_Bar:
-            return NSLocalizedString("Match Menu Bar", comment: "")
+            return String(localized: "Match Menu Bar", comment: "Option to set notch height matching system menu bar")
         case .Manual:
-            return NSLocalizedString("Manual", comment: "")
+            return String(localized: "Manual", comment: "Option to set notch height manually")
         }
     }
 }

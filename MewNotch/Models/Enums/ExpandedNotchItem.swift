@@ -20,11 +20,11 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
     var displayName: String {
         switch self {
         case .Mirror:
-            return NSLocalizedString("Mirror", comment: "")
+            return String(localized: "Mirror", comment: "Label for mirror feature item in expanded notch")
         case .NowPlaying:
-            return NSLocalizedString("Now Playing", comment: "")
+            return String(localized: "Now Playing", comment: "Label for now playing media item in expanded notch")
         case .Bash:
-            return NSLocalizedString("Bash Command", comment: "")
+            return String(localized: "Bash Command", comment: "Label for bash command output item in expanded notch")
         }
     }
     

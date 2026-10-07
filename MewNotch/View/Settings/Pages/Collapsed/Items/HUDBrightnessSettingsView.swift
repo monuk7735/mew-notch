@@ -66,7 +66,7 @@ struct HUDBrightnessSettingsView: View {
                 
                 SettingsRow(
                     title: "Step Size",
-                    subtitle: "\(Int(viewModel.localStep * 100))%",
+                    subtitle: viewModel.localStep.localizedPercentageKey(),
                     icon: MewNotch.Assets.icChartBar,
                     color: MewNotch.Colors.stepSize
                 ) {

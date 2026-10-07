@@ -57,7 +57,7 @@ struct HUDAudioSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Step Size",
-                    subtitle: "\(Int(viewModel.localVolumeStep))%",
+                    subtitle: viewModel.localVolumeStep.localizedPercentageKey(isRatio: false),
                     icon: MewNotch.Assets.icChartBar,
                     color: MewNotch.Colors.stepSize
                 ) {

@@ -17,11 +17,11 @@ enum HUDStyle: String, CaseIterable, Identifiable, Codable {
     var displayName: String {
         switch self {
         case .Minimal:
-            return NSLocalizedString("Minimal", comment: "")
+            return String(localized: "Minimal", comment: "Minimal style for system HUD display")
         case .Progress:
-            return NSLocalizedString("Progress", comment: "")
+            return String(localized: "Progress", comment: "Progress bar style for system HUD display")
         case .Notched:
-            return NSLocalizedString("Notched", comment: "")
+            return String(localized: "Notched", comment: "Notched style integrated into notch for system HUD display")
         }
     }
 }
