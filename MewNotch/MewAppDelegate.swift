@@ -59,7 +59,7 @@ class MewAppDelegate: NSObject, NSApplicationDelegate {
         hasVisibleWindows: Bool
     ) -> Bool {
         if !hasVisibleWindows {
-            openSettingsWindow.callAsFunction()
+            openSettingsWindow.callAsFunctionBringingToFront()
         }
         
         return !hasVisibleWindows
