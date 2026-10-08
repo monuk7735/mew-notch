@@ -15,9 +15,14 @@ class HUDAudioInputDefaults: HUDDefaultsProtocol {
     
     private init() {}
     
+    /// Off by default. The microphone level is normally driven by whatever
+    /// meeting app is running (automatic gain control), not by the user, and
+    /// showing it turns every background adjustment into a HUD update. The
+    /// system HUD only reports speaker volume for the same reason. Users who
+    /// want to watch the input level can still turn this on in Settings.
     @PrimitiveUserDefault(
         PREFIX + "Enabled",
-        defaultValue: true
+        defaultValue: false
     )
     var isEnabled: Bool
     

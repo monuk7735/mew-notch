@@ -28,6 +28,15 @@ class CollapsedNotchViewModel: ObservableObject {
     
     @Published var lastPowerStatus: String = ""
     @Published var lastBrightness: Float = 0.0
+    @Published var lastAudioInputVolume: Float = 0.0
+    
+    /// Minimum input-volume delta that shows a HUD. Background automation
+    /// (conference apps running automatic gain control) nudges the input level
+    /// by under about 3% every couple of seconds, sometimes with no change at
+    /// all, and assigning the same value to a @Published property still redraws
+    /// the HUD. Reacting to that noise made the volume HUD jitter while a
+    /// meeting was running.
+    private let volumeHUDThreshold: Float = 0.04
     
     init() {
         self.startListeners()
@@ -201,12 +210,41 @@ class CollapsedNotchViewModel: ObservableObject {
             return
         }
         
+        let newVolume = VolumeManager.shared.getInputVolume()
+        
+        // Ignore notifications that carry no meaningful change. The device
+        // posts one every couple of seconds while a conference app runs, often
+        // with the level untouched, and assigning the same value to a
+        // @Published property still redraws the HUD.
+        guard newVolume != lastAudioInputVolume,
+              abs(lastAudioInputVolume - newVolume) >= volumeHUDThreshold else {
+            return
+        }
+        
+        lastAudioInputVolume = newVolume
+        
+        // Reuse the HUD while it is on screen instead of rebuilding it, so the
+        // animation is not replayed on every accepted change.
+        if inputAudioVolumeHUD != nil {
+            withAnimation {
+                self.inputAudioVolumeHUD?.value = newVolume
+            }
+            
+            self.resetHUDTimer(&self.inputAudioVolumeHUD) {
+                withAnimation {
+                    self.inputAudioVolumeHUD = nil
+                }
+            }
+            
+            return
+        }
+        
         withAnimation {
             self.inputAudioVolumeHUD = .init(
                 lottie: nil,
                 icon: .init(systemName: "microphone.fill"),
-                name: "Input Volume",
-                value: VolumeManager.shared.getInputVolume(),
+                name: NSLocalizedString("Input Volume", comment: ""),
+                value: newVolume,
                 timer: inputAudioVolumeHUD?.timer
             )
         }
@@ -249,7 +287,7 @@ class CollapsedNotchViewModel: ObservableObject {
             self.outputAudioVolumeHUD = .init(
                 lottie: MewNotch.Lotties.speaker,
                 icon: MewNotch.Assets.iconSpeaker,
-                name: "Output Volume",
+                name: NSLocalizedString("Output Volume", comment: ""),
                 value: VolumeManager.shared.getOutputVolume(),
                 timer: outputAudioVolumeHUD?.timer
             )
