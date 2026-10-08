@@ -29,13 +29,12 @@ class CollapsedNotchViewModel: ObservableObject {
     @Published var lastPowerStatus: String = ""
     @Published var lastBrightness: Float = 0.0
     @Published var lastAudioInputVolume: Float = 0.0
-    @Published var lastAudioOutputVolume: Float = 0.0
     
-    /// Minimum volume delta that shows a HUD. Pressing the volume keys moves
-    /// the level by the system step (6.25%), while background automation
-    /// (conference apps running automatic gain control) nudges it by under
-    /// about 3%, so anything below this threshold is noise as far as the HUD
-    /// is concerned. Reacting to it made the volume HUD jitter while a
+    /// Minimum input-volume delta that shows a HUD. Background automation
+    /// (conference apps running automatic gain control) nudges the input level
+    /// by under about 3% every couple of seconds, sometimes with no change at
+    /// all, and assigning the same value to a @Published property still redraws
+    /// the HUD. Reacting to that noise made the volume HUD jitter while a
     /// meeting was running.
     private let volumeHUDThreshold: Float = 0.04
     
@@ -284,37 +283,12 @@ class CollapsedNotchViewModel: ObservableObject {
             return
         }
         
-        let newVolume = VolumeManager.shared.getOutputVolume()
-        
-        // See handleAudioInputVolumeChanges for why both guards are needed.
-        guard newVolume != lastAudioOutputVolume,
-              abs(lastAudioOutputVolume - newVolume) >= volumeHUDThreshold else {
-            return
-        }
-        
-        lastAudioOutputVolume = newVolume
-        
-        // Refresh the visible HUD rather than rebuilding it.
-        if outputAudioVolumeHUD != nil {
-            withAnimation {
-                self.outputAudioVolumeHUD?.value = newVolume
-            }
-            
-            self.resetHUDTimer(&self.outputAudioVolumeHUD) {
-                withAnimation {
-                    self.outputAudioVolumeHUD = nil
-                }
-            }
-            
-            return
-        }
-        
         withAnimation {
             self.outputAudioVolumeHUD = .init(
                 lottie: MewNotch.Lotties.speaker,
                 icon: MewNotch.Assets.iconSpeaker,
                 name: NSLocalizedString("Output Volume", comment: ""),
-                value: newVolume,
+                value: VolumeManager.shared.getOutputVolume(),
                 timer: outputAudioVolumeHUD?.timer
             )
         }
