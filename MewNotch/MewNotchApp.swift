@@ -74,5 +74,10 @@ struct MewNotchApp: App {
                 .modelContainer(sharedModelContainer)
         }
         .windowResizability(.contentSize)
+        // Declare the initial geometry so it is already correct when the window is
+        // created. Setting it later (see MewSettingsView) is what makes the window
+        // appear to jump when it opens.
+        .defaultSize(width: 800, height: 500)
+        .defaultPosition(.center)
     }
 }
