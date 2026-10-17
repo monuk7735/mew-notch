@@ -32,9 +32,9 @@ struct NotchShape: Shape {
     ) -> Path {
         var path = Path()
 
-        let rY = max(0, min(topRadius, rect.height * 0.45))
-        let rX = max(0, min(topRadius * 1.2, rect.width / 4))
-        let bRad = max(0, min(bottomRadius, min((rect.width - rX * 2) * 0.5, rect.height - rY)))
+        let radiusY = max(0, min(topRadius, rect.height * 0.45))
+        let radiusX = max(0, min(topRadius * 1.2, rect.width / 4))
+        let clampedBottomRadius = max(0, min(bottomRadius, min((rect.width - radiusX * 2) * 0.5, rect.height - radiusY)))
 
         path.move(
             to: CGPoint(
@@ -43,88 +43,8 @@ struct NotchShape: Shape {
             )
         )
 
-        // Smooth cubic melt curve from top border down to notch side
-        path.addCurve(
-            to: CGPoint(
-                x: rect.minX + rX,
-                y: rect.minY + rY
-            ),
-            control1: CGPoint(
-                x: rect.minX + rX * 0.5,
-                y: rect.minY
-            ),
-            control2: CGPoint(
-                x: rect.minX + rX,
-                y: rect.minY + rY * 0.5
-            )
-        )
-
-        path.addLine(
-            to: CGPoint(
-                x: rect.minX + rX,
-                y: rect.maxY - bRad
-            )
-        )
-
-        path.addCurve(
-            to: CGPoint(
-                x: rect.minX + rX + bRad,
-                y: rect.maxY
-            ),
-            control1: CGPoint(
-                x: rect.minX + rX,
-                y: rect.maxY - bRad * 0.5
-            ),
-            control2: CGPoint(
-                x: rect.minX + rX + bRad * 0.5,
-                y: rect.maxY
-            )
-        )
-
-        path.addLine(
-            to: CGPoint(
-                x: rect.maxX - rX - bRad,
-                y: rect.maxY
-            )
-        )
-
-        path.addCurve(
-            to: CGPoint(
-                x: rect.maxX - rX,
-                y: rect.maxY - bRad
-            ),
-            control1: CGPoint(
-                x: rect.maxX - rX - bRad * 0.5,
-                y: rect.maxY
-            ),
-            control2: CGPoint(
-                x: rect.maxX - rX,
-                y: rect.maxY - bRad * 0.5
-            )
-        )
-
-        path.addLine(
-            to: CGPoint(
-                x: rect.maxX - rX,
-                y: rect.minY + rY
-            )
-        )
-
-        // Smooth cubic melt curve back up to top border
-        path.addCurve(
-            to: CGPoint(
-                x: rect.maxX,
-                y: rect.minY
-            ),
-            control1: CGPoint(
-                x: rect.maxX - rX,
-                y: rect.minY + rY * 0.5
-            ),
-            control2: CGPoint(
-                x: rect.maxX - rX * 0.5,
-                y: rect.minY
-            )
-        )
+        addLeftContour(to: &path, in: rect, radiusX: radiusX, radiusY: radiusY, bottomRadius: clampedBottomRadius)
+        addRightContour(to: &path, in: rect, radiusX: radiusX, radiusY: radiusY, bottomRadius: clampedBottomRadius)
 
         path.addLine(
             to: CGPoint(
@@ -134,5 +54,102 @@ struct NotchShape: Shape {
         )
 
         return path
+    }
+
+    private func addLeftContour(
+        to path: inout Path,
+        in rect: CGRect,
+        radiusX: CGFloat,
+        radiusY: CGFloat,
+        bottomRadius: CGFloat
+    ) {
+        path.addCurve(
+            to: CGPoint(
+                x: rect.minX + radiusX,
+                y: rect.minY + radiusY
+            ),
+            control1: CGPoint(
+                x: rect.minX + radiusX * 0.5,
+                y: rect.minY
+            ),
+            control2: CGPoint(
+                x: rect.minX + radiusX,
+                y: rect.minY + radiusY * 0.5
+            )
+        )
+
+        path.addLine(
+            to: CGPoint(
+                x: rect.minX + radiusX,
+                y: rect.maxY - bottomRadius
+            )
+        )
+
+        path.addCurve(
+            to: CGPoint(
+                x: rect.minX + radiusX + bottomRadius,
+                y: rect.maxY
+            ),
+            control1: CGPoint(
+                x: rect.minX + radiusX,
+                y: rect.maxY - bottomRadius * 0.5
+            ),
+            control2: CGPoint(
+                x: rect.minX + radiusX + bottomRadius * 0.5,
+                y: rect.maxY
+            )
+        )
+
+        path.addLine(
+            to: CGPoint(
+                x: rect.maxX - radiusX - bottomRadius,
+                y: rect.maxY
+            )
+        )
+    }
+
+    private func addRightContour(
+        to path: inout Path,
+        in rect: CGRect,
+        radiusX: CGFloat,
+        radiusY: CGFloat,
+        bottomRadius: CGFloat
+    ) {
+        path.addCurve(
+            to: CGPoint(
+                x: rect.maxX - radiusX,
+                y: rect.maxY - bottomRadius
+            ),
+            control1: CGPoint(
+                x: rect.maxX - radiusX - bottomRadius * 0.5,
+                y: rect.maxY
+            ),
+            control2: CGPoint(
+                x: rect.maxX - radiusX,
+                y: rect.maxY - bottomRadius * 0.5
+            )
+        )
+
+        path.addLine(
+            to: CGPoint(
+                x: rect.maxX - radiusX,
+                y: rect.minY + radiusY
+            )
+        )
+
+        path.addCurve(
+            to: CGPoint(
+                x: rect.maxX,
+                y: rect.minY
+            ),
+            control1: CGPoint(
+                x: rect.maxX - radiusX,
+                y: rect.minY + radiusY * 0.5
+            ),
+            control2: CGPoint(
+                x: rect.maxX - radiusX * 0.5,
+                y: rect.minY
+            )
+        )
     }
 }

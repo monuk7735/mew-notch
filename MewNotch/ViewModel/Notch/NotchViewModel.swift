@@ -133,11 +133,14 @@ class NotchViewModel: ObservableObject {
                     self.onTap()
                 }
             }
-        } else if !isPinned {
             withAnimation {
                 self.isExpanded = false
 
-                self.cornerRadius = self.isHardwareNotched ? NotchUtils.shared.collapsedCornerRadius : (self.isThinBulge ? (top: 8.0, bottom: 4.0) : NotchUtils.shared.collapsedCornerRadius)
+                if self.isHardwareNotched {
+                    self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
+                } else {
+                    self.cornerRadius = self.isThinBulge ? (top: 8.0, bottom: 4.0) : NotchUtils.shared.collapsedCornerRadius
+                }
                 self.extraNotchPadSize = .init(
                     width: self.cornerRadius.top * 2,
                     height: 0

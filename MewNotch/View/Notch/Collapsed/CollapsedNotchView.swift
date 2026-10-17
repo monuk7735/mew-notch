@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CollapsedNotchView: View {
     var namespace: Namespace.ID
+    @ObservedObject var notchViewModel: NotchViewModel
 
     @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel
     @StateObject var notchDefaults = NotchDefaults.shared
@@ -23,6 +24,7 @@ struct CollapsedNotchView: View {
         self.notchViewModel = notchViewModel
         _collapsedNotchViewModel = StateObject(wrappedValue: CollapsedNotchViewModel(screen: notchViewModel.screen))
     }
+
     var body: some View {
         VStack(
             spacing: 0
@@ -180,7 +182,7 @@ struct CollapsedNotchView: View {
         .onAppear {
             notchViewModel.hasActiveHUD = collapsedNotchViewModel.hasActiveHUD
         }
-        .onChange(of: collapsedNotchViewModel.hasActiveHUD) { oldValue, newValue in
+        .onChange(of: collapsedNotchViewModel.hasActiveHUD) { _, newValue in
             withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                 notchViewModel.hasActiveHUD = newValue
             }

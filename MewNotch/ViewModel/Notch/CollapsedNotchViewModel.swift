@@ -13,14 +13,10 @@ class CollapsedNotchViewModel: ObservableObject {
 
     @Published var outputAudioVolumeHUD: HUDPropertyModel?
     @Published var outputAudioDeviceHUD: HUDPropertyModel?
-
     @Published var inputAudioVolumeHUD: HUDPropertyModel?
     @Published var inputAudioDeviceHUD: HUDPropertyModel?
-
     @Published var brightnessHUD: HUDPropertyModel?
-
     @Published var powerStatusHUD: HUDPropertyModel?
-
     @Published var lockStatusHUD: HUDPropertyModel?
     @Published var nowPlayingChangesHUD: HUDPropertyModel?
 
@@ -75,14 +71,10 @@ class CollapsedNotchViewModel: ObservableObject {
         withAnimation {
             self.outputAudioVolumeHUD = nil
             self.outputAudioDeviceHUD = nil
-
             self.inputAudioVolumeHUD = nil
             self.inputAudioDeviceHUD = nil
-
             self.brightnessHUD = nil
-
             self.powerStatusHUD = nil
-
             self.nowPlayingChangesHUD = nil
         }
     }
@@ -160,8 +152,9 @@ class CollapsedNotchViewModel: ObservableObject {
             name: NSNotification.Name("com.apple.screenIsUnlocked"),
             object: nil
         )
-        
+
         // MARK: BetterDisplay Integration
+
         _ = BetterDisplayManager.shared
         NotificationCenter.default.addObserver(
             self,
@@ -426,33 +419,37 @@ class CollapsedNotchViewModel: ObservableObject {
             }
         }
     }
-    
-    // MARK: - BetterDisplay OSD Handler
-    
-    @objc private func handleBetterDisplayOSDNotification(_ notification: Notification) {
+}
+
+// MARK: - BetterDisplay OSD Handler
+
+extension CollapsedNotchViewModel {
+    @objc func handleBetterDisplayOSDNotification(_ notification: Notification) {
         guard let osdInfo = notification.object as? BetterDisplayOSDNotification else { return }
-        
+
         // Display targeting:
         // If BetterDisplay specifies a target displayID, verify against this screen's displayID.
         if let targetDisplayID = osdInfo.displayID,
-           let currentDisplayID = self.screen?.displayID,
+           let currentDisplayID = screen?.displayID,
            targetDisplayID != 0 {
             if targetDisplayID != currentDisplayID {
                 return
             }
         }
-        
+
         let target = osdInfo.controlTarget?.lowercased() ?? ""
         let iconID = osdInfo.systemIconID ?? 0
-        
+
         let rawVal = osdInfo.value ?? 0
         let maxVal = osdInfo.maxValue ?? (rawVal > 1.0 ? 100.0 : 1.0)
         let normalizedVal: Float = maxVal > 0 ? Float(rawVal / maxVal) : Float(rawVal)
-        
+
         // Handle Brightness HUD
         if target.contains("brightness") || iconID == 1 {
-            if !HUDBrightnessDefaults.shared.isEnabled { return }
-            
+            if !HUDBrightnessDefaults.shared.isEnabled {
+                return
+            }
+
             withAnimation {
                 self.brightnessHUD = .init(
                     lottie: AppAnimation.brightness,
@@ -463,7 +460,7 @@ class CollapsedNotchViewModel: ObservableObject {
                 )
             }
 
-            self.resetHUDTimer(&self.brightnessHUD) {
+            resetHUDTimer(&brightnessHUD) {
                 withAnimation {
                     self.brightnessHUD = nil
                 }
@@ -471,7 +468,9 @@ class CollapsedNotchViewModel: ObservableObject {
         }
         // Handle Volume HUD
         else if target.contains("volume") || target.contains("sound") || target.contains("mute") || iconID == 3 || iconID == 4 {
-            if !HUDAudioOutputDefaults.shared.isEnabled { return }
+            if !HUDAudioOutputDefaults.shared.isEnabled {
+                return
+            }
 
             let isMuted = iconID == 4 || target.contains("mute")
 
@@ -484,8 +483,8 @@ class CollapsedNotchViewModel: ObservableObject {
                     timer: outputAudioVolumeHUD?.timer
                 )
             }
-            
-            self.resetHUDTimer(&self.outputAudioVolumeHUD) {
+
+            resetHUDTimer(&outputAudioVolumeHUD) {
                 withAnimation {
                     self.outputAudioVolumeHUD = nil
                 }
