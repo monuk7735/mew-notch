@@ -54,15 +54,6 @@ struct NotchSettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "Show HUD on Auxiliary Screens",
-                    subtitle: "Show HUD alerts on secondary displays when targeted; otherwise falls back to main display",
-                    icon: .display,
-                    color: AppColor.notch
-                ) {
-                    Toggle("", isOn: $notchDefaults.showHUDOnAuxiliaryScreens)
-                }
-
-                SettingsRow(
                     title: "Show on Lock Screen",
                     subtitle: "Incompatible with File Shelf feature",
                     icon: .lock,

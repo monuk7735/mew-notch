@@ -17,6 +17,7 @@ struct MewSettingsView: View {
 
         case general = "General"
         case notch = "Notch"
+        case externalDisplay = "ExternalDisplay"
 
         case expandedItems = "ExpandedItems"
         case collapsedItems = "CollapsedItems"
@@ -44,6 +45,11 @@ struct MewSettingsView: View {
                             SettingsSidebarRow(title: "Notch", icon: .notch, color: AppColor.notch)
                         }
                         .id(SettingsPages.notch)
+
+                        NavigationLink(destination: ExternalDisplaySettingsView()) {
+                            SettingsSidebarRow(title: "External Display", icon: .display, color: AppColor.notch)
+                        }
+                        .id(SettingsPages.externalDisplay)
                     }
                 )
 
