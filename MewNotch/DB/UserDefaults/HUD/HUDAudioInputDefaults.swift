@@ -17,7 +17,7 @@ class HUDAudioInputDefaults: HUDDefaultsProtocol {
     
     @PrimitiveUserDefault(
         PREFIX + "Enabled",
-        defaultValue: true
+        defaultValue: false
     )
     var isEnabled: Bool
     
