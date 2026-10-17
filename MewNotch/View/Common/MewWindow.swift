@@ -39,6 +39,7 @@ class MewPanel: NSPanel {
         level = .mainMenu + 1
 
         hasShadow = false
+        acceptsMouseMovedEvents = true
     }
 
     override var canBecomeKey: Bool {

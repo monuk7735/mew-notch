@@ -49,6 +49,8 @@ struct NotchView: View {
                     ).hide(when: !notchViewModel.isExpanded)
 
                     collapsedNotchView
+                        .opacity(notchViewModel.isExpanded ? 0 : 1)
+                        .allowsHitTesting(!notchViewModel.isExpanded)
                 }
                 .glassEffect(when: notchDefaults.applyGlassEffect, in: NotchShape(
                     topRadius: notchViewModel.cornerRadius.top,
@@ -65,13 +67,31 @@ struct NotchView: View {
                         bottomRadius: notchViewModel.cornerRadius.bottom
                     )
                 }
+                .contentShape(
+                    NotchShape(
+                        topRadius: notchViewModel.cornerRadius.top,
+                        bottomRadius: notchViewModel.cornerRadius.bottom
+                    )
+                )
                 .scaleEffect(
-                    notchViewModel.isHovered ? 1.1 : 1.0,
+                    notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.1 : 1.0,
                     anchor: .top
                 )
                 .shadow(
                     radius: notchViewModel.isHovered ? 5 : 0
                 )
+                .background(
+                    GeometryReader { proxy in
+                        Color.clear
+                            .preference(
+                                key: NotchFramePreferenceKey.self,
+                                value: proxy.frame(in: .global)
+                            )
+                    }
+                )
+                .onPreferenceChange(NotchFramePreferenceKey.self) { frame in
+                    notchViewModel.updateNotchFrame(frame)
+                }
                 .onHover {
                     notchViewModel.onHover(
                         $0,
@@ -132,5 +152,16 @@ struct NotchView: View {
         .contextMenu {
             NotchOptionsView()
         }
+    }
+}
+
+private struct NotchFramePreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+
+    static func reduce(
+        value: inout CGRect,
+        nextValue: () -> CGRect
+    ) {
+        value = nextValue()
     }
 }
