@@ -21,16 +21,14 @@ struct ScreenLockHUDView: View {
                 notchViewModel: notchViewModel,
                 variant: .left
             ) {
-                TimelineView(.animation) { _ in
-                    Rectangle()
-                        .mask {
-                            LottieView(
-                                animation: AppAnimation.lock
-                            )
-                            .currentProgress(1 - progress)
-                            .scaleEffect(1.2)
-                        }
-                }
+                Rectangle()
+                    .mask {
+                        LottieView(
+                            animation: AppAnimation.lock
+                        )
+                        .currentProgress(1 - progress)
+                        .scaleEffect(1.2)
+                    }
             }
             .onAppear {
                 progress = CGFloat(hud.value)

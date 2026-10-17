@@ -10,16 +10,26 @@ import SwiftUI
 
 struct CollapsedNotchView: View {
     var namespace: Namespace.ID
-
     @ObservedObject var notchViewModel: NotchViewModel
 
-    @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel = .init()
-
+    @ObservedObject var collapsedNotchViewModel: CollapsedNotchViewModel
     @StateObject var notchDefaults = NotchDefaults.shared
-
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
 
     var body: some View {
+        hardwareCollapsedNotchView
+            .onReceive(
+                notchDefaults.objectWillChange
+            ) {
+                collapsedNotchViewModel.hideHUDs()
+
+                DispatchQueue.main.async {
+                    notchViewModel.refreshNotchSize()
+                }
+            }
+    }
+
+    private var hardwareCollapsedNotchView: some View {
         VStack(
             spacing: 0
         ) {
@@ -104,6 +114,7 @@ struct CollapsedNotchView: View {
                     hudModel: collapsedNotchViewModel.brightnessHUD
                 )
             }
+            .padding(.horizontal, 0)
 
             PowerHUDView(
                 notchViewModel: notchViewModel,
@@ -150,35 +161,6 @@ struct CollapsedNotchView: View {
                 defaults: HUDAudioOutputDefaults.shared,
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
             )
-
-            // MARK: Notched Style View
-
-            NotchedHUDView(
-                notchViewModel: notchViewModel,
-                defaults: HUDBrightnessDefaults.shared,
-                hudModel: collapsedNotchViewModel.brightnessHUD
-            )
-
-            NotchedHUDView(
-                notchViewModel: notchViewModel,
-                defaults: HUDAudioInputDefaults.shared,
-                hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
-            )
-
-            NotchedHUDView(
-                notchViewModel: notchViewModel,
-                defaults: HUDAudioOutputDefaults.shared,
-                hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
-            )
-        }
-        .onReceive(
-            notchDefaults.objectWillChange
-        ) {
-            collapsedNotchViewModel.hideHUDs()
-
-            DispatchQueue.main.async {
-                notchViewModel.refreshNotchSize()
-            }
         }
     }
 }

@@ -14,7 +14,6 @@ enum HUDStyle: String, CaseIterable, Identifiable, Codable {
 
     case minimal = "Minimal"
     case progress = "Progress"
-    case notched = "Notched"
 
     var displayName: String {
         switch self {
@@ -22,8 +21,12 @@ enum HUDStyle: String, CaseIterable, Identifiable, Codable {
             String(localized: "Minimal", comment: "Minimal style for system HUD display")
         case .progress:
             String(localized: "Progress", comment: "Progress bar style for system HUD display")
-        case .notched:
-            String(localized: "Notched", comment: "Notched style integrated into notch for system HUD display")
         }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(String.self)
+        self = HUDStyle(rawValue: raw) ?? .minimal
     }
 }
