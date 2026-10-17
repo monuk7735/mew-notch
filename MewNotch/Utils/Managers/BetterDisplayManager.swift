@@ -68,15 +68,17 @@ struct BetterDisplayOSDNotification: Codable {
     }
 }
 
-class BetterDisplayManager: ObservableObject {
+class BetterDisplayManager {
     static let shared = BetterDisplayManager()
 
-    @Published private(set) var isBetterDisplayRunning: Bool = false
-
-    private let bundleIDs = [
-        "pro.betterdisplay.BetterDisplay",
-        "me.waydabber.BetterDisplay"
-    ]
+    var isBetterDisplayRunning: Bool {
+        let bundleIDs = [
+            "pro.betterdisplay.BetterDisplay",
+            "me.waydabber.BetterDisplay"
+        ]
+        return !NSRunningApplication.runningApplications(withBundleIdentifier: bundleIDs[0]).isEmpty
+            || !NSRunningApplication.runningApplications(withBundleIdentifier: bundleIDs[1]).isEmpty
+    }
 
     private let notificationNames = [
         "pro.betterdisplay.BetterDisplay.osd",
@@ -84,18 +86,7 @@ class BetterDisplayManager: ObservableObject {
     ]
 
     private init() {
-        updateRunningStatus()
         startListening()
-    }
-
-    func updateRunningStatus() {
-        let running = !NSRunningApplication.runningApplications(withBundleIdentifier: bundleIDs[0]).isEmpty
-            || !NSRunningApplication.runningApplications(withBundleIdentifier: bundleIDs[1]).isEmpty
-        if isBetterDisplayRunning != running {
-            DispatchQueue.main.async {
-                self.isBetterDisplayRunning = running
-            }
-        }
     }
 
     func startListening() {
@@ -107,33 +98,10 @@ class BetterDisplayManager: ObservableObject {
                 object: nil
             )
         }
-
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self,
-            selector: #selector(appStateChanged(_:)),
-            name: NSWorkspace.didLaunchApplicationNotification,
-            object: nil
-        )
-
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self,
-            selector: #selector(appStateChanged(_:)),
-            name: NSWorkspace.didTerminateApplicationNotification,
-            object: nil
-        )
     }
 
     func stopListening() {
         DistributedNotificationCenter.default().removeObserver(self)
-        NSWorkspace.shared.notificationCenter.removeObserver(self)
-    }
-
-    @objc private func appStateChanged(_ notification: Notification) {
-        guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-              let bundleID = app.bundleIdentifier else { return }
-        if bundleIDs.contains(bundleID) {
-            updateRunningStatus()
-        }
     }
 
     @objc private func handleBetterDisplayOSDNotification(_ notification: Notification) {

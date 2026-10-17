@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ExternalDisplaySettingsView: View {
     @StateObject var notchDefaults = NotchDefaults.shared
-    @ObservedObject var betterDisplayManager = BetterDisplayManager.shared
 
     var body: some View {
         Form {
@@ -29,7 +28,7 @@ struct ExternalDisplaySettingsView: View {
                     icon: .statusIcon,
                     color: AppColor.general
                 ) {
-                    let isRunning = betterDisplayManager.isBetterDisplayRunning
+                    let isRunning = BetterDisplayManager.shared.isBetterDisplayRunning
                     HStack(spacing: 6) {
                         Circle()
                             .fill(isRunning ? Color.green : Color.secondary)
@@ -61,9 +60,6 @@ struct ExternalDisplaySettingsView: View {
         .formStyle(.grouped)
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
-        .onAppear {
-            betterDisplayManager.updateRunningStatus()
-        }
     }
 }
 
