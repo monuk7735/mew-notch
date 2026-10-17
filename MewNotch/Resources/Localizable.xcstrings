@@ -87,6 +87,23 @@
         }
       }
     },
+    "AirDrop service could not be initialised": {
+      "comment": "Error description when AirDrop service cannot be created",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop service could not be initialised"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法初始化隔空投送服务"
+          }
+        }
+      }
+    },
     "All Displays": {
       "comment": "Option to show notch on all connected displays",
       "localizations": {
@@ -732,6 +749,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "展开状态项目"
+          }
+        }
+      }
+    },
+    "File cannot be sent with AirDrop": {
+      "comment": "Error description when dropped files cannot be shared via AirDrop",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File cannot be sent with AirDrop"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法通过隔空投送发送文件"
           }
         }
       }
