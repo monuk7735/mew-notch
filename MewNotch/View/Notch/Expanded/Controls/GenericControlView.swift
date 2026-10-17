@@ -10,11 +10,27 @@ import SwiftUI
 struct NotchControlButton: View {
     @ObservedObject var notchViewModel: NotchViewModel
 
-    var icon: String?
+    var icon: AppIcon?
     var customIcon: Image?
     var isSelected: Bool = false
     var padding: CGFloat = 3
     var action: () -> Void
+
+    init(
+        notchViewModel: NotchViewModel,
+        icon: AppIcon? = nil,
+        customIcon: Image? = nil,
+        isSelected: Bool = false,
+        padding: CGFloat = 3,
+        action: @escaping () -> Void
+    ) {
+        self.notchViewModel = notchViewModel
+        self.icon = icon
+        self.customIcon = customIcon
+        self.isSelected = isSelected
+        self.padding = padding
+        self.action = action
+    }
 
     var body: some View {
         Button(action: action) {
@@ -23,7 +39,7 @@ struct NotchControlButton: View {
                     customIcon
                         .resizable()
                 } else if let icon {
-                    Image(systemName: icon)
+                    icon.image
                         .resizable()
                 }
             }
@@ -37,7 +53,7 @@ struct NotchControlButton: View {
             .background {
                 Circle()
                     .fill(
-                        isSelected ? Color.blue : .white.opacity(0.2)
+                        isSelected ? AppColor.notch : .white.opacity(0.2)
                     )
             }
             .foregroundStyle(

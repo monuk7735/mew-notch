@@ -61,4 +61,27 @@ enum AppColor {
     static let autoBrightness = Color.Notch.green
     static let systemHud = Color.Notch.red
     static let video = Color.Notch.purple
+
+    // Bash Script
+    static let bash = Color.Notch.purple
+    static let bashCommand = Color.Notch.purple
+    static let bashRefresh = Color.Notch.green
+
+    /// Surfaces & Backgrounds
+    enum Surface {
+        static let darkElevated = Color(white: 0.2)
+        static let dark = Color(white: 0.15)
+        static let darkSubtle = Color(white: 0.1)
+        static let darkDeep = Color(white: 0.05)
+        static let overlay = Color.black.opacity(0.3)
+    }
+
+    /// Interactive & Selection States
+    enum Interactive {
+        static let selectedBackground = Color.blue.opacity(0.15)
+        static let unselectedBackground = Color.gray.opacity(0.1)
+        static let selectedBorder = Color.blue
+        static let unselectedBorder = Color.gray.opacity(0.3)
+        static let destructive = Color.red.opacity(0.9)
+    }
 }

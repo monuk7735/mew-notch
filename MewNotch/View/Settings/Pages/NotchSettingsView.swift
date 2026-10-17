@@ -188,11 +188,11 @@ struct ScreenSelectionCard: View {
             .padding(12)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue.opacity(0.15) : Color.gray.opacity(0.1))
+                    .fill(isSelected ? AppColor.Interactive.selectedBackground : AppColor.Interactive.unselectedBackground)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 2)
+                    .stroke(isSelected ? AppColor.Interactive.selectedBorder : AppColor.Interactive.unselectedBorder, lineWidth: 2)
                     .padding(1)
             )
             .onTapGesture {

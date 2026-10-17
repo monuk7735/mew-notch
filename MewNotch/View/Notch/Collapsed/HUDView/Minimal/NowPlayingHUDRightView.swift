@@ -47,11 +47,9 @@ struct NowPlayingHUDRightView: View {
                                 NowPlaying.shared.togglePlayPause()
                             },
                             label: {
-                                Image(
-                                    systemName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill"
-                                )
-                                .resizable()
-                                .scaledToFit()
+                                (nowPlayingModel.isPlaying ? AppIcon.pauseFill : AppIcon.playFill).image
+                                    .resizable()
+                                    .scaledToFit()
                             }
                         )
                         .buttonStyle(.plain)

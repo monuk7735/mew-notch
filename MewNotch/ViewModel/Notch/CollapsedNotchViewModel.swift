@@ -227,7 +227,7 @@ class CollapsedNotchViewModel: ObservableObject {
         withAnimation {
             self.inputAudioVolumeHUD = .init(
                 lottie: nil,
-                icon: .init(systemName: "microphone.fill"),
+                icon: AppIcon.microphoneFill.image,
                 name: NSLocalizedString("Input Volume", comment: ""),
                 value: newVolume,
                 timer: inputAudioVolumeHUD?.timer

@@ -15,7 +15,7 @@ struct SettingsControlView: View {
     var body: some View {
         NotchControlButton(
             notchViewModel: notchViewModel,
-            icon: "gear",
+            icon: .general,
             isSelected: false,
             action: openSettings.callAsFunctionBringingToFront
         )

@@ -53,19 +53,49 @@ struct AppIcon: Sendable, Hashable, ExpressibleByStringLiteral {
     static let albumName = AppIcon("music.note.list")
     static let appIcon = AppIcon("app.fill")
     static let seekbar = AppIcon("slider.horizontal.3")
+    static let playFill = AppIcon("play.fill")
+    static let pauseFill = AppIcon("pause.fill")
 
     // HUD Detail Icons
     static let microphone = AppIcon("mic.fill")
+    static let microphoneFill = AppIcon("microphone.fill")
     static let paintbrush = AppIcon("paintbrush.fill")
     static let speakerWave2 = AppIcon("speaker.wave.2.fill")
     static let chartBar = AppIcon("chart.bar.fill")
     static let boltBadgeAutomatic = AppIcon("bolt.badge.automatic.fill")
+    static let battery100 = AppIcon("battery.100")
 
     // General Settings Icons
     static let launchAtLogin = AppIcon("arrow.up.circle.fill")
     static let statusIcon = AppIcon("menubar.rectangle")
     static let disableSystemHud = AppIcon("eye.slash.fill")
     static let warning = AppIcon("exclamationmark.triangle.fill")
+
+    // Bash Script Icons
+    static let textAlignLeft = AppIcon("text.alignleft")
+    static let arrowClockwiseCircle = AppIcon("arrow.clockwise.circle")
+    static let clockArrowCirclepath = AppIcon("clock.arrow.circlepath")
+    static let terminal = AppIcon("terminal")
+    static let terminalFill = AppIcon("terminal.fill")
+
+    // Mirror & Camera Icons
+    static let personFill = AppIcon("person.fill")
+    static let videoSlashFill = AppIcon("video.slash.fill")
+
+    // File Shelf & Action Icons
+    static let close = AppIcon("xmark")
+    static let trayArrowDown = AppIcon("tray.and.arrow.down.fill")
+    static let shareplay = AppIcon("shareplay")
+
+    // Navigation & Directional Icons
+    static let chevronLeft = AppIcon("chevron.left")
+    static let chevronRight = AppIcon("chevron.right")
+    static let arrowUp = AppIcon("arrow.up")
+
+    // Notch Control & Switching Icons
+    static let pin = AppIcon("pin")
+    static let home = AppIcon("house")
+    static let folder = AppIcon("folder")
 }
 
 enum AppAsset {
