@@ -67,6 +67,9 @@ class NotchViewModel: ObservableObject {
     ) {
         self.screen = screen
         isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
+        cornerRadius = isHardwareNotched
+            ? NotchUtils.shared.collapsedCornerRadius
+            : NotchUtils.shared.unnotchedCollapsedCornerRadius
 
         refreshNotchSize()
     }
@@ -97,8 +100,8 @@ class NotchViewModel: ObservableObject {
         let isThin = isThinBulge
         let targetHeight: CGFloat = isThin ? 8.0 : baseNotchSize.height
         let targetCornerRadius: (top: CGFloat, bottom: CGFloat) = isThin
-            ? (top: 8.0, bottom: 4.0)
-            : (isExpanded ? NotchUtils.shared.expandedCornerRadius : NotchUtils.shared.collapsedCornerRadius)
+            ? (top: 8.0, bottom: 8.0)
+            : (isExpanded ? NotchUtils.shared.unnotchedExpandedCornerRadius : NotchUtils.shared.unnotchedCollapsedCornerRadius)
 
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             self.notchSize.height = targetHeight
@@ -139,7 +142,9 @@ class NotchViewModel: ObservableObject {
                 if self.isHardwareNotched {
                     self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
                 } else {
-                    self.cornerRadius = self.isThinBulge ? (top: 8.0, bottom: 4.0) : NotchUtils.shared.collapsedCornerRadius
+                    self.cornerRadius = self.isThinBulge
+                        ? (top: 8.0, bottom: 8.0)
+                        : NotchUtils.shared.unnotchedCollapsedCornerRadius
                 }
                 self.extraNotchPadSize = .init(
                     width: self.cornerRadius.top * 2,
@@ -166,7 +171,9 @@ class NotchViewModel: ObservableObject {
         }
 
         withAnimation {
-            self.cornerRadius = NotchUtils.shared.expandedCornerRadius
+            self.cornerRadius = self.isHardwareNotched
+                ? NotchUtils.shared.expandedCornerRadius
+                : NotchUtils.shared.unnotchedExpandedCornerRadius
             self.extraNotchPadSize = .init(
                 width: self.cornerRadius.top * 2,
                 height: 0

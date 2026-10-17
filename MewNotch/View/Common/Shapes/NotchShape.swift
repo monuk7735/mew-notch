@@ -92,10 +92,10 @@ struct NotchShape: Shape {
             ),
             control1: CGPoint(
                 x: rect.minX + radiusX,
-                y: rect.maxY - bottomRadius * 0.5
+                y: rect.maxY - bottomRadius * 0.448
             ),
             control2: CGPoint(
-                x: rect.minX + radiusX + bottomRadius * 0.5,
+                x: rect.minX + radiusX + bottomRadius * 0.448,
                 y: rect.maxY
             )
         )
@@ -121,12 +121,12 @@ struct NotchShape: Shape {
                 y: rect.maxY - bottomRadius
             ),
             control1: CGPoint(
-                x: rect.maxX - radiusX - bottomRadius * 0.5,
+                x: rect.maxX - radiusX - bottomRadius * 0.448,
                 y: rect.maxY
             ),
             control2: CGPoint(
                 x: rect.maxX - radiusX,
-                y: rect.maxY - bottomRadius * 0.5
+                y: rect.maxY - bottomRadius * 0.448
             )
         )
 
