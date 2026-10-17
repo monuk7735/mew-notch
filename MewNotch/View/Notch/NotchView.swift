@@ -19,9 +19,13 @@ struct NotchView: View {
     @StateObject var expandedNotchViewModel: ExpandedNotchViewModel = .init()
     @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel
 
+    var isLockScreen: Bool = false
+
     init(
-        screen: NSScreen
+        screen: NSScreen,
+        isLockScreen: Bool = false
     ) {
+        self.isLockScreen = isLockScreen
         _notchViewModel = .init(
             wrappedValue: .init(
                 screen: screen
@@ -52,19 +56,21 @@ struct NotchView: View {
         }
         .preferredColorScheme(.dark)
         .contextMenu {
-            NotchOptionsView()
+            if !isLockScreen {
+                NotchOptionsView()
+            }
         }
         .onAppear {
             if !notchViewModel.isHardwareNotched, collapsedNotchViewModel.hasActiveContent {
-                NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen)
+                NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
             }
         }
         .onChange(of: collapsedNotchViewModel.hasActiveContent) { _, hasActive in
             if !notchViewModel.isHardwareNotched {
                 if hasActive {
-                    NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen)
+                    NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
                 } else {
-                    NotchManager.shared.hideAuxiliaryWindow(for: notchViewModel.screen, delay: 0.4)
+                    NotchManager.shared.hideAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen, delay: 0.4)
                 }
             }
         }
@@ -123,12 +129,14 @@ struct NotchView: View {
             radius: notchViewModel.isHovered ? 5 : 0
         )
         .onHover {
+            guard !isLockScreen else { return }
             notchViewModel.onHover(
                 $0,
                 shouldExpand: notchDefaults.expandOnHover || notchDefaults.applyGlassEffect
             )
         }
-        .dropDestination(
+        .applyDropDestination(
+            isEnabled: !isLockScreen,
             for: URL.self,
             action: { fileURLs, _ in
                 DispatchQueue.global(qos: .utility).async {
@@ -151,12 +159,14 @@ struct NotchView: View {
                 return true
             },
             isTargeted: {
+                guard !isLockScreen else { return }
                 notchViewModel.isDropTarget = $0
             }
         )
         .onChange(
             of: notchViewModel.isDropTarget
         ) { oldValue, newValue in
+            guard !isLockScreen else { return }
             guard oldValue != newValue else { return }
 
             if newValue {
@@ -169,8 +179,25 @@ struct NotchView: View {
                 )
             }
         }
-        .onTapGesture(
-            perform: notchViewModel.onTap
-        )
+        .onTapGesture {
+            guard !isLockScreen else { return }
+            notchViewModel.onTap()
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applyDropDestination(
+        isEnabled: Bool,
+        for type: URL.Type,
+        action: @escaping ([URL], CGPoint) -> Bool,
+        isTargeted: @escaping (Bool) -> Void
+    ) -> some View {
+        if isEnabled {
+            dropDestination(for: type, action: action, isTargeted: isTargeted)
+        } else {
+            self
+        }
     }
 }

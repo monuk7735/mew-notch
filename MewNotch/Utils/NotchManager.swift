@@ -14,10 +14,17 @@ class NotchManager {
     var notchDefaults: NotchDefaults = .shared
 
     var windows: [NSScreen: NSWindow] = [:]
+    var lockScreenWindows: [NSScreen: NSWindow] = [:]
 
     private var monitorTask: Task<Void, Never>?
+    private var isScreenLocked: Bool = false
 
     private init() {
+        if let sessionDict = CGSessionCopyCurrentDictionary() as? [String: Any],
+           let isLocked = sessionDict["CGSSessionScreenIsLocked"] as? Bool {
+            isScreenLocked = isLocked
+        }
+
         monitorTask = Task { @MainActor in
             let stream = await FullScreenMonitor.shared.spaceChanges()
             for await spaces in stream {
@@ -26,11 +33,58 @@ class NotchManager {
         }
 
         addListenerForScreenUpdates()
+        addListenersForScreenLock()
     }
 
     deinit {
         monitorTask?.cancel()
+        unlockWorkItem?.cancel()
         NotificationCenter.default.removeObserver(self)
+        DistributedNotificationCenter.default().removeObserver(self)
+    }
+
+    private func addListenersForScreenLock() {
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(handleScreenLocked),
+            name: NSNotification.Name("com.apple.screenIsLocked"),
+            object: nil
+        )
+
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(handleScreenUnlocked),
+            name: NSNotification.Name("com.apple.screenIsUnlocked"),
+            object: nil
+        )
+    }
+
+    private var unlockWorkItem: DispatchWorkItem?
+
+    @objc private func handleScreenLocked() {
+        isScreenLocked = true
+        unlockWorkItem?.cancel()
+        unlockWorkItem = nil
+
+        guard notchDefaults.shownOnLockScreen else { return }
+        for (screen, window) in lockScreenWindows where NotchUtils.shared.hasNotch(screen: screen) {
+            window.orderFrontRegardless()
+        }
+    }
+
+    @objc private func handleScreenUnlocked() {
+        isScreenLocked = false
+        unlockWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, !self.isScreenLocked else { return }
+            for (_, window) in lockScreenWindows {
+                window.orderOut(nil)
+            }
+            unlockWorkItem = nil
+        }
+        unlockWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: workItem)
     }
 
     @MainActor
@@ -51,23 +105,26 @@ class NotchManager {
         }
     }
 
-    private var hideWorkItems: [NSScreen: DispatchWorkItem] = [:]
+    private var hideWorkItems: [NSWindow: DispatchWorkItem] = [:]
 
-    func showAuxiliaryWindow(for screen: NSScreen) {
-        hideWorkItems[screen]?.cancel()
-        hideWorkItems.removeValue(forKey: screen)
-        guard let panel = windows[screen], !NotchUtils.shared.hasNotch(screen: screen) else { return }
+    func showAuxiliaryWindow(for screen: NSScreen, isLockScreen: Bool = false) {
+        guard !NotchUtils.shared.hasNotch(screen: screen) else { return }
+        guard let panel = isLockScreen ? lockScreenWindows[screen] : windows[screen] else { return }
+        hideWorkItems[panel]?.cancel()
+        hideWorkItems.removeValue(forKey: panel)
         panel.orderFrontRegardless()
     }
 
-    func hideAuxiliaryWindow(for screen: NSScreen, delay: TimeInterval = 0.4) {
-        hideWorkItems[screen]?.cancel()
+    func hideAuxiliaryWindow(for screen: NSScreen, isLockScreen: Bool = false, delay: TimeInterval = 0.4) {
+        guard !NotchUtils.shared.hasNotch(screen: screen) else { return }
+        guard let panel = isLockScreen ? lockScreenWindows[screen] : windows[screen] else { return }
+        hideWorkItems[panel]?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
-            guard let self, let panel = windows[screen] else { return }
+            guard let self else { return }
             panel.orderOut(nil)
-            hideWorkItems.removeValue(forKey: screen)
+            hideWorkItems.removeValue(forKey: panel)
         }
-        hideWorkItems[screen] = workItem
+        hideWorkItems[panel] = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
     }
 
@@ -84,69 +141,130 @@ class NotchManager {
         }
     }
 
-    @objc func refreshNotches(
-        killAllWindows: Bool = false,
-        addToSeparateSpace: Bool = true
-    ) {
+    private func removeStaleWindows(killAllWindows: Bool) {
         for (screen, window) in windows {
             if killAllWindows || !NSScreen.screens.contains(
                 where: { $0 == screen }
             ) || !shouldShowOnScreen(screen) {
                 window.close()
-
-                windows.removeValue(
-                    forKey: screen
-                )
+                NotchSpaceManager.shared.notchSpace.windows.remove(window)
+                windows.removeValue(forKey: screen)
             }
         }
+
+        for (screen, window) in lockScreenWindows {
+            if killAllWindows || !notchDefaults.shownOnLockScreen || !NSScreen.screens.contains(
+                where: { $0 == screen }
+            ) || !shouldShowOnScreen(screen) {
+                window.close()
+                lockScreenWindows.removeValue(forKey: screen)
+            }
+        }
+    }
+
+    private func setupNormalWindow(for screen: NSScreen, isHardwareNotched: Bool, addToSeparateSpace: Bool) {
+        var panel: NSWindow! = windows[screen]
+
+        if panel == nil {
+            let view: NSView = NSHostingView(
+                rootView: NotchView(
+                    screen: screen,
+                    isLockScreen: false
+                )
+            )
+
+            panel = MewPanel(
+                contentRect: screen.frame,
+                styleMask: [
+                    .borderless,
+                    .nonactivatingPanel,
+                    .utilityWindow,
+                    .hudWindow
+                ],
+                backing: .buffered,
+                defer: false
+            )
+
+            panel.contentView = view
+        }
+
+        panel.setFrame(
+            screen.frame,
+            display: true
+        )
+
+        if isHardwareNotched {
+            panel.orderFrontRegardless()
+        } else {
+            panel.orderOut(nil)
+        }
+
+        windows[screen] = panel
+
+        if addToSeparateSpace {
+            NotchSpaceManager.shared.notchSpace.windows.insert(panel)
+        }
+    }
+
+    private func setupLockScreenWindow(for screen: NSScreen, isHardwareNotched: Bool, addToSeparateSpace: Bool) {
+        var lockPanel: NSWindow! = lockScreenWindows[screen]
+
+        if lockPanel == nil {
+            let lockView: NSView = NSHostingView(
+                rootView: NotchView(
+                    screen: screen,
+                    isLockScreen: true
+                )
+            )
+
+            lockPanel = MewPanel(
+                contentRect: screen.frame,
+                styleMask: [
+                    .borderless,
+                    .nonactivatingPanel,
+                    .utilityWindow,
+                    .hudWindow
+                ],
+                backing: .buffered,
+                defer: false
+            )
+
+            lockPanel.ignoresMouseEvents = true
+            lockPanel.contentView = lockView
+        }
+
+        lockPanel.setFrame(
+            screen.frame,
+            display: true
+        )
+
+        lockScreenWindows[screen] = lockPanel
+
+        if addToSeparateSpace {
+            WindowManager.shared?.moveToLockScreen(lockPanel)
+        }
+
+        if isScreenLocked, isHardwareNotched {
+            lockPanel.orderFrontRegardless()
+        } else {
+            lockPanel.orderOut(nil)
+        }
+    }
+
+    @objc func refreshNotches(
+        killAllWindows: Bool = false,
+        addToSeparateSpace: Bool = true
+    ) {
+        removeStaleWindows(killAllWindows: killAllWindows)
 
         NSScreen.screens.filter {
             shouldShowOnScreen($0)
         }.forEach { screen in
-            var panel: NSWindow! = windows[screen]
-
-            if panel == nil {
-                let view: NSView = NSHostingView(
-                    rootView: NotchView(
-                        screen: screen
-                    )
-                )
-
-                panel = MewPanel(
-                    contentRect: screen.frame,
-                    styleMask: [
-                        .borderless,
-                        .nonactivatingPanel,
-                        .utilityWindow,
-                        .hudWindow
-                    ],
-                    backing: .buffered,
-                    defer: true
-                )
-
-                panel.contentView = view
-            }
-
-            panel.setFrame(
-                screen.frame,
-                display: true
-            )
-
             let isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
-            if isHardwareNotched {
-                panel.orderFrontRegardless()
-            } else {
-                panel.orderOut(nil)
-            }
+            setupNormalWindow(for: screen, isHardwareNotched: isHardwareNotched, addToSeparateSpace: addToSeparateSpace)
 
-            windows[screen] = panel
-
-            if addToSeparateSpace {
-                if notchDefaults.shownOnLockScreen {
-                    WindowManager.shared?.moveToLockScreen(panel)
-                } else {
-                    NotchSpaceManager.shared.notchSpace.windows.insert(panel)
-                }
+            if notchDefaults.shownOnLockScreen {
+                setupLockScreenWindow(for: screen, isHardwareNotched: isHardwareNotched, addToSeparateSpace: addToSeparateSpace)
             }
         }
 

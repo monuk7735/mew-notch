@@ -55,7 +55,7 @@ struct NotchSettingsView: View {
 
                 SettingsRow(
                     title: "Show on Lock Screen",
-                    subtitle: "Incompatible with File Shelf feature",
+                    subtitle: "Displays the notch on the lock screen",
                     icon: .lock,
                     color: AppColor.lock
                 ) {

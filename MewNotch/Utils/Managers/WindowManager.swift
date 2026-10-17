@@ -89,6 +89,7 @@ public class WindowManager {
     func moveToLockScreen(
         _ window: NSWindow
     ) {
+        guard window.windowNumber > 0 else { return }
         _ = SLSSpaceAddWindowsAndRemoveFromSpaces(connection, space, [window.windowNumber] as CFArray, 7)
     }
 }
