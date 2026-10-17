@@ -177,16 +177,6 @@ struct CollapsedNotchView: View {
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
             )
         }
-        .opacity(notchViewModel.isThinBulge ? 0 : 1)
-        .animation(.easeInOut(duration: 0.2), value: notchViewModel.isThinBulge)
-        .onAppear {
-            notchViewModel.hasActiveHUD = collapsedNotchViewModel.hasActiveHUD
-        }
-        .onChange(of: collapsedNotchViewModel.hasActiveHUD) { _, newValue in
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                notchViewModel.hasActiveHUD = newValue
-            }
-        }
         .onReceive(
             notchDefaults.objectWillChange
         ) {

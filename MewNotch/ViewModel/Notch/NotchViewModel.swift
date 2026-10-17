@@ -29,36 +29,10 @@ class NotchViewModel: ObservableObject {
         height: 0
     )
 
-    @Published var isDropTarget: Bool = false {
-        didSet {
-            updateEffectiveNotchState()
-        }
-    }
-
-    @Published var isHovered: Bool = false {
-        didSet {
-            updateEffectiveNotchState()
-        }
-    }
-
-    @Published var isExpanded: Bool = false {
-        didSet {
-            updateEffectiveNotchState()
-        }
-    }
-
-    @Published var hasActiveHUD: Bool = false {
-        didSet {
-            updateEffectiveNotchState()
-        }
-    }
-
+    @Published var isDropTarget: Bool = false
+    @Published var isHovered: Bool = false
+    @Published var isExpanded: Bool = false
     @Published var isPinned: Bool = false
-
-    var isThinBulge: Bool {
-        guard !isHardwareNotched else { return false }
-        return !isHovered && !isExpanded && !hasActiveHUD && !isDropTarget
-    }
 
     private var hoverTimer: Timer?
 
@@ -88,25 +62,6 @@ class NotchViewModel: ObservableObject {
         baseNotchSize = calculated
         notchSize = calculated
         minimalHUDPadding = calculated.height * 0.2
-
-        if !isHardwareNotched {
-            updateEffectiveNotchState()
-        }
-    }
-
-    func updateEffectiveNotchState() {
-        guard !isHardwareNotched else { return }
-
-        let isThin = isThinBulge
-        let targetHeight: CGFloat = isThin ? 8.0 : baseNotchSize.height
-        let targetCornerRadius: (top: CGFloat, bottom: CGFloat) = isThin
-            ? (top: 8.0, bottom: 8.0)
-            : (isExpanded ? NotchUtils.shared.unnotchedExpandedCornerRadius : NotchUtils.shared.unnotchedCollapsedCornerRadius)
-
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-            self.notchSize.height = targetHeight
-            self.cornerRadius = targetCornerRadius
-        }
     }
 
     func onHover(
@@ -136,16 +91,13 @@ class NotchViewModel: ObservableObject {
                     self.onTap()
                 }
             }
+        } else if !isPinned {
             withAnimation {
                 self.isExpanded = false
 
-                if self.isHardwareNotched {
-                    self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
-                } else {
-                    self.cornerRadius = self.isThinBulge
-                        ? (top: 8.0, bottom: 8.0)
-                        : NotchUtils.shared.unnotchedCollapsedCornerRadius
-                }
+                self.cornerRadius = self.isHardwareNotched
+                    ? NotchUtils.shared.collapsedCornerRadius
+                    : NotchUtils.shared.unnotchedCollapsedCornerRadius
                 self.extraNotchPadSize = .init(
                     width: self.cornerRadius.top * 2,
                     height: 0

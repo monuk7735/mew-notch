@@ -35,8 +35,8 @@ class NotchUtils {
         bottom: CGFloat
     ) {
         (
-            top: 8,
-            bottom: 20
+            top: 10,
+            bottom: 24
         )
     }
 
@@ -45,8 +45,8 @@ class NotchUtils {
         bottom: CGFloat
     ) {
         (
-            top: 8,
-            bottom: 28
+            top: 10,
+            bottom: 32
         )
     }
 
