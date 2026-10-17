@@ -634,6 +634,23 @@
         }
       }
     },
+    "Displays the notch on the lock screen" : {
+      "comment" : "Subtitle for Show on Lock Screen toggle",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displays the notch on the lock screen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在锁定屏幕上显示刘海"
+          }
+        }
+      }
+    },
     "Drop Files Here" : {
       "comment" : "Drop zone prompt text for AirDrop feature",
       "localizations" : {
@@ -945,23 +962,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "悬停延迟"
-          }
-        }
-      }
-    },
-    "Displays the notch on the lock screen" : {
-      "comment" : "Subtitle for Show on Lock Screen toggle",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Displays the notch on the lock screen"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在锁定屏幕上显示刘海"
           }
         }
       }
@@ -1286,24 +1286,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "收起时刘海保持当前状态"
-          }
-        }
-      }
-    },
-    "Notched" : {
-      "comment" : "Notched style integrated into notch for system HUD display",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notched"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "刘海式"
           }
         }
       }

@@ -9,18 +9,18 @@ import Lottie
 
 enum AppAnimation {
     static var brightness: LottieAnimation? {
-        LottieAnimation.named("Brightness.json", animationCache: LRUAnimationCache.sharedCache)
+        LottieAnimation.named("Brightness.json", animationCache: DefaultAnimationCache.sharedCache)
     }
 
     static var speaker: LottieAnimation? {
-        LottieAnimation.named("Speaker.json", animationCache: LRUAnimationCache.sharedCache)
+        LottieAnimation.named("Speaker.json", animationCache: DefaultAnimationCache.sharedCache)
     }
 
     static var visualizer: LottieAnimation? {
-        LottieAnimation.named("Visualizer.json", animationCache: LRUAnimationCache.sharedCache)
+        LottieAnimation.named("Visualizer.json", animationCache: DefaultAnimationCache.sharedCache)
     }
 
     static var lock: LottieAnimation? {
-        LottieAnimation.named("Lock.json", animationCache: LRUAnimationCache.sharedCache)
+        LottieAnimation.named("Lock.json", animationCache: DefaultAnimationCache.sharedCache)
     }
 }
