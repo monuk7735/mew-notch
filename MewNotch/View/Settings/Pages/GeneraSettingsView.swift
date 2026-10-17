@@ -18,8 +18,8 @@ struct GeneraSettingsView: View {
                 SettingsRow(
                     title: "Launch at Login",
                     subtitle: "Automatically start MewNotch when you log in",
-                    icon: MewNotch.Assets.icLaunchAtLogin,
-                    color: MewNotch.Colors.style
+                    icon: .launchAtLogin,
+                    color: AppColor.style
                 ) {
                     LaunchAtLogin.Toggle {
                         Text("")
@@ -30,8 +30,8 @@ struct GeneraSettingsView: View {
                 SettingsRow(
                     title: "Status Icon",
                     subtitle: "Show icon in menu bar for easy access",
-                    icon: MewNotch.Assets.icStatusIcon,
-                    color: MewNotch.Colors.general
+                    icon: .statusIcon,
+                    color: AppColor.general
                 ) {
                     Toggle("", isOn: $appDefaults.showMenuIcon)
                 }
@@ -43,8 +43,8 @@ struct GeneraSettingsView: View {
                 SettingsRow(
                     title: "Disable System HUD",
                     subtitle: "Hide system volume and brightness overlays",
-                    icon: MewNotch.Assets.icDisableSystemHud,
-                    color: MewNotch.Colors.systemHud
+                    icon: .disableSystemHud,
+                    color: AppColor.systemHud
                 ) {
                     Toggle("", isOn: $appDefaults.disableSystemHUD)
                         .onChange(of: appDefaults.disableSystemHUD) { _, newValue in
@@ -65,7 +65,7 @@ struct GeneraSettingsView: View {
                         Label {
                             Text("Accessibility permissions are required.")
                         } icon: {
-                            MewNotch.Assets.icWarning
+                            AppIcon.warning.image
                         }
                         .font(.caption)
                         .foregroundStyle(.red)

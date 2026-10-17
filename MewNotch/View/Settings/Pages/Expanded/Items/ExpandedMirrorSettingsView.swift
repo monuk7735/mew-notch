@@ -17,8 +17,8 @@ struct ExpandedMirrorSettingsView: View {
                 SettingsRow(
                     title: "Corner Radius",
                     subtitle: "Adjust the shape of the mirror",
-                    icon: MewNotch.Assets.icCornerRadius,
-                    color: MewNotch.Colors.mirror
+                    icon: .cornerRadius,
+                    color: AppColor.mirror
                 ) {
                     Slider(
                         value: $mirrorDefaults.cornerRadius,
@@ -34,8 +34,8 @@ struct ExpandedMirrorSettingsView: View {
                 SettingsRow(
                     title: "Auto-Start Mirror",
                     subtitle: "Automatically activate camera when notch is expanded",
-                    icon: MewNotch.Assets.icVideo,
-                    color: MewNotch.Colors.video
+                    icon: .video,
+                    color: AppColor.video
                 ) {
                     Toggle("", isOn: $mirrorDefaults.autoStart)
                 }

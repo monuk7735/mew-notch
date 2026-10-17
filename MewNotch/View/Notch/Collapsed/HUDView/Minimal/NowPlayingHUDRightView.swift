@@ -24,7 +24,7 @@ struct NowPlayingHUDRightView: View {
                 variant: .right
             ) {
                 LottieView(
-                    animation: MewNotch.Lotties.visualizer
+                    animation: AppAnimation.visualizer
                 )
                 .animationSpeed(0.2)
                 .playbackMode(

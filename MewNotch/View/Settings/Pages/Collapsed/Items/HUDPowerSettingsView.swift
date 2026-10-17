@@ -16,8 +16,8 @@ struct HUDPowerSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows power state when plugged in/out",
-                    icon: MewNotch.Assets.icPower,
-                    color: MewNotch.Colors.power
+                    icon: .power,
+                    color: AppColor.power
                 ) {
                     Toggle("", isOn: ~$powerDefaults.isEnabled)
                 }
@@ -29,8 +29,8 @@ struct HUDPowerSettingsView: View {
                 SettingsRow(
                     title: "Show Time Remaining",
                     subtitle: "Displays estimated time remaining on battery",
-                    icon: MewNotch.Assets.icTimer,
-                    color: MewNotch.Colors.timer
+                    icon: .timer,
+                    color: AppColor.timer
                 ) {
                     Toggle("", isOn: $powerDefaults.showTimeRemaining)
                 }

@@ -22,7 +22,7 @@ struct AboutAppView: View {
                 VStack(spacing: 8) {
                     Text("MewNotch")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
-                        .foregroundStyle(MewNotch.Colors.notch.color)
+                        .foregroundStyle(AppColor.notch)
 
                     Text("Version \(updaterViewModel.currentVersion)")
                         .font(.system(size: 14, weight: .medium, design: .rounded))

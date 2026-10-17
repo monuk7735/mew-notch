@@ -152,8 +152,8 @@ class CollapsedNotchViewModel: ObservableObject {
     @objc func screenLocked(notification _: Notification) {
         withAnimation {
             self.lockStatusHUD = .init(
-                lottie: MewNotch.Lotties.brightness,
-                icon: MewNotch.Assets.iconSpeaker,
+                lottie: AppAnimation.brightness,
+                icon: AppAsset.speaker,
                 name: "Screen Locked",
                 value: 1.0,
                 timer: lockStatusHUD?.timer
@@ -181,7 +181,7 @@ class CollapsedNotchViewModel: ObservableObject {
         withAnimation {
             self.inputAudioDeviceHUD = .init(
                 lottie: nil,
-                icon: MewNotch.Assets.iconSpeaker,
+                icon: AppAsset.speaker,
                 name: AudioInput.sharedInstance().deviceName ?? "",
                 value: 0.0,
                 timer: inputAudioDeviceHUD?.timer
@@ -249,7 +249,7 @@ class CollapsedNotchViewModel: ObservableObject {
         withAnimation {
             self.outputAudioDeviceHUD = .init(
                 lottie: nil,
-                icon: MewNotch.Assets.iconSpeaker,
+                icon: AppAsset.speaker,
                 name: AudioOutput.sharedInstance().deviceName ?? "",
                 value: 0.0,
                 timer: outputAudioDeviceHUD?.timer
@@ -270,8 +270,8 @@ class CollapsedNotchViewModel: ObservableObject {
 
         withAnimation {
             self.outputAudioVolumeHUD = .init(
-                lottie: MewNotch.Lotties.speaker,
-                icon: MewNotch.Assets.iconSpeaker,
+                lottie: AppAnimation.speaker,
+                icon: AppAsset.speaker,
                 name: NSLocalizedString("Output Volume", comment: ""),
                 value: VolumeManager.shared.getOutputVolume(),
                 timer: outputAudioVolumeHUD?.timer
@@ -309,8 +309,8 @@ class CollapsedNotchViewModel: ObservableObject {
 
         withAnimation {
             self.brightnessHUD = .init(
-                lottie: MewNotch.Lotties.brightness,
-                icon: MewNotch.Assets.iconBrightness,
+                lottie: AppAnimation.brightness,
+                icon: AppAsset.brightness,
                 name: "Brightness",
                 value: newBrightness,
                 timer: brightnessHUD?.timer
@@ -388,7 +388,7 @@ class CollapsedNotchViewModel: ObservableObject {
                 if titleChanged, !nowPlayingMedia.title.isEmpty, HUDMediaDefaults.shared.isEnabled {
                     self.nowPlayingChangesHUD = .init(
                         lottie: nil,
-                        icon: MewNotch.Assets.iconSpeaker,
+                        icon: AppAsset.speaker,
                         name: nowPlayingMedia.title,
                         value: 0.0,
                         timeout: HUDMediaDefaults.shared.titleChangeTimeout,

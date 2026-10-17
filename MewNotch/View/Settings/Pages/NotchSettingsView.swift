@@ -20,8 +20,8 @@ struct NotchSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Show Notch On",
-                    icon: MewNotch.Assets.icDisplay,
-                    color: MewNotch.Colors.notch
+                    icon: .display,
+                    color: AppColor.notch
                 ) {
                     Picker("", selection: ~$notchDefaults.notchDisplayVisibility) {
                         ForEach(NotchDisplayVisibility.allCases) { item in
@@ -56,8 +56,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Show on Lock Screen",
                     subtitle: "Incompatible with File Shelf feature",
-                    icon: MewNotch.Assets.icLock,
-                    color: MewNotch.Colors.lock
+                    icon: .lock,
+                    color: AppColor.lock
                 ) {
                     Toggle("", isOn: $notchDefaults.shownOnLockScreen)
                         .onChange(of: notchDefaults.shownOnLockScreen) { _, _ in
@@ -68,8 +68,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Hide on Full Screen",
                     subtitle: "Hides the notch when a full screen app is detected",
-                    icon: MewNotch.Assets.icDisplay,
-                    color: MewNotch.Colors.notch
+                    icon: .display,
+                    color: AppColor.notch
                 ) {
                     Toggle("", isOn: $notchDefaults.hideOnFullScreen)
                         .onChange(of: notchDefaults.hideOnFullScreen) { _, _ in
@@ -80,8 +80,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Reset View on Collapse",
                     subtitle: notchDefaults.resetViewOnCollapse ? "Notch resets to Home when Collapsed" : "Notch will retain state when Collapsed",
-                    icon: MewNotch.Assets.icReset,
-                    color: MewNotch.Colors.notch
+                    icon: .reset,
+                    color: AppColor.notch
                 ) {
                     Toggle("", isOn: $notchDefaults.resetViewOnCollapse)
                 }
@@ -93,8 +93,8 @@ struct NotchSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Height",
-                    icon: MewNotch.Assets.icHeight,
-                    color: MewNotch.Colors.height
+                    icon: .height,
+                    color: AppColor.height
                 ) {
                     Picker("", selection: $notchDefaults.heightMode) {
                         ForEach([NotchHeightMode.matchNotch, NotchHeightMode.matchMenuBar]) { item in
@@ -108,8 +108,8 @@ struct NotchSettingsView: View {
                     SettingsRow(
                         title: "Apply Glass Effect",
                         subtitle: "Forces 'Expand on Hover' to be enabled",
-                        icon: MewNotch.Assets.icGlass,
-                        color: MewNotch.Colors.glass
+                        icon: .glass,
+                        color: AppColor.glass
                     ) {
                         Toggle("", isOn: ~$notchDefaults.applyGlassEffect)
                     }
@@ -122,8 +122,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Expand on Hover",
                     subtitle: "Expand notch when hovered.\nDisables click interactions in all HUDs.",
-                    icon: MewNotch.Assets.icHover,
-                    color: MewNotch.Colors.hover
+                    icon: .hover,
+                    color: AppColor.hover
                 ) {
                     Toggle("", isOn: Binding(
                         get: { notchDefaults.expandOnHover || notchDefaults.applyGlassEffect },
@@ -139,8 +139,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Hover Delay",
                     subtitle: notchDefaults.expandOnHoverDelay.localizedSecondsKey(),
-                    icon: MewNotch.Assets.icTimer,
-                    color: MewNotch.Colors.timer
+                    icon: .timer,
+                    color: AppColor.timer
                 ) {
                     Slider(
                         value: $notchDefaults.expandOnHoverDelay,
@@ -153,8 +153,8 @@ struct NotchSettingsView: View {
                 SettingsRow(
                     title: "Haptic Feedback",
                     subtitle: "Play haptic feedback when hovering over the notch",
-                    icon: MewNotch.Assets.icHaptic,
-                    color: MewNotch.Colors.haptic
+                    icon: .haptic,
+                    color: AppColor.haptic
                 ) {
                     Toggle("", isOn: $notchDefaults.hapticFeedback)
                 }
