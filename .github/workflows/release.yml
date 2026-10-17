@@ -11,19 +11,20 @@ jobs:
       contents: write
     runs-on: macos-26
     environment: main
-    env:
-      projname: "MewNotch"
 
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
 
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+
       - name: Install create-dmg
         run: brew install create-dmg
 
       - name: Resolve Swift packages
-        run: xcodebuild -resolvePackageDependencies -project ${{ env.projname }}.xcodeproj
+        run: mise run resolve
 
       - name: Install Apple certificate
         env:
@@ -45,18 +46,10 @@ jobs:
         run: xcodebuild -version
 
       - name: Build and archive
-        run: |
-          xcodebuild clean archive \
-            -project ${{ env.projname }}.xcodeproj \
-            -scheme ${{ env.projname }} \
-            -archivePath ${{ env.projname }} \
-            -destination "generic/platform=macOS" \
-            ONLY_ACTIVE_ARCH=NO \
-            -allowProvisioningUpdates
+        run: mise run archive
 
       - name: Export app
-        run: |
-          xcodebuild -exportArchive -archivePath "${{ env.projname }}.xcarchive" -exportPath Release -exportOptionsPlist ".github/exportOptions.plist"
+        run: mise run export
 
       - name: Create DMG
         run: |
