@@ -9,10 +9,12 @@ import SwiftUI
 
 class NotchViewModel: ObservableObject {
     var screen: NSScreen
+    @Published var isHardwareNotched: Bool = false
 
     @Published var notchSize: CGSize = .zero
+    var baseNotchSize: CGSize = .zero
 
-    var cornerRadius: (
+    @Published var cornerRadius: (
         top: CGFloat,
         bottom: CGFloat
     ) = (
@@ -27,12 +29,36 @@ class NotchViewModel: ObservableObject {
         height: 0
     )
 
-    @Published var isDropTarget: Bool = false
+    @Published var isDropTarget: Bool = false {
+        didSet {
+            updateEffectiveNotchState()
+        }
+    }
 
-    @Published var isHovered: Bool = false
-    @Published var isExpanded: Bool = false
+    @Published var isHovered: Bool = false {
+        didSet {
+            updateEffectiveNotchState()
+        }
+    }
+
+    @Published var isExpanded: Bool = false {
+        didSet {
+            updateEffectiveNotchState()
+        }
+    }
+
+    @Published var hasActiveHUD: Bool = false {
+        didSet {
+            updateEffectiveNotchState()
+        }
+    }
 
     @Published var isPinned: Bool = false
+
+    var isThinBulge: Bool {
+        guard !isHardwareNotched else { return false }
+        return !isHovered && !isExpanded && !hasActiveHUD && !isDropTarget
+    }
 
     private var hoverTimer: Timer?
 
@@ -40,35 +66,43 @@ class NotchViewModel: ObservableObject {
         screen: NSScreen
     ) {
         self.screen = screen
+        isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
 
-        let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly
-
-        notchSize = NotchUtils.shared.notchSize(
-            screen: self.screen,
-            force: shouldForce
-        )
-
-        withAnimation {
-            notchSize.width += extraNotchPadSize.width
-            notchSize.height += extraNotchPadSize.height
-
-            minimalHUDPadding = notchSize.height * 0.2
-        }
+        refreshNotchSize()
     }
 
     func refreshNotchSize() {
+        isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
         let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly
 
-        notchSize = NotchUtils.shared.notchSize(
+        var calculated = NotchUtils.shared.notchSize(
             screen: screen,
             force: shouldForce
         )
+        calculated.width += extraNotchPadSize.width
+        calculated.height += extraNotchPadSize.height
 
-        withAnimation {
-            notchSize.width += extraNotchPadSize.width
-            notchSize.height += extraNotchPadSize.height
+        baseNotchSize = calculated
+        notchSize = calculated
+        minimalHUDPadding = calculated.height * 0.2
 
-            minimalHUDPadding = notchSize.height * 0.2
+        if !isHardwareNotched {
+            updateEffectiveNotchState()
+        }
+    }
+
+    func updateEffectiveNotchState() {
+        guard !isHardwareNotched else { return }
+
+        let isThin = isThinBulge
+        let targetHeight: CGFloat = isThin ? 8.0 : baseNotchSize.height
+        let targetCornerRadius: (top: CGFloat, bottom: CGFloat) = isThin
+            ? (top: 8.0, bottom: 4.0)
+            : (isExpanded ? NotchUtils.shared.expandedCornerRadius : NotchUtils.shared.collapsedCornerRadius)
+
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            self.notchSize.height = targetHeight
+            self.cornerRadius = targetCornerRadius
         }
     }
 
@@ -103,7 +137,7 @@ class NotchViewModel: ObservableObject {
             withAnimation {
                 self.isExpanded = false
 
-                self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
+                self.cornerRadius = self.isHardwareNotched ? NotchUtils.shared.collapsedCornerRadius : (self.isThinBulge ? (top: 8.0, bottom: 4.0) : NotchUtils.shared.collapsedCornerRadius)
                 self.extraNotchPadSize = .init(
                     width: self.cornerRadius.top * 2,
                     height: 0

@@ -11,14 +11,18 @@ import SwiftUI
 struct CollapsedNotchView: View {
     var namespace: Namespace.ID
 
-    @ObservedObject var notchViewModel: NotchViewModel
-
-    @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel = .init()
-
+    @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel
     @StateObject var notchDefaults = NotchDefaults.shared
-
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
 
+    init(
+        namespace: Namespace.ID,
+        notchViewModel: NotchViewModel
+    ) {
+        self.namespace = namespace
+        self.notchViewModel = notchViewModel
+        _collapsedNotchViewModel = StateObject(wrappedValue: CollapsedNotchViewModel(screen: notchViewModel.screen))
+    }
     var body: some View {
         VStack(
             spacing: 0
@@ -170,6 +174,16 @@ struct CollapsedNotchView: View {
                 defaults: HUDAudioOutputDefaults.shared,
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
             )
+        }
+        .opacity(notchViewModel.isThinBulge ? 0 : 1)
+        .animation(.easeInOut(duration: 0.2), value: notchViewModel.isThinBulge)
+        .onAppear {
+            notchViewModel.hasActiveHUD = collapsedNotchViewModel.hasActiveHUD
+        }
+        .onChange(of: collapsedNotchViewModel.hasActiveHUD) { oldValue, newValue in
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                notchViewModel.hasActiveHUD = newValue
+            }
         }
         .onReceive(
             notchDefaults.objectWillChange

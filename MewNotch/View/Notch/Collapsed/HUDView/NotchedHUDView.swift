@@ -62,8 +62,8 @@ struct NotchedHUDView<T: HUDDefaultsProtocol>: View {
                 )
             )
             .frame(
-                width: notchViewModel.notchSize.width - notchViewModel.extraNotchPadSize.width,
-                height: notchViewModel.notchSize.width - notchViewModel.notchSize.height - notchViewModel.extraNotchPadSize.width
+                width: max(0, notchViewModel.notchSize.width - notchViewModel.extraNotchPadSize.width),
+                height: max(0, notchViewModel.notchSize.width - notchViewModel.notchSize.height - notchViewModel.extraNotchPadSize.width)
             )
             .transition(
                 .move(

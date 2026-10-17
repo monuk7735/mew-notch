@@ -91,11 +91,19 @@ class NotchUtils {
         var notchWidth: CGFloat = 180
         var notchHeight: CGFloat = 0
 
-        if let topLeftSpace: CGFloat = screen.auxiliaryTopLeftArea?.width, let topRightSpace: CGFloat = screen.auxiliaryTopRightArea?.width {
-            notchWidth = screen.frame.width - topLeftSpace - topRightSpace
+        if let topLeftSpace: CGFloat = screen.auxiliaryTopLeftArea?.width,
+           let topRightSpace: CGFloat = screen.auxiliaryTopRightArea?.width,
+           topLeftSpace > 0, topRightSpace > 0 {
+            let calculatedWidth = screen.frame.width - topLeftSpace - topRightSpace
+            if calculatedWidth > 0 {
+                notchWidth = calculatedWidth
+            }
         }
 
         notchHeight = screen.frame.maxY - screen.visibleFrame.maxY
+        if notchHeight <= 0 {
+            notchHeight = 24
+        }
 
         return .init(
             width: notchWidth,
