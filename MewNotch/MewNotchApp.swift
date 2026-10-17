@@ -74,5 +74,7 @@ struct MewNotchApp: App {
                 .modelContainer(sharedModelContainer)
         }
         .windowResizability(.contentSize)
+        .defaultSize(width: 800, height: 500)
+        .defaultPosition(.center)
     }
 }
