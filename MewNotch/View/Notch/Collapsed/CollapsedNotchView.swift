@@ -173,26 +173,6 @@ struct CollapsedNotchView: View {
                 defaults: HUDAudioOutputDefaults.shared,
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
             )
-
-            // MARK: Notched Style View
-
-            NotchedHUDView(
-                notchViewModel: notchViewModel,
-                defaults: HUDBrightnessDefaults.shared,
-                hudModel: collapsedNotchViewModel.brightnessHUD
-            )
-
-            NotchedHUDView(
-                notchViewModel: notchViewModel,
-                defaults: HUDAudioInputDefaults.shared,
-                hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
-            )
-
-            NotchedHUDView(
-                notchViewModel: notchViewModel,
-                defaults: HUDAudioOutputDefaults.shared,
-                hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
-            )
         }
     }
 }
