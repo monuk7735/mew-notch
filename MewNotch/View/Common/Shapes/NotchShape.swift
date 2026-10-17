@@ -118,34 +118,3 @@ struct NotchShape: Shape {
         return path
     }
 }
-
-struct AdaptiveNotchShape: Shape {
-    var isHardwareNotched: Bool
-    var topRadius: CGFloat
-    var bottomRadius: CGFloat
-    var floatingCornerRadius: CGFloat
-
-    var animatableData: AnimatablePair<CGFloat, CGFloat> {
-        get {
-            AnimatablePair(bottomRadius, floatingCornerRadius)
-        }
-        set {
-            bottomRadius = newValue.first
-            floatingCornerRadius = newValue.second
-        }
-    }
-
-    func path(in rect: CGRect) -> Path {
-        if isHardwareNotched {
-            NotchShape(
-                topRadius: topRadius,
-                bottomRadius: bottomRadius
-            ).path(in: rect)
-        } else {
-            RoundedRectangle(
-                cornerRadius: floatingCornerRadius,
-                style: .continuous
-            ).path(in: rect)
-        }
-    }
-}

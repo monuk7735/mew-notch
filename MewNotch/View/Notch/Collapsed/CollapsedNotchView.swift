@@ -82,9 +82,7 @@ struct CollapsedNotchView: View {
                 )
 
                 OnlyNotchView(
-                    notchSize: notchViewModel.notchSize,
-                    isHardwareNotched: notchViewModel.isHardwareNotched,
-                    hasActiveContent: collapsedNotchViewModel.hasActiveContent
+                    notchSize: notchViewModel.notchSize
                 )
 
                 NowPlayingHUDRightView(

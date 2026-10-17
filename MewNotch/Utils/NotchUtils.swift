@@ -30,14 +30,6 @@ class NotchUtils {
         )
     }
 
-    var floatingCollapsedCornerRadius: CGFloat {
-        14
-    }
-
-    var floatingExpandedCornerRadius: CGFloat {
-        24
-    }
-
     private init() {}
 
     func hasNotch(

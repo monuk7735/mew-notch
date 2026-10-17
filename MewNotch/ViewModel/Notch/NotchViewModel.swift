@@ -9,20 +9,17 @@ import SwiftUI
 
 class NotchViewModel: ObservableObject {
     var screen: NSScreen
-    @Published var isHardwareNotched: Bool = false
 
     @Published var notchSize: CGSize = .zero
-    var baseNotchSize: CGSize = .zero
+    @Published var isHardwareNotched: Bool = true
 
-    @Published var cornerRadius: (
+    var cornerRadius: (
         top: CGFloat,
         bottom: CGFloat
     ) = (
         top: 8,
         bottom: 13
     )
-
-    @Published var floatingCornerRadius: CGFloat = 14
 
     var minimalHUDPadding: CGFloat = 0
 
@@ -37,153 +34,33 @@ class NotchViewModel: ObservableObject {
     @Published var isPinned: Bool = false
 
     private var hoverTimer: Timer?
-    private var globalMouseMonitor: Any?
-    private var localMouseMonitor: Any?
-    private var mouseTrackingTimer: Timer?
-    private var expansionDate: Date?
-    var notchScreenRect: CGRect = .zero
-
-    var currentShape: AdaptiveNotchShape {
-        AdaptiveNotchShape(
-            isHardwareNotched: isHardwareNotched,
-            topRadius: cornerRadius.top,
-            bottomRadius: cornerRadius.bottom,
-            floatingCornerRadius: floatingCornerRadius
-        )
-    }
 
     init(
         screen: NSScreen
     ) {
         self.screen = screen
-        isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
-        cornerRadius = NotchUtils.shared.collapsedCornerRadius
-        floatingCornerRadius = NotchUtils.shared.floatingCollapsedCornerRadius
-        extraNotchPadSize = .init(
-            width: isHardwareNotched ? cornerRadius.top * 2 : 0,
-            height: 0
-        )
-
         refreshNotchSize()
-    }
-
-    deinit {
-        stopMouseTracking()
-        hoverTimer?.invalidate()
     }
 
     func refreshNotchSize() {
         isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
         let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly
 
-        var calculated = NotchUtils.shared.notchSize(
+        extraNotchPadSize = .init(
+            width: isHardwareNotched ? cornerRadius.top * 2 : 0,
+            height: 0
+        )
+
+        notchSize = NotchUtils.shared.notchSize(
             screen: screen,
             force: shouldForce
         )
-        calculated.width += extraNotchPadSize.width
-        calculated.height += extraNotchPadSize.height
 
-        baseNotchSize = calculated
-        notchSize = calculated
-        minimalHUDPadding = calculated.height * 0.2
-    }
+        withAnimation {
+            notchSize.width += extraNotchPadSize.width
+            notchSize.height += extraNotchPadSize.height
 
-    func updateNotchFrame(_ rect: CGRect) {
-        guard rect.width > 0, rect.height > 0 else { return }
-        let screenFrame = screen.frame
-        let minX = screenFrame.minX + rect.minX
-        let minY = screenFrame.maxY - rect.maxY
-        notchScreenRect = CGRect(
-            x: minX,
-            y: minY,
-            width: rect.width,
-            height: rect.height
-        )
-    }
-
-    func startMouseTracking() {
-        stopMouseTracking()
-        expansionDate = Date()
-
-        globalMouseMonitor = NSEvent.addGlobalMonitorForEvents(
-            matching: [.mouseMoved]
-        ) { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.checkMousePosition()
-            }
-        }
-
-        localMouseMonitor = NSEvent.addLocalMonitorForEvents(
-            matching: [.mouseMoved]
-        ) { [weak self] event in
-            self?.checkMousePosition()
-            return event
-        }
-
-        mouseTrackingTimer = Timer.scheduledTimer(
-            withTimeInterval: 0.05,
-            repeats: true
-        ) { [weak self] _ in
-            self?.checkMousePosition()
-        }
-    }
-
-    func stopMouseTracking() {
-        if let monitor = globalMouseMonitor {
-            NSEvent.removeMonitor(monitor)
-            globalMouseMonitor = nil
-        }
-        if let monitor = localMouseMonitor {
-            NSEvent.removeMonitor(monitor)
-            localMouseMonitor = nil
-        }
-        mouseTrackingTimer?.invalidate()
-        mouseTrackingTimer = nil
-    }
-
-    func checkMousePosition() {
-        guard isExpanded, !isPinned, !isDropTarget else { return }
-
-        if let expansionDate, Date().timeIntervalSince(expansionDate) < 0.2 {
-            return
-        }
-
-        guard notchScreenRect.width > 0, notchScreenRect.height > 0 else { return }
-
-        let mouseLoc = NSEvent.mouseLocation
-        let activeRect = notchScreenRect.insetBy(dx: -8, dy: -8)
-
-        if !activeRect.contains(mouseLoc) {
-            collapse()
-        }
-    }
-
-    func collapse() {
-        stopMouseTracking()
-        hoverTimer?.invalidate()
-
-        guard isExpanded else {
-            withAnimation {
-                self.isHovered = false
-            }
-            return
-        }
-
-        withAnimation(
-            .spring(
-                response: 0.35,
-                dampingFraction: 0.85
-            )
-        ) {
-            self.isExpanded = false
-            self.isHovered = false
-
-            self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
-            self.floatingCornerRadius = NotchUtils.shared.floatingCollapsedCornerRadius
-            self.extraNotchPadSize = .init(
-                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
-                height: 0
-            )
+            minimalHUDPadding = notchSize.height * 0.2
         }
     }
 
@@ -191,16 +68,16 @@ class NotchViewModel: ObservableObject {
         _ isHovered: Bool,
         shouldExpand: Bool = true
     ) {
+        if NotchDefaults.shared.hapticFeedback {
+            HapticsManager.shared.feedback(
+                pattern: .generic
+            )
+        }
+
         hoverTimer?.invalidate()
 
         if isHovered {
-            if NotchDefaults.shared.hapticFeedback {
-                HapticsManager.shared.feedback(
-                    pattern: .generic
-                )
-            }
-
-            if shouldExpand, !isExpanded {
+            if shouldExpand {
                 hoverTimer = .scheduledTimer(
                     withTimeInterval: NotchDefaults.shared.expandOnHoverDelay,
                     repeats: false
@@ -212,23 +89,23 @@ class NotchViewModel: ObservableObject {
                         )
                     }
 
-                    onTap()
+                    self.onTap()
                 }
             }
-
+        } else if !isPinned {
             withAnimation {
-                self.isHovered = true
+                self.isExpanded = false
+
+                self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
+                self.extraNotchPadSize = .init(
+                    width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
+                    height: 0
+                )
             }
-        } else {
-            if isExpanded {
-                if !isPinned {
-                    collapse()
-                }
-            } else {
-                withAnimation {
-                    self.isHovered = false
-                }
-            }
+        }
+
+        withAnimation {
+            self.isHovered = isHovered
         }
     }
 
@@ -246,13 +123,10 @@ class NotchViewModel: ObservableObject {
 
         withAnimation {
             self.cornerRadius = NotchUtils.shared.expandedCornerRadius
-            self.floatingCornerRadius = NotchUtils.shared.floatingExpandedCornerRadius
             self.extraNotchPadSize = .init(
                 width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
                 height: 0
             )
         }
-
-        startMouseTracking()
     }
 }

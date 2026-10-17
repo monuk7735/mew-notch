@@ -1256,6 +1256,7 @@
     },
     "Notched" : {
       "comment" : "Notched style integrated into notch for system HUD display",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

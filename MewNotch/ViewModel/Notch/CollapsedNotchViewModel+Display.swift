@@ -29,29 +29,48 @@ extension CollapsedNotchViewModel {
         return true
     }
 
+    func shouldHandleDisplayTargetedNotification(targetDisplayID: CGDirectDisplayID?) -> Bool {
+        let currentDisplayID = screen?.displayID ?? 0
+        let targetID = targetDisplayID ?? 0
+
+        // If no target display specified, or targeted to main display:
+        // Main display handles it; auxiliary displays do not.
+        if targetID == 0 {
+            return !isAuxiliaryScreen
+        }
+
+        if isAuxiliaryScreen {
+            // Auxiliary screen: only handle if targeted to this exact display AND auxiliary HUD is enabled
+            return targetID == currentDisplayID && NotchDefaults.shared.showHUDOnAuxiliaryScreens
+        } else {
+            // Main display:
+            if targetID == currentDisplayID {
+                return true
+            }
+
+            // Targeted to an auxiliary screen: if auxiliary displays are disabled, fallback to main display
+            if !NotchDefaults.shared.showHUDOnAuxiliaryScreens {
+                return true
+            }
+
+            // Auxiliary screens are enabled, so that display will handle it
+            return false
+        }
+    }
+
     @objc func handleBetterDisplayOSDNotification(_ notification: Notification) {
         guard let osdInfo = notification.object as? BetterDisplayOSDNotification else { return }
 
-        // Display targeting:
-        // If BetterDisplay specifies a target displayID, verify against this screen's displayID.
-        var isTargetedForThisDisplay = false
-        if let targetDisplayID = osdInfo.displayID,
-           let currentDisplayID = screen?.displayID,
-           targetDisplayID != 0 {
-            if targetDisplayID != currentDisplayID {
-                return
-            }
-            isTargetedForThisDisplay = true
+        guard shouldHandleDisplayTargetedNotification(targetDisplayID: osdInfo.displayID) else {
+            return
         }
 
         let target = osdInfo.controlTarget?.lowercased() ?? ""
         let iconID = osdInfo.systemIconID ?? 0
         let isBrightness = target.contains("brightness") || iconID == 1
 
-        // Auxiliary screens only support display-targeted brightness
-        if isAuxiliaryScreen {
-            guard isBrightness && isTargetedForThisDisplay else { return }
-        } else if !shouldShowHUDOnThisScreen, !(isBrightness && isTargetedForThisDisplay) {
+        // Auxiliary screens only support brightness HUD
+        if isAuxiliaryScreen, !isBrightness {
             return
         }
 
@@ -108,13 +127,8 @@ extension CollapsedNotchViewModel {
 
         let targetDisplayID = (notification.userInfo?["display"] as? NSNumber)?.uint32Value
             ?? (notification.userInfo?["displayID"] as? NSNumber)?.uint32Value
-        let currentDisplayID = screen?.displayID
 
-        if let targetDisplayID, targetDisplayID != 0, let currentDisplayID {
-            if targetDisplayID != currentDisplayID {
-                return
-            }
-        } else if isAuxiliaryScreen || !shouldShowHUDOnThisScreen {
+        guard shouldHandleDisplayTargetedNotification(targetDisplayID: targetDisplayID) else {
             return
         }
 
