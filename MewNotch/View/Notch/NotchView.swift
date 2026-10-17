@@ -55,7 +55,7 @@ struct NotchView: View {
             NotchOptionsView()
         }
         .onAppear {
-            if !notchViewModel.isHardwareNotched && collapsedNotchViewModel.hasActiveContent {
+            if !notchViewModel.isHardwareNotched, collapsedNotchViewModel.hasActiveContent {
                 NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen)
             }
         }

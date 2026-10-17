@@ -19,14 +19,14 @@ struct CollapsedNotchView: View {
     var body: some View {
         hardwareCollapsedNotchView
             .onReceive(
-            notchDefaults.objectWillChange
-        ) {
-            collapsedNotchViewModel.hideHUDs()
+                notchDefaults.objectWillChange
+            ) {
+                collapsedNotchViewModel.hideHUDs()
 
-            DispatchQueue.main.async {
-                notchViewModel.refreshNotchSize()
+                DispatchQueue.main.async {
+                    notchViewModel.refreshNotchSize()
+                }
             }
-        }
     }
 
     private var hardwareCollapsedNotchView: some View {

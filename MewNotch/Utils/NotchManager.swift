@@ -63,9 +63,9 @@ class NotchManager {
     func hideAuxiliaryWindow(for screen: NSScreen, delay: TimeInterval = 0.4) {
         hideWorkItems[screen]?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
-            guard let self, let panel = self.windows[screen] else { return }
+            guard let self, let panel = windows[screen] else { return }
             panel.orderOut(nil)
-            self.hideWorkItems.removeValue(forKey: screen)
+            hideWorkItems.removeValue(forKey: screen)
         }
         hideWorkItems[screen] = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
@@ -88,7 +88,6 @@ class NotchManager {
         killAllWindows: Bool = false,
         addToSeparateSpace: Bool = true
     ) {
-
         for (screen, window) in windows {
             if killAllWindows || !NSScreen.screens.contains(
                 where: { $0 == screen }

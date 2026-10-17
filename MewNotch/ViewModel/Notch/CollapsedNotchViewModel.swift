@@ -348,7 +348,9 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func handleNowPlayingMediaChanges() {
-        if isAuxiliaryScreen { return }
+        if isAuxiliaryScreen {
+            return
+        }
 
         if !NowPlaying.shared.playing {
             DispatchQueue.main.asyncAfter(

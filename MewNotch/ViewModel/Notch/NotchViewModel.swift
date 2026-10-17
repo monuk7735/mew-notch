@@ -89,7 +89,7 @@ class NotchViewModel: ObservableObject {
                         )
                     }
 
-                    self.onTap()
+                    onTap()
                 }
             }
         } else if !isPinned {
