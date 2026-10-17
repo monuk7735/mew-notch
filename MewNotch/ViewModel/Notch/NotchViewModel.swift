@@ -22,6 +22,8 @@ class NotchViewModel: ObservableObject {
         bottom: 13
     )
 
+    @Published var floatingCornerRadius: CGFloat = 14
+
     var minimalHUDPadding: CGFloat = 0
 
     var extraNotchPadSize: CGSize = .init(
@@ -41,14 +43,26 @@ class NotchViewModel: ObservableObject {
     private var expansionDate: Date?
     var notchScreenRect: CGRect = .zero
 
+    var currentShape: AdaptiveNotchShape {
+        AdaptiveNotchShape(
+            isHardwareNotched: isHardwareNotched,
+            topRadius: cornerRadius.top,
+            bottomRadius: cornerRadius.bottom,
+            floatingCornerRadius: floatingCornerRadius
+        )
+    }
+
     init(
         screen: NSScreen
     ) {
         self.screen = screen
         isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
-        cornerRadius = isHardwareNotched
-            ? NotchUtils.shared.collapsedCornerRadius
-            : NotchUtils.shared.unnotchedCollapsedCornerRadius
+        cornerRadius = NotchUtils.shared.collapsedCornerRadius
+        floatingCornerRadius = NotchUtils.shared.floatingCollapsedCornerRadius
+        extraNotchPadSize = .init(
+            width: isHardwareNotched ? cornerRadius.top * 2 : 0,
+            height: 0
+        )
 
         refreshNotchSize()
     }
@@ -164,11 +178,10 @@ class NotchViewModel: ObservableObject {
             self.isExpanded = false
             self.isHovered = false
 
-            self.cornerRadius = self.isHardwareNotched
-                ? NotchUtils.shared.collapsedCornerRadius
-                : NotchUtils.shared.unnotchedCollapsedCornerRadius
+            self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
+            self.floatingCornerRadius = NotchUtils.shared.floatingCollapsedCornerRadius
             self.extraNotchPadSize = .init(
-                width: self.cornerRadius.top * 2,
+                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
                 height: 0
             )
         }
@@ -232,11 +245,10 @@ class NotchViewModel: ObservableObject {
         }
 
         withAnimation {
-            self.cornerRadius = self.isHardwareNotched
-                ? NotchUtils.shared.expandedCornerRadius
-                : NotchUtils.shared.unnotchedExpandedCornerRadius
+            self.cornerRadius = NotchUtils.shared.expandedCornerRadius
+            self.floatingCornerRadius = NotchUtils.shared.floatingExpandedCornerRadius
             self.extraNotchPadSize = .init(
-                width: self.cornerRadius.top * 2,
+                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
                 height: 0
             )
         }

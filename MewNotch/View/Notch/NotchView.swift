@@ -33,6 +33,8 @@ struct NotchView: View {
             HStack {
                 Spacer()
 
+                let currentShape = notchViewModel.currentShape
+
                 ZStack(
                     alignment: .top
                 ) {
@@ -52,34 +54,39 @@ struct NotchView: View {
                         .opacity(notchViewModel.isExpanded ? 0 : 1)
                         .allowsHitTesting(!notchViewModel.isExpanded)
                 }
-                .glassEffect(when: notchDefaults.applyGlassEffect, in: NotchShape(
-                    topRadius: notchViewModel.cornerRadius.top,
-                    bottomRadius: notchViewModel.cornerRadius.bottom
-                ))
+                .glassEffect(when: notchDefaults.applyGlassEffect, in: currentShape)
                 .background {
                     if !notchDefaults.applyGlassEffect {
                         Color.black
                     }
                 }
+                .overlay {
+                    if !notchViewModel.isHardwareNotched, !notchDefaults.applyGlassEffect {
+                        currentShape
+                            .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
+                    }
+                }
                 .mask {
-                    NotchShape(
-                        topRadius: notchViewModel.cornerRadius.top,
-                        bottomRadius: notchViewModel.cornerRadius.bottom
-                    )
+                    currentShape
                 }
                 .contentShape(
-                    NotchShape(
-                        topRadius: notchViewModel.cornerRadius.top,
-                        bottomRadius: notchViewModel.cornerRadius.bottom
-                    )
+                    currentShape
                 )
                 .scaleEffect(
-                    notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.1 : 1.0,
+                    notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.05 : 1.0,
                     anchor: .top
                 )
                 .shadow(
-                    radius: notchViewModel.isHovered ? 5 : 0
+                    color: notchViewModel.isHardwareNotched
+                        ? Color.black.opacity(notchViewModel.isHovered ? 0.3 : 0)
+                        : Color.black.opacity(0.25),
+                    radius: notchViewModel.isHardwareNotched
+                        ? (notchViewModel.isHovered ? 5 : 0)
+                        : (notchViewModel.isExpanded ? 16 : 8),
+                    x: 0,
+                    y: notchViewModel.isHardwareNotched ? 0 : (notchViewModel.isExpanded ? 6 : 3)
                 )
+                .padding(.top, notchViewModel.isHardwareNotched ? 0 : 8)
                 .background(
                     GeometryReader { proxy in
                         Color.clear

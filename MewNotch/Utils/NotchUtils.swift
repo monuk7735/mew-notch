@@ -30,24 +30,12 @@ class NotchUtils {
         )
     }
 
-    var unnotchedCollapsedCornerRadius: (
-        top: CGFloat,
-        bottom: CGFloat
-    ) {
-        (
-            top: 10,
-            bottom: 24
-        )
+    var floatingCollapsedCornerRadius: CGFloat {
+        14
     }
 
-    var unnotchedExpandedCornerRadius: (
-        top: CGFloat,
-        bottom: CGFloat
-    ) {
-        (
-            top: 10,
-            bottom: 32
-        )
+    var floatingExpandedCornerRadius: CGFloat {
+        24
     }
 
     private init() {}
@@ -122,7 +110,9 @@ class NotchUtils {
 
         notchHeight = screen.frame.maxY - screen.visibleFrame.maxY
         if notchHeight <= 0 {
-            notchHeight = 24
+            notchHeight = 28
+        } else {
+            notchHeight = max(28, notchHeight)
         }
 
         return .init(
