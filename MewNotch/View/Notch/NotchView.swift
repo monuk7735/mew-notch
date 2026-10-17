@@ -166,8 +166,7 @@ struct NotchView: View {
         .onChange(
             of: notchViewModel.isDropTarget
         ) { oldValue, newValue in
-            guard !isLockScreen else { return }
-            guard oldValue != newValue else { return }
+            guard !isLockScreen, oldValue != newValue else { return }
 
             if newValue {
                 expandedNotchViewModel.currentView = .shelf

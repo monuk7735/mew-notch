@@ -146,10 +146,9 @@ struct MirrorView: View {
             }
         } else if cameraAuthStatus == .notDetermined {
             requestCameraAuthorization()
-        } else if cameraAuthStatus == .denied {
-            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {
-                openURL(url)
-            }
+        } else if cameraAuthStatus == .denied,
+                  let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {
+            openURL(url)
         }
     }
 }

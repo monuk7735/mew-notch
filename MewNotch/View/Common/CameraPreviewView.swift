@@ -84,11 +84,10 @@ struct CameraPreviewView: NSViewRepresentable {
                 session.startRunning()
 
                 DispatchQueue.main.async {
-                    if let connection = self.previewLayer?.connection {
-                        if connection.isVideoMirroringSupported {
-                            connection.automaticallyAdjustsVideoMirroring = false
-                            connection.isVideoMirrored = true // Mirror for "Mirror" view!
-                        }
+                    if let connection = self.previewLayer?.connection,
+                       connection.isVideoMirroringSupported {
+                        connection.automaticallyAdjustsVideoMirroring = false
+                        connection.isVideoMirrored = true // Mirror for "Mirror" view!
                     }
                 }
             }

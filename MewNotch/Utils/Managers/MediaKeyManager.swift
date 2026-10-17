@@ -87,14 +87,14 @@ class MediaKeyManager {
             var subtype = event.getIntegerValueField(subtypeField)
             var data1 = event.getIntegerValueField(data1Field)
 
-            if subtype == 0, let nsEvent = NSEvent(cgEvent: event) {
-                if nsEvent.type == .systemDefined {
-                    let nsSubtype = Int64(nsEvent.subtype.rawValue)
-                    let nsData1 = Int64(nsEvent.data1)
-                    if nsSubtype != 0 {
-                        subtype = nsSubtype
-                        data1 = nsData1
-                    }
+            if subtype == 0,
+               let nsEvent = NSEvent(cgEvent: event),
+               nsEvent.type == .systemDefined {
+                let nsSubtype = Int64(nsEvent.subtype.rawValue)
+                let nsData1 = Int64(nsEvent.data1)
+                if nsSubtype != 0 {
+                    subtype = nsSubtype
+                    data1 = nsData1
                 }
             }
 
