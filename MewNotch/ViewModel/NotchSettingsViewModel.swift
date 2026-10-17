@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 final class NotchSettingsViewModel: ObservableObject {
-    @Published var screens: [NSScreen] = NSScreen.screens
+    @Published var screens: [NSScreen] = NSScreen.screens.filter { !$0.isAirPlay }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -33,7 +33,7 @@ final class NotchSettingsViewModel: ObservableObject {
     @objc
     func refreshScreens() {
         DispatchQueue.main.async {
-            self.screens = NSScreen.screens
+            self.screens = NSScreen.screens.filter { !$0.isAirPlay }
         }
     }
 

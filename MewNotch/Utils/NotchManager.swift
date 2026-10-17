@@ -52,6 +52,10 @@ class NotchManager {
     }
 
     func shouldShowOnScreen(_ screen: NSScreen) -> Bool {
+        if screen.isAirPlay {
+            return false
+        }
+
         let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
 
         switch notchDefaults.notchDisplayVisibility {
