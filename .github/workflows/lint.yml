@@ -1,0 +1,28 @@
+name: PR Verification (Lint)
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: pr-verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & Formatting
+    runs-on: macos-26
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Tools via mise
+        uses: jdx/mise-action@v2
+
+      - name: Check SwiftFormat
+        run: mise run format:check
+
+      - name: Check SwiftLint
+        run: mise run lint

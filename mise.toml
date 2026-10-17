@@ -48,5 +48,15 @@ xcodebuild clean archive \
   -archivePath MewNotch.xcarchive \
   -derivedDataPath $DERIVED_DATA \
   -destination "generic/platform=macOS" \
-  ONLY_ACTIVE_ARCH=NO
+  ONLY_ACTIVE_ARCH=NO \
+  -allowProvisioningUpdates
+"""
+
+[tasks.export]
+description = "Export archived app using export options"
+run = """
+xcodebuild -exportArchive \
+  -archivePath MewNotch.xcarchive \
+  -exportPath Release \
+  -exportOptionsPlist .github/exportOptions.plist
 """
