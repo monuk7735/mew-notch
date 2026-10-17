@@ -14,21 +14,8 @@ struct ExternalDisplaySettingsView: View {
         Form {
             Section {
                 SettingsRow(
-                    title: "Show HUD on External Displays",
-                    subtitle: "Show display-targeted brightness alerts on secondary displays; otherwise falls back to main display",
-                    icon: .display,
-                    color: AppColor.notch
-                ) {
-                    Toggle("", isOn: $notchDefaults.showHUDOnAuxiliaryScreens)
-                }
-            } header: {
-                Text("HUD Alerts")
-            }
-
-            Section {
-                SettingsRow(
-                    title: "BetterDisplay Brightness Control",
-                    subtitle: "Allow BetterDisplay to handle brightness keys when it is running instead of MewNotch capturing them",
+                    title: "Brightness Control",
+                    subtitle: "Let BetterDisplay handle brightness keys",
                     icon: .brightnessFill,
                     color: AppColor.brightness
                 ) {
@@ -36,8 +23,8 @@ struct ExternalDisplaySettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "BetterDisplay Status",
-                    subtitle: "Detects whether BetterDisplay is actively running on this system",
+                    title: "Status",
+                    subtitle: "Detects running application",
                     icon: .statusIcon,
                     color: AppColor.general
                 ) {
@@ -52,13 +39,13 @@ struct ExternalDisplaySettingsView: View {
                     }
                 }
             } header: {
-                Text("BetterDisplay Integration")
+                Text("BetterDisplay")
             }
 
             Section {
                 SettingsRow(
                     title: "Lock Screen Alerts",
-                    subtitle: "Lock and unlock status alerts are displayed across all connected monitors",
+                    subtitle: "Show lock status on all monitors",
                     icon: .lock,
                     color: AppColor.lock
                 ) {

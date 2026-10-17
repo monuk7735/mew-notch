@@ -23,10 +23,8 @@ extension CollapsedNotchViewModel {
     }
 
     var shouldShowHUDOnThisScreen: Bool {
-        if isAuxiliaryScreen, !NotchDefaults.shared.showHUDOnAuxiliaryScreens {
-            return false
-        }
-        return true
+        guard let screen else { return true }
+        return NotchManager.shared.shouldShowOnScreen(screen)
     }
 
     func shouldHandleDisplayTargetedNotification(targetDisplayID: CGDirectDisplayID?) -> Bool {
@@ -40,20 +38,20 @@ extension CollapsedNotchViewModel {
         }
 
         if isAuxiliaryScreen {
-            // Auxiliary screen: only handle if targeted to this exact display AND auxiliary HUD is enabled
-            return targetID == currentDisplayID && NotchDefaults.shared.showHUDOnAuxiliaryScreens
+            // Auxiliary screen: handle if targeted to this exact display
+            return targetID == currentDisplayID
         } else {
             // Main display:
             if targetID == currentDisplayID {
                 return true
             }
 
-            // Targeted to an auxiliary screen: if auxiliary displays are disabled, fallback to main display
-            if !NotchDefaults.shared.showHUDOnAuxiliaryScreens {
+            // Targeted to an auxiliary screen: fallback to main display if that screen doesn't show notch
+            if let targetScreen = NSScreen.screens.first(where: { $0.displayID == targetID }),
+               !NotchManager.shared.shouldShowOnScreen(targetScreen) {
                 return true
             }
 
-            // Auxiliary screens are enabled, so that display will handle it
             return false
         }
     }

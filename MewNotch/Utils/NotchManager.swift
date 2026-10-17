@@ -51,24 +51,23 @@ class NotchManager {
         }
     }
 
+    func shouldShowOnScreen(_ screen: NSScreen) -> Bool {
+        let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
+
+        switch notchDefaults.notchDisplayVisibility {
+        case .allDisplays:
+            return true
+        case .notchedDisplayOnly:
+            return NotchUtils.shared.hasNotch(screen: screen)
+        case .custom:
+            return shownOnDisplays.contains(screen.localizedName)
+        }
+    }
+
     @objc func refreshNotches(
         killAllWindows: Bool = false,
         addToSeparateSpace: Bool = true
     ) {
-        let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
-
-        let shouldShowOnScreen: (NSScreen) -> Bool = { [weak self] screen in
-            guard let self else { return false }
-
-            switch notchDefaults.notchDisplayVisibility {
-            case .allDisplays:
-                return true
-            case .notchedDisplayOnly:
-                return NotchUtils.shared.hasNotch(screen: screen)
-            case .custom:
-                return shownOnDisplays.contains(screen.localizedName)
-            }
-        }
 
         for (screen, window) in windows {
             if killAllWindows || !NSScreen.screens.contains(
