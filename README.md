@@ -38,7 +38,7 @@
 - **File Shelf** - Drag and drop files to the notch for quick access. **Now with Persistence!** Files stay there even after restarts.
 - **Power State** - Show current power source. Toggle "Time Remaining" display for a cleaner look.
 - **Notch on Lock Screen** - The notch HUD is now visible even on the macOS lock screen.
-- **Now Playing** - Control now playing media directly from notch. Shows title changes automatically with customizable pop-up timeouts.
+- **Now Playing** - Control now playing media directly from notch. Shows title changes automatically with customizable pop-up timeouts and interactive seekbar.
 - **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch. Now with customizable corner radius.
 - **Bash Script View** - Run and display bash commands directly in the expanded notch.
 - **Customizable Interactions** - Tailor the notch exactly to your liking with adjustable hover expand delays and toggles for HUD animations.
