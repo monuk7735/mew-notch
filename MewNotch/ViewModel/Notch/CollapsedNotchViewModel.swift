@@ -188,6 +188,7 @@ class CollapsedNotchViewModel: ObservableObject {
 
     @objc func screenUnlocked(notification _: Notification) {
         withAnimation {
+            self.lockStatusHUD?.name = "Screen Unlocked"
             self.lockStatusHUD?.value = 0.0
         }
 

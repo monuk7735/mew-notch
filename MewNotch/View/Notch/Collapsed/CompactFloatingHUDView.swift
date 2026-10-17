@@ -13,27 +13,80 @@ struct CompactFloatingHUDView: View {
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var collapsedNotchViewModel: CollapsedNotchViewModel
 
-    var body: some View {
-        contentView
-            .frame(height: max(24, min(30, notchViewModel.notchSize.height)))
+    private var hasBrightness: Bool {
+        collapsedNotchViewModel.brightnessHUD != nil && HUDBrightnessDefaults.shared.isEnabled
     }
 
-    @ViewBuilder
-    private var contentView: some View {
-        if let brightness = collapsedNotchViewModel.brightnessHUD,
-           HUDBrightnessDefaults.shared.isEnabled {
-            CompactSliderHUDView(
-                hud: brightness,
-                style: HUDBrightnessDefaults.shared.style,
-                animateChanges: HUDBrightnessDefaults.shared.animateChanges
-            )
-        } else if let lock = collapsedNotchViewModel.lockStatusHUD {
-            CompactLockHUDView(
-                notchViewModel: notchViewModel,
-                hud: lock
-            )
-        } else {
-            EmptyView()
+    private var hasLock: Bool {
+        collapsedNotchViewModel.lockStatusHUD != nil
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            if let lock = collapsedNotchViewModel.lockStatusHUD {
+                CompactLockIconView(hud: lock)
+            }
+
+            if let brightness = collapsedNotchViewModel.brightnessHUD,
+               HUDBrightnessDefaults.shared.isEnabled {
+                CompactSliderHUDView(
+                    hud: brightness,
+                    style: HUDBrightnessDefaults.shared.style,
+                    animateChanges: HUDBrightnessDefaults.shared.animateChanges
+                )
+                .transition(.opacity)
+            } else if let lock = collapsedNotchViewModel.lockStatusHUD {
+                Text(lock.name)
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.white)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .transition(.opacity)
+            }
+        }
+        .padding(.horizontal, 10)
+        .frame(height: max(24, min(30, notchViewModel.notchSize.height)))
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: hasBrightness)
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: hasLock)
+    }
+}
+
+struct CompactLockIconView: View {
+    var hud: HUDPropertyModel
+    @State private var progress: CGFloat = 0
+
+    var body: some View {
+        TimelineView(.animation) { _ in
+            Rectangle()
+                .fill(Color.white)
+                .mask {
+                    LottieView(
+                        animation: AppAnimation.lock
+                    )
+                    .currentProgress(1 - progress)
+                    .scaleEffect(1.2)
+                }
+                .frame(width: 16, height: 16)
+        }
+        .onAppear {
+            progress = CGFloat(hud.value)
+        }
+        .onChange(of: hud.value) { _, newValue in
+            animateTo(CGFloat(newValue))
+        }
+    }
+
+    private func animateTo(_ newValue: CGFloat) {
+        let duration = 0.3
+        let steps = 30
+        let stepTime = duration / Double(steps)
+        let start = progress
+        let delta = newValue - start
+
+        for step in 0 ... steps {
+            DispatchQueue.main.asyncAfter(deadline: .now() + stepTime * Double(step)) {
+                let progress = start + delta * CGFloat(step) / CGFloat(steps)
+                self.progress = progress
+            }
         }
     }
 }
@@ -76,61 +129,6 @@ struct CompactSliderHUDView: View {
             }
             .if(!animateChanges) { view in
                 view.animation(nil, value: hud.value)
-            }
-        }
-        .padding(.horizontal, 8)
-    }
-}
-
-struct CompactLockHUDView: View {
-    @ObservedObject var notchViewModel: NotchViewModel
-    var hud: HUDPropertyModel
-
-    @State private var progress: CGFloat = 0
-
-    var body: some View {
-        HStack(spacing: 8) {
-            TimelineView(.animation) { _ in
-                Rectangle()
-                    .fill(Color.white)
-                    .mask {
-                        LottieView(
-                            animation: AppAnimation.lock
-                        )
-                        .currentProgress(1 - progress)
-                        .scaleEffect(1.2)
-                    }
-                    .frame(
-                        width: 16,
-                        height: 16
-                    )
-            }
-
-            Text(hud.name)
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.white)
-                .fixedSize(horizontal: true, vertical: false)
-        }
-        .padding(.horizontal, 10)
-        .onAppear {
-            progress = CGFloat(hud.value)
-        }
-        .onChange(of: hud.value) { _, newValue in
-            animateTo(CGFloat(newValue))
-        }
-    }
-
-    private func animateTo(_ newValue: CGFloat) {
-        let duration = 0.3
-        let steps = 30
-        let stepTime = duration / Double(steps)
-        let start = progress
-        let delta = newValue - start
-
-        for step in 0 ... steps {
-            DispatchQueue.main.asyncAfter(deadline: .now() + stepTime * Double(step)) {
-                let progress = start + delta * CGFloat(step) / CGFloat(steps)
-                self.progress = progress
             }
         }
     }
