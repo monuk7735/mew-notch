@@ -51,25 +51,43 @@ class NotchManager {
         }
     }
 
+    private var hideWorkItems: [NSScreen: DispatchWorkItem] = [:]
+
+    func showAuxiliaryWindow(for screen: NSScreen) {
+        hideWorkItems[screen]?.cancel()
+        hideWorkItems.removeValue(forKey: screen)
+        guard let panel = windows[screen], !NotchUtils.shared.hasNotch(screen: screen) else { return }
+        panel.orderFrontRegardless()
+    }
+
+    func hideAuxiliaryWindow(for screen: NSScreen, delay: TimeInterval = 0.4) {
+        hideWorkItems[screen]?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, let panel = windows[screen] else { return }
+            panel.orderOut(nil)
+            hideWorkItems.removeValue(forKey: screen)
+        }
+        hideWorkItems[screen] = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+    }
+
+    func shouldShowOnScreen(_ screen: NSScreen) -> Bool {
+        let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
+
+        switch notchDefaults.notchDisplayVisibility {
+        case .allDisplays:
+            return true
+        case .notchedDisplayOnly:
+            return NotchUtils.shared.hasNotch(screen: screen)
+        case .custom:
+            return shownOnDisplays.contains(screen.localizedName)
+        }
+    }
+
     @objc func refreshNotches(
         killAllWindows: Bool = false,
         addToSeparateSpace: Bool = true
     ) {
-        let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
-
-        let shouldShowOnScreen: (NSScreen) -> Bool = { [weak self] screen in
-            guard let self else { return false }
-
-            switch notchDefaults.notchDisplayVisibility {
-            case .allDisplays:
-                return true
-            case .notchedDisplayOnly:
-                return NotchUtils.shared.hasNotch(screen: screen)
-            case .custom:
-                return shownOnDisplays.contains(screen.localizedName)
-            }
-        }
-
         for (screen, window) in windows {
             if killAllWindows || !NSScreen.screens.contains(
                 where: { $0 == screen }
@@ -114,7 +132,12 @@ class NotchManager {
                 display: true
             )
 
-            panel.orderFrontRegardless()
+            let isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
+            if isHardwareNotched {
+                panel.orderFrontRegardless()
+            } else {
+                panel.orderOut(nil)
+            }
 
             windows[screen] = panel
 

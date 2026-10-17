@@ -11,6 +11,7 @@ class NotchViewModel: ObservableObject {
     var screen: NSScreen
 
     @Published var notchSize: CGSize = .zero
+    @Published var isHardwareNotched: Bool = true
 
     var cornerRadius: (
         top: CGFloat,
@@ -28,10 +29,8 @@ class NotchViewModel: ObservableObject {
     )
 
     @Published var isDropTarget: Bool = false
-
     @Published var isHovered: Bool = false
     @Published var isExpanded: Bool = false
-
     @Published var isPinned: Bool = false
 
     private var hoverTimer: Timer?
@@ -40,24 +39,17 @@ class NotchViewModel: ObservableObject {
         screen: NSScreen
     ) {
         self.screen = screen
-
-        let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly
-
-        notchSize = NotchUtils.shared.notchSize(
-            screen: self.screen,
-            force: shouldForce
-        )
-
-        withAnimation {
-            notchSize.width += extraNotchPadSize.width
-            notchSize.height += extraNotchPadSize.height
-
-            minimalHUDPadding = notchSize.height * 0.2
-        }
+        refreshNotchSize()
     }
 
     func refreshNotchSize() {
+        isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
         let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly
+
+        extraNotchPadSize = .init(
+            width: isHardwareNotched ? cornerRadius.top * 2 : 0,
+            height: 0
+        )
 
         notchSize = NotchUtils.shared.notchSize(
             screen: screen,
@@ -89,14 +81,15 @@ class NotchViewModel: ObservableObject {
                 hoverTimer = .scheduledTimer(
                     withTimeInterval: NotchDefaults.shared.expandOnHoverDelay,
                     repeats: false
-                ) { _ in
+                ) { [weak self] _ in
+                    guard let self else { return }
                     if NotchDefaults.shared.hapticFeedback {
                         HapticsManager.shared.feedback(
                             pattern: .generic
                         )
                     }
 
-                    self.onTap()
+                    onTap()
                 }
             }
         } else if !isPinned {
@@ -105,7 +98,7 @@ class NotchViewModel: ObservableObject {
 
                 self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
                 self.extraNotchPadSize = .init(
-                    width: self.cornerRadius.top * 2,
+                    width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
                     height: 0
                 )
             }
@@ -131,7 +124,7 @@ class NotchViewModel: ObservableObject {
         withAnimation {
             self.cornerRadius = NotchUtils.shared.expandedCornerRadius
             self.extraNotchPadSize = .init(
-                width: self.cornerRadius.top * 2,
+                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
                 height: 0
             )
         }

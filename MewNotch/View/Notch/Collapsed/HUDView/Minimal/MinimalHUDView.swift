@@ -21,7 +21,7 @@ struct MinimalHUDView<Content: View>: View {
 
     var body: some View {
         content()
-            .padding(notchViewModel.minimalHUDPadding)
+            .padding(notchViewModel.isHardwareNotched ? notchViewModel.minimalHUDPadding : 0)
             .frame(
                 width: notchViewModel.notchSize.height,
                 height: notchViewModel.notchSize.height
@@ -37,9 +37,9 @@ struct MinimalHUDView<Content: View>: View {
             .padding(
                 .init(
                     top: 0,
-                    leading: notchViewModel.extraNotchPadSize.width / 2 * (variant == .left ? 1 : -1),
+                    leading: notchViewModel.isHardwareNotched ? notchViewModel.extraNotchPadSize.width / 2 * (variant == .left ? 1 : -1) : 0,
                     bottom: 0,
-                    trailing: notchViewModel.extraNotchPadSize.width / 2 * (variant == .left ? -1 : 1)
+                    trailing: notchViewModel.isHardwareNotched ? notchViewModel.extraNotchPadSize.width / 2 * (variant == .left ? -1 : 1) : 0
                 )
             )
     }
