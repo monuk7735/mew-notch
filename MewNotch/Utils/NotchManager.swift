@@ -51,11 +51,27 @@ class NotchManager {
         }
     }
 
-    func shouldShowOnScreen(_ screen: NSScreen) -> Bool {
-        if screen.isAirPlay {
-            return false
-        }
+    private var hideWorkItems: [NSScreen: DispatchWorkItem] = [:]
 
+    func showAuxiliaryWindow(for screen: NSScreen) {
+        hideWorkItems[screen]?.cancel()
+        hideWorkItems.removeValue(forKey: screen)
+        guard let panel = windows[screen], !NotchUtils.shared.hasNotch(screen: screen) else { return }
+        panel.orderFrontRegardless()
+    }
+
+    func hideAuxiliaryWindow(for screen: NSScreen, delay: TimeInterval = 0.4) {
+        hideWorkItems[screen]?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, let panel = self.windows[screen] else { return }
+            panel.orderOut(nil)
+            self.hideWorkItems.removeValue(forKey: screen)
+        }
+        hideWorkItems[screen] = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+    }
+
+    func shouldShowOnScreen(_ screen: NSScreen) -> Bool {
         let shownOnDisplays = Set(notchDefaults.shownOnDisplay.filter { $1 }.keys)
 
         switch notchDefaults.notchDisplayVisibility {
@@ -117,7 +133,12 @@ class NotchManager {
                 display: true
             )
 
-            panel.orderFrontRegardless()
+            let isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
+            if isHardwareNotched {
+                panel.orderFrontRegardless()
+            } else {
+                panel.orderOut(nil)
+            }
 
             windows[screen] = panel
 
