@@ -949,19 +949,19 @@
         }
       }
     },
-    "Incompatible with File Shelf feature" : {
-      "comment" : "Notice when AirDrop conflicts with File Shelf",
+    "Displays the notch on the lock screen" : {
+      "comment" : "Subtitle for Show on Lock Screen toggle",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Incompatible with File Shelf feature"
+            "value" : "Displays the notch on the lock screen"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "与文件暂存架功能不兼容"
+            "value" : "在锁定屏幕上显示刘海"
           }
         }
       }

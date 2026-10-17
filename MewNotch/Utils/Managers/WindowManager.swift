@@ -39,9 +39,8 @@ public class WindowManager {
 
     private init?() {
         let frameworkURL = NSURL(fileURLWithPath: "/System/Library/PrivateFrameworks/SkyLight.framework")
-        guard let bundle = CFBundleCreate(kCFAllocatorDefault, frameworkURL) else { return nil }
-
-        guard let SLSMainConnectionIDPointer = CFBundleGetFunctionPointerForName(bundle, "SLSMainConnectionID" as CFString) else { return nil }
+        guard let bundle = CFBundleCreate(kCFAllocatorDefault, frameworkURL),
+              let SLSMainConnectionIDPointer = CFBundleGetFunctionPointerForName(bundle, "SLSMainConnectionID" as CFString) else { return nil }
         typealias SLSMainConnectionIDAlias = @convention(c) () -> Int32
         SLSMainConnectionID = unsafeBitCast(SLSMainConnectionIDPointer, to: SLSMainConnectionIDAlias.self)
 
@@ -89,6 +88,7 @@ public class WindowManager {
     func moveToLockScreen(
         _ window: NSWindow
     ) {
+        guard window.windowNumber > 0 else { return }
         _ = SLSSpaceAddWindowsAndRemoveFromSpaces(connection, space, [window.windowNumber] as CFArray, 7)
     }
 }

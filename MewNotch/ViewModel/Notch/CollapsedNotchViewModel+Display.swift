@@ -57,9 +57,8 @@ extension CollapsedNotchViewModel {
     }
 
     @objc func handleBetterDisplayOSDNotification(_ notification: Notification) {
-        guard let osdInfo = notification.object as? BetterDisplayOSDNotification else { return }
-
-        guard shouldHandleDisplayTargetedNotification(targetDisplayID: osdInfo.displayID) else {
+        guard let osdInfo = notification.object as? BetterDisplayOSDNotification,
+              shouldHandleDisplayTargetedNotification(targetDisplayID: osdInfo.displayID) else {
             return
         }
 
