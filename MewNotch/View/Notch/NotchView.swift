@@ -58,11 +58,13 @@ struct NotchView: View {
 
     @ViewBuilder
     private var floatingHUDView: some View {
-        CompactFloatingHUDView(
-            namespace: namespace,
-            notchViewModel: notchViewModel,
-            collapsedNotchViewModel: collapsedNotchViewModel
-        )
+        if collapsedNotchViewModel.hasActiveContent {
+            CompactFloatingHUDView(
+                namespace: namespace,
+                notchViewModel: notchViewModel,
+                collapsedNotchViewModel: collapsedNotchViewModel
+            )
+        }
     }
 
     private var hardwareNotchView: some View {

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import <IOKit/IOKitLib.h>
-#import <CoreVideo/CoreVideo.h>
 
 NSString *BrightnessNotification = @"Brightness";
 
@@ -26,11 +25,11 @@ int DisplayServicesUnregisterForBrightnessChangeNotifications(
 
 @interface Brightness ()
 - (void)displayBrightnessDidChange:(NSDictionary *) userInfo;
-- (void)onDisplayLinkTick;
+- (void)onAnimationTick;
 - (float)hardwareBrightness;
 - (BOOL)shouldAnimate;
-- (void)startDisplayLinkIfNeeded;
-- (void)stopDisplayLink;
+- (void)startAnimationTimerIfNeeded;
+- (void)stopAnimationTimer;
 @end
 
 static void DisplayBrightnessListener(
@@ -48,27 +47,12 @@ static void DisplayBrightnessListener(
     return;
 }
 
-static CVReturn DisplayLinkBrightnessCallback(
-    CVDisplayLinkRef displayLink,
-    const CVTimeStamp *inNow,
-    const CVTimeStamp *inOutputTime,
-    CVOptionFlags flagsIn,
-    CVOptionFlags *flagsOut,
-    void *displayLinkContext
-) {
-    Brightness *brightnessObj = (__bridge Brightness *)displayLinkContext;
-    [brightnessObj performSelectorOnMainThread:@selector(onDisplayLinkTick)
-                                    withObject:nil
-                                 waitUntilDone:NO];
-    return kCVReturnSuccess;
-}
-
 @implementation Brightness
 {
     float _targetBrightness;
     float _startBrightness;
     NSTimeInterval _animationStartTime;
-    CVDisplayLinkRef _displayLink;
+    dispatch_source_t _animationTimer;
     BOOL _isAnimating;
 }
 
@@ -91,7 +75,7 @@ static CVReturn DisplayLinkBrightnessCallback(
 
     _targetBrightness = NAN;
     _isAnimating = NO;
-    _displayLink = NULL;
+    _animationTimer = nil;
     [self registerListener:YES];
 
     return self;
@@ -99,11 +83,7 @@ static CVReturn DisplayLinkBrightnessCallback(
 
 - (void)dealloc
 {
-    [self stopDisplayLink];
-    if (_displayLink != NULL) {
-        CVDisplayLinkRelease(_displayLink);
-        _displayLink = NULL;
-    }
+    [self stopAnimationTimer];
     [self registerListener:NO];
 }
 
@@ -157,21 +137,32 @@ static CVReturn DisplayLinkBrightnessCallback(
     [self setBrightness:value smooth:[self shouldAnimate]];
 }
 
-- (void)startDisplayLinkIfNeeded
+- (void)startAnimationTimerIfNeeded
 {
-    if (_displayLink == NULL) {
-        CVDisplayLinkCreateWithActiveCGDisplays(&_displayLink);
-        CVDisplayLinkSetOutputCallback(_displayLink, DisplayLinkBrightnessCallback, (__bridge void *)self);
-        CVDisplayLinkStart(_displayLink);
-    } else if (!CVDisplayLinkIsRunning(_displayLink)) {
-        CVDisplayLinkStart(_displayLink);
+    if (_animationTimer != nil) {
+        return;
+    }
+    
+    _animationTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    if (_animationTimer) {
+        // Fire roughly every 16ms (60 fps)
+        dispatch_source_set_timer(_animationTimer,
+                                  dispatch_time(DISPATCH_TIME_NOW, 0),
+                                  16 * NSEC_PER_MSEC,
+                                  1 * NSEC_PER_MSEC);
+        __weak typeof(self) weakSelf = self;
+        dispatch_source_set_event_handler(_animationTimer, ^{
+            [weakSelf onAnimationTick];
+        });
+        dispatch_resume(_animationTimer);
     }
 }
 
-- (void)stopDisplayLink
+- (void)stopAnimationTimer
 {
-    if (_displayLink != NULL && CVDisplayLinkIsRunning(_displayLink)) {
-        CVDisplayLinkStop(_displayLink);
+    if (_animationTimer != nil) {
+        dispatch_source_cancel(_animationTimer);
+        _animationTimer = nil;
     }
 }
 
@@ -180,7 +171,7 @@ static CVReturn DisplayLinkBrightnessCallback(
     value = fmaxf(0.0f, fminf(1.0f, value));
     
     if (!smooth) {
-        [self stopDisplayLink];
+        [self stopAnimationTimer];
         _isAnimating = NO;
         _targetBrightness = value;
         DisplayServicesSetBrightness(
@@ -224,16 +215,18 @@ static CVReturn DisplayLinkBrightnessCallback(
     ];
     
     if ([NSThread isMainThread]) {
-        [self startDisplayLinkIfNeeded];
+        [self startAnimationTimerIfNeeded];
     } else {
-        [self performSelectorOnMainThread:@selector(startDisplayLinkIfNeeded) withObject:nil waitUntilDone:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self startAnimationTimerIfNeeded];
+        });
     }
 }
 
-- (void)onDisplayLinkTick
+- (void)onAnimationTick
 {
     if (!_isAnimating) {
-        [self stopDisplayLink];
+        [self stopAnimationTimer];
         return;
     }
     
@@ -242,7 +235,7 @@ static CVReturn DisplayLinkBrightnessCallback(
     
     if (elapsed >= kBrightnessAnimationDuration) {
         _isAnimating = NO;
-        [self stopDisplayLink];
+        [self stopAnimationTimer];
         DisplayServicesSetBrightness(CGMainDisplayID(), _targetBrightness);
         return;
     }
