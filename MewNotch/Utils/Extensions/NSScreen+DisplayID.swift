@@ -15,14 +15,4 @@ extension NSScreen {
         }
         return CGDirectDisplayID(screenNumber.uint32Value)
     }
-
-    /// Whether this screen is an AirPlay or wireless streaming display without hardware timing.
-    var isAirPlay: Bool {
-        if localizedName.localizedCaseInsensitiveContains("AirPlay") {
-            return true
-        }
-        guard let id = displayID else { return false }
-        // 0x61697270 is four-char code 'airp' used by macOS for AirPlay displays
-        return CGDisplayModelNumber(id) == 0x61697270
-    }
 }

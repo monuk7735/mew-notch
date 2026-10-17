@@ -55,16 +55,6 @@ class NotchDefaults: ObservableObject {
     }
 
     @PrimitiveUserDefault(
-        PREFIX + "ShowHUDOnAuxiliaryScreens",
-        defaultValue: false
-    )
-    var showHUDOnAuxiliaryScreens: Bool {
-        didSet {
-            objectWillChange.send()
-        }
-    }
-
-    @PrimitiveUserDefault(
         PREFIX + "YieldBrightnessToBetterDisplay",
         defaultValue: true
     )

@@ -17,18 +17,8 @@ struct CollapsedNotchView: View {
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
 
     var body: some View {
-        Group {
-            if notchViewModel.isHardwareNotched {
-                hardwareCollapsedNotchView
-            } else {
-                CompactFloatingHUDView(
-                    namespace: namespace,
-                    notchViewModel: notchViewModel,
-                    collapsedNotchViewModel: collapsedNotchViewModel
-                )
-            }
-        }
-        .onReceive(
+        hardwareCollapsedNotchView
+            .onReceive(
             notchDefaults.objectWillChange
         ) {
             collapsedNotchViewModel.hideHUDs()
