@@ -13,4 +13,15 @@ enum HUDStyle: String, CaseIterable, Identifiable, Codable {
     case Minimal
     case Progress
     case Notched
+    
+    var displayName: String {
+        switch self {
+        case .Minimal:
+            return String(localized: "Minimal", comment: "Minimal style for system HUD display")
+        case .Progress:
+            return String(localized: "Progress", comment: "Progress bar style for system HUD display")
+        case .Notched:
+            return String(localized: "Notched", comment: "Notched style integrated into notch for system HUD display")
+        }
+    }
 }

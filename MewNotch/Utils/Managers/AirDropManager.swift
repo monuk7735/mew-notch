@@ -38,10 +38,10 @@ class AirDrop: NSObject, NSSharingServiceDelegate {
                 domain: "AirDrop",
                 code: 1,
                 userInfo: [
-                    NSLocalizedDescriptionKey: NSLocalizedString(
-                        "AirDrop service could not be initialised",
-                        comment: ""
-                    ),
+                    NSLocalizedDescriptionKey: String(
+                        localized: "AirDrop service could not be initialised",
+                        comment: "Error description when AirDrop service cannot be created"
+                    )
                 ]
             )
         }
@@ -52,10 +52,10 @@ class AirDrop: NSObject, NSSharingServiceDelegate {
                 domain: "AirDrop",
                 code: 2,
                 userInfo: [
-                    NSLocalizedDescriptionKey: NSLocalizedString(
-                        "File cannot be sent with AirDrop",
-                        comment: ""
-                    ),
+                    NSLocalizedDescriptionKey: String(
+                        localized: "File cannot be sent with AirDrop",
+                        comment: "Error description when dropped files cannot be shared via AirDrop"
+                    )
                 ]
             )
         }

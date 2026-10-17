@@ -140,7 +140,7 @@ struct NotchSettingsView: View {
                 
                 SettingsRow(
                     title: "Hover Delay",
-                    subtitle: "\(notchDefaults.expandOnHoverDelay.formatted()) seconds.\n",
+                    subtitle: notchDefaults.expandOnHoverDelay.localizedSecondsKey(),
                     icon: MewNotch.Assets.icTimer,
                     color: MewNotch.Colors.timer
                 ) {
