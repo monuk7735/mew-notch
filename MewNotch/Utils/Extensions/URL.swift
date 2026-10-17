@@ -23,7 +23,7 @@ extension URL {
                 size: .zero
             )
         }
-        
+
         return NSWorkspace.shared
             .icon(
                 forFile: path

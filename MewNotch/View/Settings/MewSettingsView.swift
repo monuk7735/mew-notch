@@ -8,26 +8,26 @@
 import SwiftUI
 
 struct MewSettingsView: View {
-    
     @Environment(\.scenePhase) var scenePhase
-    
+
     enum SettingsPages: String, CaseIterable, Identifiable {
-        var id: String { rawValue }
-        
-        case General
-        case Notch
-        
-        case ExpandedItems
-        case CollapsedItems
-        
-        case About
+        var id: String {
+            rawValue
+        }
+
+        case general = "General"
+        case notch = "Notch"
+
+        case expandedItems = "ExpandedItems"
+        case collapsedItems = "CollapsedItems"
+
+        case about = "About"
     }
 
-    
     @StateObject var defaultsManager = MewDefaultsManager.shared
-    
-    @State var selectedPage: SettingsPages = .General
-    
+
+    @State var selectedPage: SettingsPages = .general
+
     var body: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             List(
@@ -38,39 +38,37 @@ struct MewSettingsView: View {
                         NavigationLink(destination: GeneraSettingsView()) {
                             SettingsSidebarRow(title: "General", icon: MewNotch.Assets.icGeneral, color: MewNotch.Colors.general)
                         }
-                        .id(SettingsPages.General)
-                        
+                        .id(SettingsPages.general)
+
                         NavigationLink(destination: NotchSettingsView()) {
                             SettingsSidebarRow(title: "Notch", icon: MewNotch.Assets.icNotch, color: MewNotch.Colors.notch)
                         }
-                        .id(SettingsPages.Notch)
+                        .id(SettingsPages.notch)
                     }
-                        
-
                 )
-                
+
                 Section(
                     content: {
                         NavigationLink(destination: CollapsedItemsSettingsView()) {
                             SettingsSidebarRow(title: "Collapsed", icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
                         }
-                        .id(SettingsPages.CollapsedItems)
-                        
+                        .id(SettingsPages.collapsedItems)
+
                         NavigationLink(destination: ExpandedItemsSettingsView()) {
                             SettingsSidebarRow(title: "Expanded", icon: MewNotch.Assets.icMedia, color: MewNotch.Colors.nowPlaying)
                         }
-                        .id(SettingsPages.ExpandedItems)
+                        .id(SettingsPages.expandedItems)
                     },
                     header: {
                         Text("Notch Items")
                     }
                 )
-                
+
                 Section {
                     NavigationLink(destination: AboutAppView()) {
                         SettingsSidebarRow(title: "About", icon: MewNotch.Assets.icAbout, color: MewNotch.Colors.about)
                     }
-                    .id(SettingsPages.About)
+                    .id(SettingsPages.about)
                 }
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 180, max: 200)
@@ -88,17 +86,17 @@ struct MewSettingsView: View {
                 guard let window = NSApp.windows.first(
                     where: {
                         $0.identifier?.rawValue == "com_apple_SwiftUI_Settings_window" ||
-                        ($0.styleMask.contains(.titled) && $0.styleMask.contains(.closable))
+                            ($0.styleMask.contains(.titled) && $0.styleMask.contains(.closable))
                     }
                 ) else {
                     return
                 }
-                
+
                 window.toolbarStyle = .unified
                 window.styleMask.insert(.resizable)
                 window.styleMask.insert(.miniaturizable)
                 window.styleMask.insert(.closable)
-                
+
                 window.minSize = NSSize(width: 800, height: 500)
             }
         }

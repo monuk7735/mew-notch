@@ -1,0 +1,39 @@
+# Xcode & DerivedData
+build/
+DerivedData/
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+
+## User settings
+xcuserdata/
+
+## macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Build & Release Distribution Artifacts
+Release/
+ReleaseDist/
+*.xcarchive/
+*.dmg
+*.app
+sparkle_key.pem
+main
+
+# Mise toolchain local overrides
+.mise.local.toml

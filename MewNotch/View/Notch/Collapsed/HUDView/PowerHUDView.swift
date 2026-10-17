@@ -8,20 +8,19 @@
 import SwiftUI
 
 struct PowerHUDView<T: HUDDefaultsProtocol>: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var defaults: T
-    
+
     var hudModel: HUDPropertyModel?
-    
+
     var body: some View {
         if let hud = hudModel, defaults.isEnabled {
             HStack {
                 hud.getIcon()
                     .padding(5)
-                
+
                 Spacer()
-                
+
                 if hud.value.isFinite {
                     let formattedDuration = hud.value.formattedDuration(allowedUnits: [.hours, .minutes], width: .narrow)
                     Text("\(formattedDuration) Left", comment: "Time remaining for battery HUD")

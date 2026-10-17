@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct OnlyNotchView: View {
-    
     var notchSize: CGSize = .zero
-    
+
     var body: some View {
         Text(
             ""

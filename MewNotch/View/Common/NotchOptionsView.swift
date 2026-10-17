@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct NotchOptionsView: View {
-    
     enum OptionsType {
-        case ContextMenu
-        case MenuBar
+        case contextMenu
+        case menuBar
     }
-    
+
     @Environment(\.openSettings) private var openSettings
-    
+
     @StateObject var updaterViewModel: UpdaterViewModel = .shared
     @StateObject private var appDefaults = AppDefaults.shared
-    
-    var type: OptionsType = .ContextMenu
-    
+
+    var type: OptionsType = .contextMenu
+
     var body: some View {
         Button("Refresh Notch") {
             NotchManager.shared.refreshNotches(killAllWindows: true)
         }
-        
+
         Button("Settings") {
             openSettings.callAsFunctionBringingToFront()
         }
@@ -33,14 +32,14 @@ struct NotchOptionsView: View {
             ",",
             modifiers: .command
         )
-        
+
         Button("Quit") {
             AppManager.shared.kill()
         }
         .keyboardShortcut("R", modifiers: .command)
-        
+
         Divider()
-        
+
         Button("Check for Updates...") {
             updaterViewModel.checkForUpdates()
         }

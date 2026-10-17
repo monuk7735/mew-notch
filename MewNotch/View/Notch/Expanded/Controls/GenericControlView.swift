@@ -8,22 +8,21 @@
 import SwiftUI
 
 struct NotchControlButton: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
-    
-    var icon: String? = nil
-    var customIcon: Image? = nil
+
+    var icon: String?
+    var customIcon: Image?
     var isSelected: Bool = false
     var padding: CGFloat = 3
     var action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Group {
-                if let customIcon = customIcon {
+                if let customIcon {
                     customIcon
                         .resizable()
-                } else if let icon = icon {
+                } else if let icon {
                     Image(systemName: icon)
                         .resizable()
                 }

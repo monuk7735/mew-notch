@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct HUDAudioSettingsView: View {
-    
     @StateObject private var viewModel = HUDAudioSettingsViewModel()
-    
+
     var body: some View {
         Form {
             Section {
@@ -25,7 +24,7 @@ struct HUDAudioSettingsView: View {
             } header: {
                 Text("Output General")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Style",
@@ -40,7 +39,7 @@ struct HUDAudioSettingsView: View {
                     .labelsHidden()
                 }
                 .hide(when: !viewModel.outputDefaults.isEnabled)
-                
+
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
@@ -49,11 +48,11 @@ struct HUDAudioSettingsView: View {
                 ) {
                     Toggle("", isOn: $viewModel.outputDefaults.animateChanges)
                 }
-                .hide(when: !viewModel.outputDefaults.isEnabled || viewModel.outputDefaults.style != .Minimal)
+                .hide(when: !viewModel.outputDefaults.isEnabled || viewModel.outputDefaults.style != .minimal)
             } header: {
                 Text("Output Appearance")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Step Size",
@@ -63,7 +62,7 @@ struct HUDAudioSettingsView: View {
                 ) {
                     Slider(
                         value: $viewModel.localVolumeStep,
-                        in: 1...10,
+                        in: 1 ... 10,
                         step: 1
                     )
                 }
@@ -71,7 +70,7 @@ struct HUDAudioSettingsView: View {
             } header: {
                 Text("Output Details")
             }
-            
+
             Section {
                 SettingsRow(
                     title: "Enabled",
@@ -84,7 +83,7 @@ struct HUDAudioSettingsView: View {
             } header: {
                 Text("Input General")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Style",
@@ -99,7 +98,7 @@ struct HUDAudioSettingsView: View {
                     .labelsHidden()
                 }
                 .hide(when: !viewModel.inputDefaults.isEnabled)
-                
+
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
@@ -108,7 +107,7 @@ struct HUDAudioSettingsView: View {
                 ) {
                     Toggle("", isOn: $viewModel.inputDefaults.animateChanges)
                 }
-                .hide(when: !viewModel.inputDefaults.isEnabled || viewModel.inputDefaults.style != .Minimal)
+                .hide(when: !viewModel.inputDefaults.isEnabled || viewModel.inputDefaults.style != .minimal)
             } header: {
                 Text("Input Appearance")
             }

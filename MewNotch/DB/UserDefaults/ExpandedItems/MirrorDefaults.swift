@@ -8,13 +8,12 @@
 import SwiftUI
 
 class MirrorDefaults: ObservableObject {
-    
     static let shared = MirrorDefaults()
-    
+
     private static var PREFIX: String = "Expanded_Mirror_"
-    
+
     private init() {}
-    
+
     @AppStorage(PREFIX + "mirrorCornerRadius") var cornerRadius: Double = 50.0 {
         didSet {
             withAnimation {
@@ -22,7 +21,7 @@ class MirrorDefaults: ObservableObject {
             }
         }
     }
-    
+
     @AppStorage(PREFIX + "autoStart") var autoStart: Bool = false {
         didSet {
             withAnimation {

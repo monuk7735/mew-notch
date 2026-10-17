@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct HUDBrightnessSettingsView: View {
-    
     @StateObject private var viewModel = HUDBrightnessSettingsViewModel()
-    
+
     var body: some View {
         Form {
             Section {
@@ -25,7 +24,7 @@ struct HUDBrightnessSettingsView: View {
             } header: {
                 Text("General")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Style",
@@ -40,7 +39,7 @@ struct HUDBrightnessSettingsView: View {
                     .labelsHidden()
                 }
                 .hide(when: !viewModel.defaults.isEnabled)
-                
+
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
@@ -49,11 +48,11 @@ struct HUDBrightnessSettingsView: View {
                 ) {
                     Toggle("", isOn: $viewModel.defaults.animateChanges)
                 }
-                .hide(when: !viewModel.defaults.isEnabled || viewModel.defaults.style != .Minimal)
+                .hide(when: !viewModel.defaults.isEnabled || viewModel.defaults.style != .minimal)
             } header: {
                 Text("Appearance")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Show Auto Brightness Changes",
@@ -63,7 +62,7 @@ struct HUDBrightnessSettingsView: View {
                     Toggle("", isOn: ~$viewModel.defaults.showAutoBrightnessChanges)
                 }
                 .hide(when: !viewModel.defaults.isEnabled)
-                
+
                 SettingsRow(
                     title: "Step Size",
                     subtitle: viewModel.localStep.localizedPercentageKey(),
@@ -72,7 +71,7 @@ struct HUDBrightnessSettingsView: View {
                 ) {
                     Slider(
                         value: $viewModel.localStep,
-                        in: 0.01...0.10,
+                        in: 0.01 ... 0.10,
                         step: 0.01
                     )
                 }

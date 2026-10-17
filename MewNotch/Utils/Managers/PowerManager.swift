@@ -8,13 +8,11 @@
 import Foundation
 
 class PowerManager: ObservableObject {
-    
     static let shared = PowerManager()
-    
+
     private let powerStatus = PowerStatus.sharedInstance() ?? .init()
-    
+
     private init() {
         powerStatus.providingSource()
     }
-    
 }

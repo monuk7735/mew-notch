@@ -4,16 +4,15 @@
 //
 //  Created by Monu Kumar on 23/03/25.
 //
-import SwiftUI
 import Combine
+import SwiftUI
 
 @propertyWrapper
 public struct CodableUserDefault<T: Codable> {
-    
     let key: String
     let defaultValue: T
     let suiteName: String?
-    
+
     public init(
         _ key: String,
         defaultValue: T,
@@ -23,17 +22,17 @@ public struct CodableUserDefault<T: Codable> {
         self.defaultValue = defaultValue
         self.suiteName = suiteName
     }
-    
+
     public var wrappedValue: T {
         get {
             let defaults = suiteName != nil ? UserDefaults(
                 suiteName: suiteName!
-            ): UserDefaults.standard
-            
+            ) : UserDefaults.standard
+
             guard let data = defaults?.data(forKey: key) else {
                 return defaultValue
             }
-            
+
             return (
                 try? JSONDecoder().decode(T.self, from: data)
             ) ?? defaultValue
@@ -41,17 +40,17 @@ public struct CodableUserDefault<T: Codable> {
         set {
             let defaults = suiteName != nil ? UserDefaults(
                 suiteName: suiteName!
-            ): UserDefaults.standard
-            
+            ) : UserDefaults.standard
+
             let encoded = try? JSONEncoder().encode(newValue)
-            
+
             defaults?.set(encoded, forKey: key)
         }
     }
-    
+
     public static subscript<EnclosingSelf: ObservableObject>(
         _enclosingInstance object: EnclosingSelf,
-        wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, T>,
+        wrapped _: ReferenceWritableKeyPath<EnclosingSelf, T>,
         storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
     ) -> T {
         get {

@@ -7,7 +7,6 @@ import AppKit
 import SwiftUI
 
 extension OpenSettingsAction {
-    
     /// Opens the Settings window and brings it to the front.
     ///
     /// MewNotch runs as an accessory app (`LSUIElement` in Info.plist), so the
@@ -17,10 +16,10 @@ extension OpenSettingsAction {
     ///
     /// Activate explicitly, then raise the window once SwiftUI has created it.
     func callAsFunctionBringingToFront() {
-        self.callAsFunction()
-        
+        callAsFunction()
+
         NSRunningApplication.current.activate(options: [.activateAllWindows])
-        
+
         DispatchQueue.main.async {
             if let window = NSApp.windows.first(
                 where: { $0.isVisible && $0.canBecomeKey }

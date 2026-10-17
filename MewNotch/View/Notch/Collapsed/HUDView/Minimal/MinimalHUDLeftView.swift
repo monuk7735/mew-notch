@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct MinimalHUDLeftView<T: HUDDefaultsProtocol>: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var defaults: T
-    
+
     var hudModel: HUDPropertyModel?
-    
+
     var body: some View {
-        if let hud = hudModel, defaults.isEnabled, (defaults.style == .Minimal || notchViewModel.isExpanded) {
+        if let hud = hudModel, defaults.isEnabled, defaults.style == .minimal || notchViewModel.isExpanded {
             MinimalHUDView(
                 notchViewModel: notchViewModel,
                 variant: .left

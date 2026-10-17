@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-struct AnimatedTextView<Content>: View, Animatable where Content: View {
-    
+struct AnimatedTextView<Content: View>: View, Animatable {
     var value: Double
-    
+
     var content: (Double) -> Content
-    
+
     var animatableData: Double {
         get { value }
         set { value = newValue }
     }
-    
+
     var body: some View {
         content(
             value

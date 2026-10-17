@@ -1,5 +1,5 @@
 //
-//  HUDSettingsView.swift
+//  CollapsedItemsSettingsView.swift
 //  MewNotch
 //
 //  Created by Monu Kumar on 04/01/2026.
@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct CollapsedItemsSettingsView: View {
-    
     @State private var selectedTab: Int = 0
-    
+
     var body: some View {
         VStack(spacing: 0) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4), spacing: 12) {
@@ -20,7 +19,7 @@ struct CollapsedItemsSettingsView: View {
                 HudTabButton(title: "Media", icon: MewNotch.Assets.icMedia, tag: 3, selection: $selectedTab)
             }
             .padding()
-            
+
             Group {
                 switch selectedTab {
                 case 0:
@@ -51,9 +50,11 @@ struct HudTabButton: View {
     let icon: Image
     let tag: Int
     @Binding var selection: Int
-    
-    var isSelected: Bool { selection == tag }
-    
+
+    var isSelected: Bool {
+        selection == tag
+    }
+
     var body: some View {
         Button {
             withAnimation(.snappy(duration: 0.2)) {
@@ -64,7 +65,7 @@ struct HudTabButton: View {
                 icon
                     .font(.system(size: 20))
                     .foregroundStyle(isSelected ? Color.primary : Color.secondary)
-                
+
                 Text(title)
                     .font(.caption.weight(.medium))
                     .foregroundStyle(isSelected ? Color.primary : Color.secondary)

@@ -1,5 +1,5 @@
 //
-//  NowPlayingSettingsView.swift
+//  ExpandedNowPlayingSettingsView.swift
 //  MewNotch
 //
 //  Created by Monu Kumar on 04/01/2026.
@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct ExpandedNowPlayingSettingsView: View {
-    
     @StateObject private var nowPlayingDefaults = NowPlayingDefaults.shared
     @StateObject private var notchDefaults = NotchDefaults.shared
-    
+
     var body: some View {
         Form {
             Section {
@@ -20,9 +19,9 @@ struct ExpandedNowPlayingSettingsView: View {
                     icon: MewNotch.Assets.icCornerRadius,
                     color: MewNotch.Colors.albumArt
                 ) {
-                    Slider(value: $nowPlayingDefaults.albumArtCornerRadius, in: 15...50, step: 1)
+                    Slider(value: $nowPlayingDefaults.albumArtCornerRadius, in: 15 ... 50, step: 1)
                 }
-                
+
                 SettingsRow(
                     title: "Show Artist",
                     icon: MewNotch.Assets.icArtist,
@@ -30,7 +29,7 @@ struct ExpandedNowPlayingSettingsView: View {
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showArtist)
                 }
-                
+
                 SettingsRow(
                     title: "Show Album",
                     icon: MewNotch.Assets.icAlbumName,
@@ -38,7 +37,7 @@ struct ExpandedNowPlayingSettingsView: View {
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showAlbum)
                 }
-                
+
                 SettingsRow(
                     title: "Show App Icon",
                     icon: MewNotch.Assets.icAppIcon,
@@ -46,7 +45,7 @@ struct ExpandedNowPlayingSettingsView: View {
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showAppIcon)
                 }
-                
+
                 SettingsRow(
                     title: "Enable Seekbar",
                     icon: MewNotch.Assets.icSeekbar,

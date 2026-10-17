@@ -7,16 +7,14 @@
 
 import SwiftUI
 
-
 struct NotchSettingsView: View {
-    
     @Environment(\.scenePhase) private var scenePhase
-    
+
     @StateObject private var viewModel = NotchSettingsViewModel()
-    
+
     @StateObject var notchDefaults = NotchDefaults.shared
     @StateObject var mirrorDefaults = MirrorDefaults.shared
-    
+
     var body: some View {
         Form {
             Section {
@@ -35,14 +33,14 @@ struct NotchSettingsView: View {
                         viewModel.refreshNotches()
                     }
                 }
-                
-                if notchDefaults.notchDisplayVisibility == .Custom {
+
+                if notchDefaults.notchDisplayVisibility == .custom {
                     VStack(spacing: 8) {
                         Text("Choose Displays to show notch on")
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
+
                         ScrollView(.horizontal) {
                             LazyHStack(spacing: 12) {
                                 ForEach(viewModel.screens, id: \.self) { screen in
@@ -54,7 +52,7 @@ struct NotchSettingsView: View {
                     }
                     .padding(.vertical, 4)
                 }
-                
+
                 SettingsRow(
                     title: "Show on Lock Screen",
                     subtitle: "Incompatible with File Shelf feature",
@@ -66,7 +64,7 @@ struct NotchSettingsView: View {
                             viewModel.refreshNotchesAndKillWindows()
                         }
                 }
-                
+
                 SettingsRow(
                     title: "Hide on Full Screen",
                     subtitle: "Hides the notch when a full screen app is detected",
@@ -78,7 +76,7 @@ struct NotchSettingsView: View {
                             viewModel.refreshNotches()
                         }
                 }
-                
+
                 SettingsRow(
                     title: "Reset View on Collapse",
                     subtitle: notchDefaults.resetViewOnCollapse ? "Notch resets to Home when Collapsed" : "Notch will retain state when Collapsed",
@@ -87,11 +85,11 @@ struct NotchSettingsView: View {
                 ) {
                     Toggle("", isOn: $notchDefaults.resetViewOnCollapse)
                 }
-                
+
             } header: {
                 Text("Displays")
             }
-            
+
             Section {
                 SettingsRow(
                     title: "Height",
@@ -99,13 +97,13 @@ struct NotchSettingsView: View {
                     color: MewNotch.Colors.height
                 ) {
                     Picker("", selection: $notchDefaults.heightMode) {
-                        ForEach([NotchHeightMode.Match_Notch, NotchHeightMode.Match_Menu_Bar]) { item in
+                        ForEach([NotchHeightMode.matchNotch, NotchHeightMode.matchMenuBar]) { item in
                             Text(item.displayName).tag(item)
                         }
                     }
                     .labelsHidden()
                 }
-                
+
                 if #available(macOS 26.0, *) {
                     SettingsRow(
                         title: "Apply Glass Effect",
@@ -119,7 +117,7 @@ struct NotchSettingsView: View {
             } header: {
                 Text("Interface")
             }
-            
+
             Section {
                 SettingsRow(
                     title: "Expand on Hover",
@@ -137,7 +135,7 @@ struct NotchSettingsView: View {
                     ))
                 }
                 .disabled(notchDefaults.applyGlassEffect)
-                
+
                 SettingsRow(
                     title: "Hover Delay",
                     subtitle: notchDefaults.expandOnHoverDelay.localizedSecondsKey(),
@@ -146,7 +144,7 @@ struct NotchSettingsView: View {
                 ) {
                     Slider(
                         value: $notchDefaults.expandOnHoverDelay,
-                        in: 0.1...2.0,
+                        in: 0.1 ... 2.0,
                         step: 0.1
                     )
                 }
@@ -170,7 +168,7 @@ struct NotchSettingsView: View {
         .onChange(
             of: notchDefaults.shownOnDisplay
         ) { _, _ in
-             viewModel.refreshNotches()
+            viewModel.refreshNotches()
         }
     }
 }
@@ -178,11 +176,11 @@ struct NotchSettingsView: View {
 struct ScreenSelectionCard: View {
     let screen: NSScreen
     @ObservedObject var notchDefaults: NotchDefaults
-    
+
     private var isSelected: Bool {
         notchDefaults.shownOnDisplay[screen.localizedName] == true
     }
-    
+
     var body: some View {
         Text(screen.localizedName)
             .font(.subheadline)

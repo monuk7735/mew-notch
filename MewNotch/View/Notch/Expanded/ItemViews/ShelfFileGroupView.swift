@@ -8,21 +8,19 @@
 import SwiftUI
 
 struct ShelfFileGroupView: View {
-    
     var shelfGroupModel: ShelfFileGroupModel
     var onDelete: () -> Void
-    
+
     @State private var isHovered: Bool = false
-    
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            
             VStack(spacing: 8) {
                 Image(nsImage: shelfGroupModel.preview)
                     .resizable()
                     .scaledToFit()
                     .frame(maxHeight: 40)
-                
+
                 MarqueeTextView(
                     text: shelfGroupModel.groupName,
                     font: .systemFont(ofSize: 11, weight: .medium),
@@ -45,11 +43,10 @@ struct ShelfFileGroupView: View {
             .onMultiDrag {
                 shelfGroupModel.files.map { $0.fileURL as NSURL }
             }
-            
-            
+
             if isHovered {
                 Button {
-                    self.onDelete()
+                    onDelete()
                 } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 8, weight: .bold))
@@ -70,4 +67,3 @@ struct ShelfFileGroupView: View {
         }
     }
 }
-

@@ -1,5 +1,5 @@
 //
-//  Binding.swift
+//  Binding+Prefix.swift
 //  MewNotch
 //
 //  Created by Monu Kumar on 05/04/26.
@@ -8,9 +8,8 @@
 import SwiftUI
 
 extension Binding {
-    
     var animated: Self {
-        return Binding(
+        Binding(
             get: { self.wrappedValue },
             set: { newValue in
                 withAnimation {
@@ -24,5 +23,5 @@ extension Binding {
 prefix operator ~
 
 public prefix func ~ <Value>(binding: Binding<Value>) -> Binding<Value> {
-    return binding.animated
+    binding.animated
 }

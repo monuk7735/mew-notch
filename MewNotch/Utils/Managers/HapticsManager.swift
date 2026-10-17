@@ -8,9 +8,8 @@
 import SwiftUI
 
 class HapticsManager {
-    
     static let shared = HapticsManager()
-    
+
     private init() {}
 
     func feedback(

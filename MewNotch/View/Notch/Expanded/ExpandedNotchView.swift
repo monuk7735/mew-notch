@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct ExpandedNotchView: View {
-    
     var namespace: Namespace.ID
-    
+
     @Namespace private var nilNamespace
-    
+
     @StateObject private var notchDefaults = NotchDefaults.shared
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var expandedNotchViewModel: ExpandedNotchViewModel
-    
+
     var collapsedNotchView: CollapsedNotchView
-    
+
     var body: some View {
         VStack {
             HStack(
@@ -33,25 +32,25 @@ struct ExpandedNotchView: View {
                         spacing: 8
                     )
                 }
-                
+
                 collapsedNotchView
-                .opacity(0)
-                .disabled(true)
-                
+                    .opacity(0)
+                    .disabled(true)
+
                 HStack(
                     spacing: 2
                 ) {
                     SettingsControlView(
                         notchViewModel: notchViewModel
                     )
-                    
+
                     PinControlView(
                         notchViewModel: notchViewModel
                     )
                 }
             }
             .zIndex(5)
-            
+
             ZStack {
                 NotchHomeView(
                     namespace: namespace,
@@ -60,13 +59,13 @@ struct ExpandedNotchView: View {
                     collapsedNotchView: collapsedNotchView
                 )
                 .opacity(
-                    expandedNotchViewModel.currentView != .Home ? 0 : 1
+                    expandedNotchViewModel.currentView != .home ? 0 : 1
                 )
-                
+
                 switch expandedNotchViewModel.currentView {
-                case .Home:
+                case .home:
                     EmptyView()
-                case .Shelf:
+                case .shelf:
                     FileShelfView(
                         notchViewModel: notchViewModel,
                         expandedNotchViewModel: expandedNotchViewModel
@@ -95,9 +94,9 @@ struct ExpandedNotchView: View {
             of: notchViewModel.isExpanded
         ) { old, new in
             guard notchDefaults.resetViewOnCollapse else { return }
-            if old != new && !new {
+            if old != new, !new {
                 withAnimation {
-                    expandedNotchViewModel.currentView = .Home
+                    expandedNotchViewModel.currentView = .home
                 }
             }
         }

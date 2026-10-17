@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct ExpandedBashSettingsView: View {
-    
     @StateObject private var bashDefaults = BashDefaults.shared
     @StateObject private var notchDefaults = NotchDefaults.shared
-    
+
     var body: some View {
         Form {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Command")
                         .font(.headline)
-                    
+
                     TextEditor(text: $bashDefaults.command)
                         .font(.system(.body, design: .monospaced))
                         .frame(minHeight: 100)
@@ -29,7 +28,7 @@ struct ExpandedBashSettingsView: View {
                             RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
                         )
-                    
+
                     Text("Enter a bash command to execute. The output will be displayed in the notch.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -38,7 +37,7 @@ struct ExpandedBashSettingsView: View {
             } header: {
                 Text("Bash Script")
             }
-            
+
             Section {
                 SettingsRow(
                     title: "Show Command",
@@ -48,7 +47,7 @@ struct ExpandedBashSettingsView: View {
                 ) {
                     Toggle("", isOn: $bashDefaults.showCommand)
                 }
-                
+
                 SettingsRow(
                     title: "Width Multiplier",
                     subtitle: bashDefaults.widthMultiplier.localizedMultiplierKey(),
@@ -57,11 +56,11 @@ struct ExpandedBashSettingsView: View {
                 ) {
                     Slider(
                         value: $bashDefaults.widthMultiplier,
-                        in: 0.5...2.0,
+                        in: 0.5 ... 2.0,
                         step: 0.1
                     )
                 }
-                
+
                 SettingsRow(
                     title: "Auto-Refresh",
                     subtitle: "Automatically execute the command periodically",
@@ -70,7 +69,7 @@ struct ExpandedBashSettingsView: View {
                 ) {
                     Toggle("", isOn: $bashDefaults.autoRefresh)
                 }
-                
+
                 SettingsRow(
                     title: "Refresh Interval",
                     subtitle: bashDefaults.refreshInterval.localizedSecondsKey(width: .wide, maxFractionalDigits: 0),
@@ -79,7 +78,7 @@ struct ExpandedBashSettingsView: View {
                 ) {
                     Slider(
                         value: $bashDefaults.refreshInterval,
-                        in: 1.0...10.0,
+                        in: 1.0 ... 10.0,
                         step: 1.0
                     )
                 }

@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct NowPlayingHUDLeftView: View {
-    
     @StateObject var notchDefaults = NotchDefaults.shared
-    
+
     var namespace: Namespace.ID = Namespace().wrappedValue
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var nowPlayingModel: NowPlayingMediaModel?
-    
+
     @State private var isHovered: Bool = false
-    
+
     var body: some View {
         if let nowPlayingModel {
             MinimalHUDView(
@@ -46,9 +45,9 @@ struct NowPlayingHUDLeftView: View {
                     .opacity(
                         nowPlayingModel.isPlaying ? 1.0 : 0.5
                     )
-                    .opacity(self.isHovered ? 0 : 1)
+                    .opacity(isHovered ? 0 : 1)
                     .overlay {
-                        if self.isHovered {
+                        if isHovered {
                             Button(
                                 action: {
                                     guard let url = NSWorkspace.shared.urlForApplication(
@@ -56,20 +55,21 @@ struct NowPlayingHUDLeftView: View {
                                     ) else {
                                         return
                                     }
-                                    
+
                                     NSWorkspace.shared.openApplication(
                                         at: url,
                                         configuration: .init()
                                     )
+                                },
+                                label: {
+                                    nowPlayingModel.appIcon
+                                        .resizable()
+                                        .aspectRatio(
+                                            1,
+                                            contentMode: .fill
+                                        )
                                 }
-                            ) {
-                                nowPlayingModel.appIcon
-                                    .resizable()
-                                    .aspectRatio(
-                                        1,
-                                        contentMode: .fill
-                                    )
-                            }
+                            )
                             .buttonStyle(.plain)
                         }
                     }

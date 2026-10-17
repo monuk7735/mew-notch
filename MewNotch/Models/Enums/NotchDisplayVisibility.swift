@@ -9,22 +9,21 @@ import Foundation
 
 enum NotchDisplayVisibility: String, CaseIterable, Codable, Identifiable {
     var id: String {
-        self.rawValue
+        rawValue
     }
-    
-    case AllDisplays
-    case NotchedDisplayOnly
-    
-    case Custom
-    
+
+    case allDisplays = "AllDisplays"
+    case notchedDisplayOnly = "NotchedDisplayOnly"
+    case custom = "Custom"
+
     var displayName: String {
         switch self {
-        case .AllDisplays:
-            return String(localized: "All Displays", comment: "Option to show notch on all connected displays")
-        case .NotchedDisplayOnly:
-            return String(localized: "Notched Displays Only", comment: "Option to show notch only on displays with a hardware notch")
-        case .Custom:
-            return String(localized: "Custom", comment: "Option to choose custom displays for showing notch")
+        case .allDisplays:
+            String(localized: "All Displays", comment: "Option to show notch on all connected displays")
+        case .notchedDisplayOnly:
+            String(localized: "Notched Displays Only", comment: "Option to show notch only on displays with a hardware notch")
+        case .custom:
+            String(localized: "Custom", comment: "Option to choose custom displays for showing notch")
         }
     }
 }

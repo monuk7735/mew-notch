@@ -1,0 +1,52 @@
+[tools]
+swiftlint = "latest"
+swiftformat = "latest"
+
+[env]
+PROJECT = "MewNotch.xcodeproj"
+SCHEME = "MewNotch"
+DERIVED_DATA = ".build/DerivedData"
+
+[tasks.resolve]
+description = "Resolve Swift Package dependencies"
+run = "xcodebuild -resolvePackageDependencies -project $PROJECT -derivedDataPath $DERIVED_DATA"
+
+[tasks.build]
+description = "Build MewNotch for macOS"
+run = "xcodebuild -project $PROJECT -scheme $SCHEME -destination 'platform=macOS' -derivedDataPath $DERIVED_DATA build"
+
+[tasks."build:release"]
+description = "Build MewNotch in Release configuration"
+run = "xcodebuild -project $PROJECT -scheme $SCHEME -configuration Release -destination 'platform=macOS' -derivedDataPath $DERIVED_DATA build"
+
+[tasks.clean]
+description = "Clean Xcode build artifacts"
+run = "xcodebuild -project $PROJECT -scheme $SCHEME -derivedDataPath $DERIVED_DATA clean"
+
+[tasks.lint]
+description = "Run SwiftLint code linter"
+run = "swiftlint lint"
+
+[tasks.format]
+description = "Format Swift source files with SwiftFormat"
+run = "swiftformat ."
+
+[tasks."format:check"]
+description = "Check Swift source formatting with SwiftFormat"
+run = "swiftformat --lint ."
+
+[tasks."lint:fix"]
+description = "Format code and apply SwiftLint autofixes"
+run = "swiftformat . && swiftlint --fix"
+
+[tasks.archive]
+description = "Build and archive MewNotch for release distribution"
+run = """
+xcodebuild clean archive \
+  -project $PROJECT \
+  -scheme $SCHEME \
+  -archivePath MewNotch.xcarchive \
+  -derivedDataPath $DERIVED_DATA \
+  -destination "generic/platform=macOS" \
+  ONLY_ACTIVE_ARCH=NO
+"""

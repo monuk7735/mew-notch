@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct PinControlView: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var body: some View {
         NotchControlButton(
             notchViewModel: notchViewModel,

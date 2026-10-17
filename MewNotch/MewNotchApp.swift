@@ -5,27 +5,26 @@
 //  Created by Monu Kumar on 25/02/25.
 //
 
-import SwiftUI
-import SwiftData
 import Sparkle
+import SwiftData
+import SwiftUI
 
 @main
 struct MewNotchApp: App {
-    
     @NSApplicationDelegateAdaptor(MewAppDelegate.self) var mewAppDelegate
-    
+
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
-    
+
     @StateObject private var updaterViewModel: UpdaterViewModel = .shared
-    
+
     @ObservedObject private var appDefaults = AppDefaults.shared
-    
+
     @State private var isMenuShown: Bool = true
-    
+
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([ ])
-        
+        let schema = Schema([])
+
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false
@@ -42,10 +41,10 @@ struct MewNotchApp: App {
             )
         }
     }()
-    
+
     init() {
-        self._isMenuShown = .init(
-            initialValue: self.appDefaults.showMenuIcon
+        _isMenuShown = .init(
+            initialValue: appDefaults.showMenuIcon
         )
     }
 
@@ -54,13 +53,14 @@ struct MewNotchApp: App {
             isInserted: $isMenuShown,
             content: {
                 Text("MewNotch")
-                
+
                 NotchOptionsView()
+            },
+            label: {
+                MewNotch.Assets.iconMenuBar
+                    .renderingMode(.template)
             }
-        ) {
-            MewNotch.Assets.iconMenuBar
-                .renderingMode(.template)
-        }
+        )
         .onChange(
             of: appDefaults.showMenuIcon
         ) { oldVal, newVal in
@@ -68,7 +68,7 @@ struct MewNotchApp: App {
                 isMenuShown = newVal
             }
         }
-        
+
         Settings {
             MewSettingsView()
                 .modelContainer(sharedModelContainer)
