@@ -100,8 +100,6 @@ struct MewSettingsView: View {
                 window.styleMask.insert(.closable)
                 
                 window.minSize = NSSize(width: 800, height: 500)
-                window.setContentSize(NSSize(width: 800, height: 500))
-                window.center()
             }
         }
     }
