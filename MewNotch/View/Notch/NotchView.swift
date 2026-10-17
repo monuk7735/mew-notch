@@ -19,6 +19,9 @@ struct NotchView: View {
     @StateObject var expandedNotchViewModel: ExpandedNotchViewModel = .init()
     @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel
 
+    @State private var meltProgress: CGFloat = 0.0
+    @State private var notchContentSize: CGSize = .zero
+
     init(
         screen: NSScreen
     ) {
@@ -52,45 +55,20 @@ struct NotchView: View {
 
                 let currentShape = notchViewModel.currentShape
                 let isVisible = isNotchVisible
+                let currentWidth = notchContentSize.width > 0 ? notchContentSize.width : notchViewModel.notchSize.width
+                let currentHeight = notchContentSize.height > 0 ? notchContentSize.height : notchViewModel.notchSize.height
 
-                ZStack(
-                    alignment: .top
+                LiquidMeltContainer(
+                    progress: meltProgress,
+                    width: currentWidth,
+                    height: currentHeight,
+                    cornerRadius: notchViewModel.floatingCornerRadius,
+                    isHardwareNotched: notchViewModel.isHardwareNotched,
+                    applyGlassEffect: notchDefaults.applyGlassEffect,
+                    hardwareShape: currentShape
                 ) {
-                    let collapsedNotchView = CollapsedNotchView(
-                        namespace: namespace,
-                        notchViewModel: notchViewModel,
-                        collapsedNotchViewModel: collapsedNotchViewModel
-                    )
-
-                    ExpandedNotchView(
-                        namespace: namespace,
-                        notchViewModel: notchViewModel,
-                        expandedNotchViewModel: expandedNotchViewModel,
-                        collapsedNotchView: collapsedNotchView
-                    ).hide(when: !notchViewModel.isExpanded)
-
-                    collapsedNotchView
-                        .opacity(notchViewModel.isExpanded ? 0 : 1)
-                        .allowsHitTesting(!notchViewModel.isExpanded)
+                    notchContent
                 }
-                .glassEffect(when: notchDefaults.applyGlassEffect, in: currentShape)
-                .background {
-                    if !notchDefaults.applyGlassEffect {
-                        Color.black
-                    }
-                }
-                .overlay {
-                    if !notchViewModel.isHardwareNotched, !notchDefaults.applyGlassEffect {
-                        currentShape
-                            .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
-                    }
-                }
-                .mask {
-                    currentShape
-                }
-                .contentShape(
-                    currentShape
-                )
                 .scaleEffect(
                     notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.05 : 1.0,
                     anchor: .top
@@ -105,21 +83,10 @@ struct NotchView: View {
                     x: 0,
                     y: notchViewModel.isHardwareNotched ? 0 : (notchViewModel.isExpanded ? 6 : 3)
                 )
-                .padding(.top, notchViewModel.isHardwareNotched ? 0 : 8)
-                .opacity(isVisible ? 1 : 0)
-                .scaleEffect(isVisible ? 1 : 0.8, anchor: .top)
-                .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isVisible)
-                .background(
-                    GeometryReader { proxy in
-                        Color.clear
-                            .preference(
-                                key: NotchFramePreferenceKey.self,
-                                value: proxy.frame(in: .global)
-                            )
+                .onChange(of: isNotchVisible, initial: true) { _, visible in
+                    withAnimation(.spring(response: 0.42, dampingFraction: 0.78)) {
+                        meltProgress = visible ? 1.0 : 0.0
                     }
-                )
-                .onPreferenceChange(NotchFramePreferenceKey.self) { frame in
-                    notchViewModel.updateNotchFrame(frame)
                 }
                 .onHover {
                     notchViewModel.onHover(
@@ -193,6 +160,46 @@ struct NotchView: View {
         .preferredColorScheme(.dark)
         .contextMenu {
             NotchOptionsView()
+        }
+    }
+
+    private var notchContent: some View {
+        ZStack(
+            alignment: .top
+        ) {
+            let collapsedNotchView = CollapsedNotchView(
+                namespace: namespace,
+                notchViewModel: notchViewModel,
+                collapsedNotchViewModel: collapsedNotchViewModel
+            )
+
+            ExpandedNotchView(
+                namespace: namespace,
+                notchViewModel: notchViewModel,
+                expandedNotchViewModel: expandedNotchViewModel,
+                collapsedNotchView: collapsedNotchView
+            ).hide(when: !notchViewModel.isExpanded)
+
+            collapsedNotchView
+                .opacity(notchViewModel.isExpanded ? 0 : 1)
+                .allowsHitTesting(!notchViewModel.isExpanded)
+        }
+        .background(
+            GeometryReader { proxy in
+                Color.clear
+                    .preference(
+                        key: NotchFramePreferenceKey.self,
+                        value: proxy.frame(in: .global)
+                    )
+            }
+        )
+        .onPreferenceChange(NotchFramePreferenceKey.self) { frame in
+            if meltProgress > 0.95 || notchViewModel.isHardwareNotched {
+                notchViewModel.updateNotchFrame(frame)
+                if frame.width > 0, frame.height > 0 {
+                    notchContentSize = frame.size
+                }
+            }
         }
     }
 }
