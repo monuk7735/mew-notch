@@ -308,45 +308,6 @@ class CollapsedNotchViewModel: ObservableObject {
         }
     }
 
-    @objc private func handleBrightnessChanges(
-        _ notification: NSNotification
-    ) {
-        if !HUDBrightnessDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
-            return
-        }
-
-        var newBrightness: Float! = (notification.userInfo?["value"] as? Float)
-        newBrightness = newBrightness ?? Brightness.sharedInstance().brightness
-
-        defer {
-            lastBrightness = newBrightness
-        }
-
-        if !HUDBrightnessDefaults.shared.showAutoBrightnessChanges, abs(lastBrightness - newBrightness) < 0.01 {
-            withAnimation {
-                self.brightnessHUD?.value = newBrightness
-            }
-
-            return
-        }
-
-        withAnimation {
-            self.brightnessHUD = .init(
-                lottie: AppAnimation.brightness,
-                icon: AppAsset.brightness,
-                name: "Brightness",
-                value: newBrightness,
-                timer: brightnessHUD?.timer
-            )
-        }
-
-        resetHUDTimer(&brightnessHUD) {
-            withAnimation {
-                self.brightnessHUD = nil
-            }
-        }
-    }
-
     @objc private func handlePowerStatusChanges() {
         if !HUDPowerDefaults.shared.showTimeRemaining || !shouldShowHUDOnThisScreen {
             return

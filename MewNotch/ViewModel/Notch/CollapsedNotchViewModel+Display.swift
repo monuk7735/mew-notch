@@ -30,28 +30,35 @@ extension CollapsedNotchViewModel {
     }
 
     @objc func handleBetterDisplayOSDNotification(_ notification: Notification) {
-        guard shouldShowHUDOnThisScreen else { return }
         guard let osdInfo = notification.object as? BetterDisplayOSDNotification else { return }
 
         // Display targeting:
         // If BetterDisplay specifies a target displayID, verify against this screen's displayID.
+        var isTargetedForThisDisplay = false
         if let targetDisplayID = osdInfo.displayID,
            let currentDisplayID = screen?.displayID,
            targetDisplayID != 0 {
             if targetDisplayID != currentDisplayID {
                 return
             }
+            isTargetedForThisDisplay = true
         }
 
         let target = osdInfo.controlTarget?.lowercased() ?? ""
         let iconID = osdInfo.systemIconID ?? 0
+        let isBrightness = target.contains("brightness") || iconID == 1
+
+        // Brightness HUDs specifically targeted for this display are excluded from auxiliary suppression
+        if !shouldShowHUDOnThisScreen, !(isBrightness && isTargetedForThisDisplay) {
+            return
+        }
 
         let rawVal = osdInfo.value ?? 0
         let maxVal = osdInfo.maxValue ?? (rawVal > 1.0 ? 100.0 : 1.0)
         let normalizedVal: Float = maxVal > 0 ? Float(rawVal / maxVal) : Float(rawVal)
 
         // Handle Brightness HUD
-        if target.contains("brightness") || iconID == 1 {
+        if isBrightness {
             guard HUDBrightnessDefaults.shared.isEnabled else { return }
 
             withAnimation {
@@ -88,6 +95,54 @@ extension CollapsedNotchViewModel {
                 withAnimation {
                     self.outputAudioVolumeHUD = nil
                 }
+            }
+        }
+    }
+
+    @objc func handleBrightnessChanges(_ notification: NSNotification) {
+        guard HUDBrightnessDefaults.shared.isEnabled else {
+            return
+        }
+
+        let targetDisplayID = (notification.userInfo?["display"] as? NSNumber)?.uint32Value
+            ?? (notification.userInfo?["displayID"] as? NSNumber)?.uint32Value
+        let currentDisplayID = screen?.displayID
+
+        if let targetDisplayID, targetDisplayID != 0, let currentDisplayID {
+            if targetDisplayID != currentDisplayID {
+                return
+            }
+        } else if !shouldShowHUDOnThisScreen {
+            return
+        }
+
+        var newBrightness: Float! = (notification.userInfo?["value"] as? Float)
+        newBrightness = newBrightness ?? Brightness.sharedInstance().brightness
+
+        defer {
+            lastBrightness = newBrightness
+        }
+
+        if !HUDBrightnessDefaults.shared.showAutoBrightnessChanges, abs(lastBrightness - newBrightness) < 0.01 {
+            withAnimation {
+                self.brightnessHUD?.value = newBrightness
+            }
+            return
+        }
+
+        withAnimation {
+            self.brightnessHUD = .init(
+                lottie: AppAnimation.brightness,
+                icon: AppAsset.brightness,
+                name: "Brightness",
+                value: newBrightness,
+                timer: brightnessHUD?.timer
+            )
+        }
+
+        resetHUDTimer(&brightnessHUD) {
+            withAnimation {
+                self.brightnessHUD = nil
             }
         }
     }

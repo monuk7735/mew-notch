@@ -55,7 +55,7 @@ struct NotchSettingsView: View {
 
                 SettingsRow(
                     title: "Show HUD on Auxiliary Screens",
-                    subtitle: "Show volume, brightness, and system HUD alerts on secondary displays",
+                    subtitle: "Show volume and system alerts on secondary displays (targeted brightness is always shown)",
                     icon: .display,
                     color: AppColor.notch
                 ) {
