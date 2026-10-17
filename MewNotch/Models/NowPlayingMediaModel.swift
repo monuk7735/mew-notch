@@ -31,8 +31,8 @@ struct NowPlayingMediaModel: Hashable {
         .init(
             appBundleIdentifier: "",
             appName: "",
-            appIcon: Image(systemName: "app.fill"),
-            albumArt: Image(systemName: "music.note"),
+            appIcon: AppIcon.appIcon.image,
+            albumArt: AppIcon.media.image,
             album: "",
             artist: String(localized: "Play media to show details", comment: "Placeholder artist text when no media is playing"),
             title: String(localized: "Nothing is playing", comment: "Placeholder title text when no media is playing"),

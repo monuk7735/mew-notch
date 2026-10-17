@@ -16,8 +16,8 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows volume changes",
-                    icon: MewNotch.Assets.icSpeakerWave2,
-                    color: MewNotch.Colors.output
+                    icon: .speakerWave2,
+                    color: AppColor.output
                 ) {
                     Toggle("", isOn: ~$viewModel.outputDefaults.isEnabled)
                 }
@@ -28,8 +28,8 @@ struct HUDAudioSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Style",
-                    icon: MewNotch.Assets.icPaintbrush,
-                    color: MewNotch.Colors.style
+                    icon: .paintbrush,
+                    color: AppColor.style
                 ) {
                     Picker("", selection: ~$viewModel.outputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
@@ -43,8 +43,8 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
-                    icon: MewNotch.Assets.icVideo,
-                    color: MewNotch.Colors.video
+                    icon: .video,
+                    color: AppColor.video
                 ) {
                     Toggle("", isOn: $viewModel.outputDefaults.animateChanges)
                 }
@@ -57,8 +57,8 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Step Size",
                     subtitle: viewModel.localVolumeStep.localizedPercentageKey(isRatio: false),
-                    icon: MewNotch.Assets.icChartBar,
-                    color: MewNotch.Colors.stepSize
+                    icon: .chartBar,
+                    color: AppColor.stepSize
                 ) {
                     Slider(
                         value: $viewModel.localVolumeStep,
@@ -75,8 +75,8 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows volume changes",
-                    icon: MewNotch.Assets.icMicrophone,
-                    color: MewNotch.Colors.input
+                    icon: .microphone,
+                    color: AppColor.input
                 ) {
                     Toggle("", isOn: ~$viewModel.inputDefaults.isEnabled)
                 }
@@ -87,8 +87,8 @@ struct HUDAudioSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Style",
-                    icon: MewNotch.Assets.icPaintbrush,
-                    color: MewNotch.Colors.style
+                    icon: .paintbrush,
+                    color: AppColor.style
                 ) {
                     Picker("", selection: ~$viewModel.inputDefaults.style) {
                         ForEach(HUDStyle.allCases) { style in
@@ -102,8 +102,8 @@ struct HUDAudioSettingsView: View {
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
-                    icon: MewNotch.Assets.icVideo,
-                    color: MewNotch.Colors.video
+                    icon: .video,
+                    color: AppColor.video
                 ) {
                     Toggle("", isOn: $viewModel.inputDefaults.animateChanges)
                 }

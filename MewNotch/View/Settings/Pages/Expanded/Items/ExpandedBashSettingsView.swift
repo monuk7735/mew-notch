@@ -42,8 +42,8 @@ struct ExpandedBashSettingsView: View {
                 SettingsRow(
                     title: "Show Command",
                     subtitle: "Display the command text in the notch",
-                    icon: Image(systemName: "text.alignleft"),
-                    color: .purple
+                    icon: .textAlignLeft,
+                    color: AppColor.bashCommand
                 ) {
                     Toggle("", isOn: $bashDefaults.showCommand)
                 }
@@ -51,8 +51,8 @@ struct ExpandedBashSettingsView: View {
                 SettingsRow(
                     title: "Width Multiplier",
                     subtitle: bashDefaults.widthMultiplier.localizedMultiplierKey(),
-                    icon: Image(systemName: "text.alignleft"),
-                    color: .purple
+                    icon: .textAlignLeft,
+                    color: AppColor.bashCommand
                 ) {
                     Slider(
                         value: $bashDefaults.widthMultiplier,
@@ -64,8 +64,8 @@ struct ExpandedBashSettingsView: View {
                 SettingsRow(
                     title: "Auto-Refresh",
                     subtitle: "Automatically execute the command periodically",
-                    icon: Image(systemName: "arrow.clockwise.circle"),
-                    color: .green
+                    icon: .arrowClockwiseCircle,
+                    color: AppColor.bashRefresh
                 ) {
                     Toggle("", isOn: $bashDefaults.autoRefresh)
                 }
@@ -73,8 +73,8 @@ struct ExpandedBashSettingsView: View {
                 SettingsRow(
                     title: "Refresh Interval",
                     subtitle: bashDefaults.refreshInterval.localizedSecondsKey(width: .wide, maxFractionalDigits: 0),
-                    icon: Image(systemName: "clock.arrow.circlepath"),
-                    color: .green
+                    icon: .clockArrowCirclepath,
+                    color: AppColor.bashRefresh
                 ) {
                     Slider(
                         value: $bashDefaults.refreshInterval,

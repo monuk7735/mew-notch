@@ -9,10 +9,20 @@ import SwiftUI
 
 struct SettingsIcon: View {
     let icon: Image
-    let color: MewNotch.IconColor
+    let color: Color
 
     @ScaledMetric private var iconSize: CGFloat = 30
     @ScaledMetric private var cornerRadius: CGFloat = 7
+
+    init(icon: Image, color: Color) {
+        self.icon = icon
+        self.color = color
+    }
+
+    init(icon: AppIcon, color: Color) {
+        self.icon = icon.image
+        self.color = color
+    }
 
     var body: some View {
         icon
@@ -21,7 +31,7 @@ struct SettingsIcon: View {
             .frame(width: iconSize, height: iconSize)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(color.color.gradient)
+                    .fill(color.gradient)
                     .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
             )
     }
@@ -30,7 +40,19 @@ struct SettingsIcon: View {
 struct SettingsSidebarRow: View {
     let title: LocalizedStringKey
     let icon: Image
-    let color: MewNotch.IconColor
+    let color: Color
+
+    init(title: LocalizedStringKey, icon: Image, color: Color) {
+        self.title = title
+        self.icon = icon
+        self.color = color
+    }
+
+    init(title: LocalizedStringKey, icon: AppIcon, color: Color) {
+        self.title = title
+        self.icon = icon.image
+        self.color = color
+    }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -47,7 +69,7 @@ struct SettingsRow<Content: View>: View {
     let title: LocalizedStringKey
     let subtitle: LocalizedStringKey?
     let icon: Image
-    let color: MewNotch.IconColor
+    let color: Color
     let content: Content
 
     @ScaledMetric private var spacing: CGFloat = 16
@@ -56,7 +78,7 @@ struct SettingsRow<Content: View>: View {
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey? = nil,
         icon: Image,
-        color: MewNotch.IconColor,
+        color: Color,
         @ViewBuilder content: () -> Content
     ) {
         self.title = title
@@ -64,6 +86,22 @@ struct SettingsRow<Content: View>: View {
         self.icon = icon
         self.color = color
         self.content = content()
+    }
+
+    init(
+        title: LocalizedStringKey,
+        subtitle: LocalizedStringKey? = nil,
+        icon: AppIcon,
+        color: Color,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.init(
+            title: title,
+            subtitle: subtitle,
+            icon: icon.image,
+            color: color,
+            content: content
+        )
     }
 
     var body: some View {
@@ -99,13 +137,29 @@ extension SettingsRow where Content == EmptyView {
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey? = nil,
         icon: Image,
-        color: MewNotch.IconColor
+        color: Color
     ) {
-        self.title = title
-        self.subtitle = subtitle
-        self.icon = icon
-        self.color = color
-        content = EmptyView()
+        self.init(
+            title: title,
+            subtitle: subtitle,
+            icon: icon,
+            color: color,
+            content: { EmptyView() }
+        )
+    }
+
+    init(
+        title: LocalizedStringKey,
+        subtitle: LocalizedStringKey? = nil,
+        icon: AppIcon,
+        color: Color
+    ) {
+        self.init(
+            title: title,
+            subtitle: subtitle,
+            icon: icon.image,
+            color: color
+        )
     }
 }
 
@@ -114,13 +168,13 @@ extension SettingsRow where Content == EmptyView {
         SettingsRow(
             title: "General Settings",
             subtitle: "Takes you to general settings",
-            icon: Image(systemName: "gear"),
+            icon: .general,
             color: .gray
         )
 
         SettingsRow(
             title: "Enabled",
-            icon: Image(systemName: "bolt.fill"),
+            icon: .power,
             color: .green
         ) {
             Toggle("", isOn: .constant(true))
@@ -128,7 +182,7 @@ extension SettingsRow where Content == EmptyView {
 
         SettingsRow(
             title: "Appearance",
-            icon: Image(systemName: "paintpalette.fill"),
+            icon: .paintbrush,
             color: .blue
         ) {
             Picker("", selection: .constant(1)) {

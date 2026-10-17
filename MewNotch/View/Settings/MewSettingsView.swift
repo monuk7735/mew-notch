@@ -36,12 +36,12 @@ struct MewSettingsView: View {
                 Section(
                     content: {
                         NavigationLink(destination: GeneraSettingsView()) {
-                            SettingsSidebarRow(title: "General", icon: MewNotch.Assets.icGeneral, color: MewNotch.Colors.general)
+                            SettingsSidebarRow(title: "General", icon: .general, color: AppColor.general)
                         }
                         .id(SettingsPages.general)
 
                         NavigationLink(destination: NotchSettingsView()) {
-                            SettingsSidebarRow(title: "Notch", icon: MewNotch.Assets.icNotch, color: MewNotch.Colors.notch)
+                            SettingsSidebarRow(title: "Notch", icon: .notch, color: AppColor.notch)
                         }
                         .id(SettingsPages.notch)
                     }
@@ -50,12 +50,12 @@ struct MewSettingsView: View {
                 Section(
                     content: {
                         NavigationLink(destination: CollapsedItemsSettingsView()) {
-                            SettingsSidebarRow(title: "Collapsed", icon: MewNotch.Assets.icHud, color: MewNotch.Colors.hud)
+                            SettingsSidebarRow(title: "Collapsed", icon: .hud, color: AppColor.hud)
                         }
                         .id(SettingsPages.collapsedItems)
 
                         NavigationLink(destination: ExpandedItemsSettingsView()) {
-                            SettingsSidebarRow(title: "Expanded", icon: MewNotch.Assets.icMedia, color: MewNotch.Colors.nowPlaying)
+                            SettingsSidebarRow(title: "Expanded", icon: .media, color: AppColor.nowPlaying)
                         }
                         .id(SettingsPages.expandedItems)
                     },
@@ -66,7 +66,7 @@ struct MewSettingsView: View {
 
                 Section {
                     NavigationLink(destination: AboutAppView()) {
-                        SettingsSidebarRow(title: "About", icon: MewNotch.Assets.icAbout, color: MewNotch.Colors.about)
+                        SettingsSidebarRow(title: "About", icon: .about, color: AppColor.about)
                     }
                     .id(SettingsPages.about)
                 }

@@ -40,8 +40,8 @@ struct MirrorView: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            Color(white: 0.15),
-                            Color(white: 0.05)
+                            AppColor.Surface.dark,
+                            AppColor.Surface.darkDeep
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -73,7 +73,7 @@ struct MirrorView: View {
                 } else {
                     // Placeholder when camera is OFF but authorized
                     VStack(spacing: 4) {
-                        Image(systemName: "person.fill")
+                        AppIcon.personFill.image
                             .resizable()
                             .scaledToFit()
                             .frame(height: notchViewModel.notchSize.height * 0.8) // Reduce icon size slightly to fit text
@@ -93,7 +93,7 @@ struct MirrorView: View {
             } else {
                 // Not Authorized / Denied / Not Determined State
                 VStack(spacing: 4) {
-                    Image(systemName: "video.slash.fill")
+                    AppIcon.videoSlashFill.image
                         .resizable()
                         .scaledToFit()
                         .frame(height: 16)
