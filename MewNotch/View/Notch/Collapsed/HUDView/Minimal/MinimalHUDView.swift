@@ -21,11 +21,10 @@ struct MinimalHUDView<Content: View>: View {
 
     var body: some View {
         content()
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
+            .padding(notchViewModel.minimalHUDPadding)
             .frame(
-                minWidth: notchViewModel.notchSize.height,
-                minHeight: notchViewModel.notchSize.height
+                width: notchViewModel.notchSize.height,
+                height: notchViewModel.notchSize.height
             )
             .transition(
                 .move(

@@ -58,16 +58,34 @@ struct NotchView: View {
                 let currentWidth = notchContentSize.width > 0 ? notchContentSize.width : notchViewModel.notchSize.width
                 let currentHeight = notchContentSize.height > 0 ? notchContentSize.height : notchViewModel.notchSize.height
 
-                LiquidMeltContainer(
-                    progress: meltProgress,
-                    width: currentWidth,
-                    height: currentHeight,
-                    cornerRadius: notchViewModel.floatingCornerRadius,
-                    isHardwareNotched: notchViewModel.isHardwareNotched,
-                    applyGlassEffect: notchDefaults.applyGlassEffect,
-                    hardwareShape: currentShape
-                ) {
-                    notchContent
+                Group {
+                    if notchViewModel.isHardwareNotched {
+                        notchContent
+                            .glassEffect(when: notchDefaults.applyGlassEffect, in: currentShape)
+                            .background {
+                                if !notchDefaults.applyGlassEffect {
+                                    Color.black
+                                }
+                            }
+                            .mask {
+                                currentShape
+                            }
+                            .contentShape(
+                                currentShape
+                            )
+                    } else {
+                        LiquidMeltContainer(
+                            progress: meltProgress,
+                            width: currentWidth,
+                            height: currentHeight,
+                            cornerRadius: notchViewModel.floatingCornerRadius,
+                            isHardwareNotched: false,
+                            applyGlassEffect: notchDefaults.applyGlassEffect,
+                            hardwareShape: currentShape
+                        ) {
+                            notchContent
+                        }
+                    }
                 }
                 .scaleEffect(
                     notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.05 : 1.0,
