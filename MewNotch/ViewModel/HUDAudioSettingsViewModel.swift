@@ -5,22 +5,21 @@
 //  Created by Monu Kumar on 03/01/2026.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 final class HUDAudioSettingsViewModel: ObservableObject {
-    
     @Published var inputDefaults = HUDAudioInputDefaults.shared
     @Published var outputDefaults = HUDAudioOutputDefaults.shared
-    
+
     @Published var localVolumeStep: Double
-    
+
     private var debounceTask: Task<Void, Error>?
     private var cancellables = Set<AnyCancellable>()
-    
+
     init() {
-        self.localVolumeStep = HUDAudioOutputDefaults.shared.step
-        
+        localVolumeStep = HUDAudioOutputDefaults.shared.step
+
         $localVolumeStep
             .dropFirst()
             .sink { [weak self] newValue in
@@ -28,7 +27,7 @@ final class HUDAudioSettingsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     private func debounce(newValue: Double) {
         debounceTask?.cancel()
         debounceTask = Task {

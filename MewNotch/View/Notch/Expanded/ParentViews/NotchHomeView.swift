@@ -8,49 +8,46 @@
 import SwiftUI
 
 struct NotchHomeView: View {
-    
     var namespace: Namespace.ID
-    
+
     @StateObject private var notchDefaults = NotchDefaults.shared
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var expandedNotchViewModel: ExpandedNotchViewModel
-    
+
     var collapsedNotchView: CollapsedNotchView
-    
+
     var body: some View {
         HStack(
             spacing: 12
         ) {
             let items = notchDefaults.expandedNotchItems
-            
+
             ForEach(
-                0..<items.count,
+                0 ..< items.count,
                 id: \.self
             ) { index in
-                
                 let item = items[index]
-                
+
                 switch item {
-                case .Mirror:
+                case .mirror:
                     MirrorView(
                         notchViewModel: notchViewModel
                     )
-                case .NowPlaying:
+                case .nowPlaying:
                     NowPlayingDetailView(
                         namespace: namespace,
                         notchViewModel: notchViewModel,
-                        nowPlayingModel: expandedNotchViewModel.nowPlayingMedia ?? .Placeholder
+                        nowPlayingModel: expandedNotchViewModel.nowPlayingMedia ?? .placeholder
                     )
-                case .Bash:
+                case .bash:
                     BashView(notchViewModel: notchViewModel)
                 }
-                
-                if notchDefaults.showDividers && index != items.count - 1 {
+
+                if notchDefaults.showDividers, index != items.count - 1 {
                     Divider()
                 }
             }
-            
         }
         .frame(
             height: notchViewModel.notchSize.height * 3

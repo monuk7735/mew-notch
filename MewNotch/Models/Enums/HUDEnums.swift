@@ -8,20 +8,22 @@
 import Foundation
 
 enum HUDStyle: String, CaseIterable, Identifiable, Codable {
-    var id: String { rawValue }
-    
-    case Minimal
-    case Progress
-    case Notched
-    
+    var id: String {
+        rawValue
+    }
+
+    case minimal = "Minimal"
+    case progress = "Progress"
+    case notched = "Notched"
+
     var displayName: String {
         switch self {
-        case .Minimal:
-            return String(localized: "Minimal", comment: "Minimal style for system HUD display")
-        case .Progress:
-            return String(localized: "Progress", comment: "Progress bar style for system HUD display")
-        case .Notched:
-            return String(localized: "Notched", comment: "Notched style integrated into notch for system HUD display")
+        case .minimal:
+            String(localized: "Minimal", comment: "Minimal style for system HUD display")
+        case .progress:
+            String(localized: "Progress", comment: "Progress bar style for system HUD display")
+        case .notched:
+            String(localized: "Notched", comment: "Notched style integrated into notch for system HUD display")
         }
     }
 }

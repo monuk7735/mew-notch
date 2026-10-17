@@ -8,7 +8,6 @@
 import SwiftUI
 
 class MewPanel: NSPanel {
-    
     override init(
         contentRect: NSRect,
         styleMask: NSWindow.StyleMask,
@@ -21,31 +20,31 @@ class MewPanel: NSPanel {
             backing: backing,
             defer: flag
         )
-        
+
         isFloatingPanel = true
         isOpaque = false
         titleVisibility = .hidden
         titlebarAppearsTransparent = true
         backgroundColor = .clear
         isMovable = false
-        
+
         collectionBehavior = [
             .fullScreenAuxiliary,
             .stationary,
             .canJoinAllSpaces,
-            .ignoresCycle,
+            .ignoresCycle
         ]
-        
+
         canBecomeVisibleWithoutLogin = true
         level = .mainMenu + 1
-        
+
         hasShadow = false
     }
-    
+
     override var canBecomeKey: Bool {
         false
     }
-    
+
     override var canBecomeMain: Bool {
         false
     }

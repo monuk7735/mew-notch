@@ -5,22 +5,20 @@
 //  Created by Monu Kumar on 26/02/25.
 //
 
+import Lottie
 import SwiftUI
 
-import Lottie
-
 struct CollapsedNotchView: View {
-    
     var namespace: Namespace.ID
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel = .init()
-    
+
     @StateObject var notchDefaults = NotchDefaults.shared
-    
+
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
-    
+
     var body: some View {
         VStack(
             spacing: 0
@@ -33,24 +31,24 @@ struct CollapsedNotchView: View {
                     defaults: HUDBrightnessDefaults.shared,
                     hudModel: collapsedNotchViewModel.brightnessHUD
                 )
-                
+
                 MinimalHUDLeftView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioInputDefaults.shared,
                     hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
                 )
-                
+
                 MinimalHUDLeftView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioOutputDefaults.shared,
                     hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
                 )
-                
+
                 ScreenLockHUDView(
                     notchViewModel: notchViewModel,
                     hudModel: collapsedNotchViewModel.lockStatusHUD
                 )
-                
+
                 NowPlayingHUDLeftView(
                     namespace: namespace,
                     notchViewModel: notchViewModel,
@@ -62,11 +60,11 @@ struct CollapsedNotchView: View {
                 .hide(
                     when: notchViewModel.isExpanded
                 )
-                
+
                 OnlyNotchView(
                     notchSize: notchViewModel.notchSize
                 )
-                
+
                 NowPlayingHUDRightView(
                     notchViewModel: notchViewModel,
                     nowPlayingModel: collapsedNotchViewModel.nowPlayingMedia
@@ -77,7 +75,7 @@ struct CollapsedNotchView: View {
                 .hide(
                     when: notchViewModel.isExpanded
                 )
-                
+
                 MinimalHUDView(
                     notchViewModel: notchViewModel,
                     variant: .right
@@ -87,44 +85,44 @@ struct CollapsedNotchView: View {
                 .hide(
                     when: collapsedNotchViewModel.lockStatusHUD == nil
                 )
-                
+
                 MinimalHUDRightView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioOutputDefaults.shared,
                     hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
                 )
-                
+
                 MinimalHUDRightView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioInputDefaults.shared,
                     hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
                 )
-                
+
                 MinimalHUDRightView(
                     notchViewModel: notchViewModel,
                     defaults: HUDBrightnessDefaults.shared,
                     hudModel: collapsedNotchViewModel.brightnessHUD
                 )
             }
-            
+
             PowerHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDPowerDefaults.shared,
                 hudModel: collapsedNotchViewModel.powerStatusHUD
             )
-            
+
             AudioDeviceHUDView(
                 notchViewModel: notchViewModel,
-                deviceType: .Input,
+                deviceType: .input,
                 hudModel: collapsedNotchViewModel.inputAudioDeviceHUD
             )
-            
+
             AudioDeviceHUDView(
                 notchViewModel: notchViewModel,
-                deviceType: .Output,
+                deviceType: .output,
                 hudModel: collapsedNotchViewModel.outputAudioDeviceHUD
             )
-            
+
             NowPlayingTextHUDView(
                 notchViewModel: notchViewModel,
                 hudModel: collapsedNotchViewModel.nowPlayingChangesHUD
@@ -132,40 +130,41 @@ struct CollapsedNotchView: View {
             .hide(
                 when: notchViewModel.isExpanded
             )
-            
+
             // MARK: Progress Style Views
+
             ProgressHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDBrightnessDefaults.shared,
                 hudModel: collapsedNotchViewModel.brightnessHUD
             )
-            
+
             ProgressHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDAudioInputDefaults.shared,
                 hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
             )
-            
+
             ProgressHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDAudioOutputDefaults.shared,
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
             )
-            
+
             // MARK: Notched Style View
-            
+
             NotchedHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDBrightnessDefaults.shared,
                 hudModel: collapsedNotchViewModel.brightnessHUD
             )
-            
+
             NotchedHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDAudioInputDefaults.shared,
                 hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
             )
-            
+
             NotchedHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDAudioOutputDefaults.shared,
@@ -176,7 +175,7 @@ struct CollapsedNotchView: View {
             notchDefaults.objectWillChange
         ) {
             collapsedNotchViewModel.hideHUDs()
-            
+
             DispatchQueue.main.async {
                 notchViewModel.refreshNotchSize()
             }

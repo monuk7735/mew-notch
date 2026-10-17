@@ -8,9 +8,7 @@
 import SwiftUI
 
 class MewDefaultsManager: ObservableObject {
-    
     static let shared = MewDefaultsManager()
-    
-    private init() { }
-    
+
+    private init() {}
 }

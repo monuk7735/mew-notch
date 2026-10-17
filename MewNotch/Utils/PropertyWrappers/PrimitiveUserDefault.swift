@@ -4,16 +4,15 @@
 //
 //  Created by Monu Kumar on 23/03/25.
 //
-import SwiftUI
 import Combine
+import SwiftUI
 
 @propertyWrapper
 public struct PrimitiveUserDefault<T> {
-    
     public let key: String
     public let defaultValue: T
     public let suiteName: String?
-    
+
     public init(
         _ key: String,
         defaultValue: T,
@@ -23,13 +22,13 @@ public struct PrimitiveUserDefault<T> {
         self.defaultValue = defaultValue
         self.suiteName = suiteName
     }
-    
+
     public var wrappedValue: T {
         get {
             let defaults = suiteName != nil ? UserDefaults(
                 suiteName: suiteName!
-            ): UserDefaults.standard
-            
+            ) : UserDefaults.standard
+
             return defaults?.object(
                 forKey: key
             ) as? T ?? defaultValue
@@ -39,10 +38,10 @@ public struct PrimitiveUserDefault<T> {
             defaults?.set(newValue, forKey: key)
         }
     }
-    
+
     public static subscript<EnclosingSelf: ObservableObject>(
         _enclosingInstance object: EnclosingSelf,
-        wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, T>,
+        wrapped _: ReferenceWritableKeyPath<EnclosingSelf, T>,
         storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
     ) -> T {
         get {

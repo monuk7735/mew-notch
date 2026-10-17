@@ -5,24 +5,23 @@
 //  Created by Monu Kumar on 05/06/25.
 //
 
-import SwiftUI
 import Lottie
+import SwiftUI
 
 struct ScreenLockHUDView: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var hudModel: HUDPropertyModel?
-    
+
     @State var progress: CGFloat = 0
-    
+
     var body: some View {
         if let hud = hudModel {
             MinimalHUDView(
                 notchViewModel: notchViewModel,
                 variant: .left
             ) {
-                TimelineView(.animation) { context in
+                TimelineView(.animation) { _ in
                     Rectangle()
                         .mask {
                             LottieView(
@@ -43,7 +42,7 @@ struct ScreenLockHUDView: View {
             }
         }
     }
-    
+
     private func animateTo(_ newValue: CGFloat) {
         // Smoothly interpolate animatedProgress to newValue
         let duration = 0.3
@@ -51,8 +50,8 @@ struct ScreenLockHUDView: View {
         let stepTime = duration / Double(steps)
         let start = progress
         let delta = newValue - start
-        
-        for step in 0...steps {
+
+        for step in 0 ... steps {
             DispatchQueue.main.asyncAfter(deadline: .now() + stepTime * Double(step)) {
                 let progress = start + delta * CGFloat(step) / CGFloat(steps)
                 self.progress = progress

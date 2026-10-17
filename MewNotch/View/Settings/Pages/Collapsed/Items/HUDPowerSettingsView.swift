@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct HUDPowerSettingsView: View {
-    
     @StateObject var powerDefaults = HUDPowerDefaults.shared
-    
+
     var body: some View {
         Form {
             Section {
@@ -25,7 +24,7 @@ struct HUDPowerSettingsView: View {
             } header: {
                 Text("General")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Show Time Remaining",

@@ -8,47 +8,46 @@
 import SwiftUI
 
 class ExpandedNotchViewModel: ObservableObject {
-    
     enum NotchViewType: String, CaseIterable, Identifiable {
         var id: String {
-            self.rawValue
+            rawValue
         }
-        
-        case Home
-        case Shelf
-        
+
+        case home = "Home"
+        case shelf = "Shelf"
+
         var imageSystemName: String {
             switch self {
-            case .Home:
-                return "house"
-            case .Shelf:
-                return "folder"
+            case .home:
+                "house"
+            case .shelf:
+                "folder"
             }
         }
     }
-    
-    @Published var currentView: NotchViewType = .Home
-    
+
+    @Published var currentView: NotchViewType = .home
+
     @Published var nowPlayingMedia: NowPlayingMediaModel?
-    
+
     @Published var shelfFileGroups: [ShelfFileGroupModel] = [] {
         didSet {
             ShelfDefaults.shared.shelfFileGroups = shelfFileGroups
         }
     }
-    
+
     init() {
-        self.startListeners()
-        
-        self.nowPlayingMedia = NowPlaying.shared.nowPlayingModel
-        
-        self.shelfFileGroups = ShelfDefaults.shared.shelfFileGroups
+        startListeners()
+
+        nowPlayingMedia = NowPlaying.shared.nowPlayingModel
+
+        shelfFileGroups = ShelfDefaults.shared.shelfFileGroups
     }
-    
+
     deinit {
-        self.stopListeners()
+        NotificationCenter.default.removeObserver(self)
     }
-    
+
     func startListeners() {
         NotificationCenter.default.addObserver(
             self,
@@ -57,21 +56,16 @@ class ExpandedNotchViewModel: ObservableObject {
             object: nil
         )
     }
-    
-    func stopListeners() {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
+
     @objc func handleNowPlayingMediaChanges() {
         guard let nowPlayingMedia = NowPlaying.shared.nowPlayingModel else {
             return
         }
-        
+
         DispatchQueue.main.async {
             withAnimation {
                 self.nowPlayingMedia = nowPlayingMedia
             }
         }
     }
-    
 }

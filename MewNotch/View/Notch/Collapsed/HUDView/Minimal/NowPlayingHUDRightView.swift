@@ -5,20 +5,18 @@
 //  Created by Monu Kumar on 26/03/25.
 //
 
+import Lottie
 import SwiftUI
 
-import Lottie
-
 struct NowPlayingHUDRightView: View {
-    
     @StateObject var notchDefaults = NotchDefaults.shared
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var nowPlayingModel: NowPlayingMediaModel?
-    
+
     @State private var isHovered: Bool = false
-    
+
     var body: some View {
         if let nowPlayingModel {
             MinimalHUDView(
@@ -31,30 +29,31 @@ struct NowPlayingHUDRightView: View {
                 .animationSpeed(0.2)
                 .playbackMode(
                     nowPlayingModel.isPlaying
-                    ? .playing(
-                        .fromProgress(
-                            0,
-                            toProgress: 1,
-                            loopMode: .loop
+                        ? .playing(
+                            .fromProgress(
+                                0,
+                                toProgress: 1,
+                                loopMode: .loop
+                            )
                         )
-                    )
-                    : .paused
+                        : .paused
                 )
                 .scaledToFit()
-                .opacity(self.isHovered ? 0 : 1)
+                .opacity(isHovered ? 0 : 1)
                 .overlay {
-                    if self.isHovered {
+                    if isHovered {
                         Button(
                             action: {
                                 NowPlaying.shared.togglePlayPause()
+                            },
+                            label: {
+                                Image(
+                                    systemName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill"
+                                )
+                                .resizable()
+                                .scaledToFit()
                             }
-                        ) {
-                            Image(
-                                systemName: nowPlayingModel.isPlaying ? "pause.fill" : "play.fill"
-                            )
-                            .resizable()
-                            .scaledToFit()
-                        }
+                        )
                         .buttonStyle(.plain)
                         .padding(6)
                     }

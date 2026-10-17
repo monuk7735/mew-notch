@@ -5,21 +5,19 @@
 //  Created by Monu Kumar on 11/03/25.
 //
 
-import SwiftUI
-
 import Lottie
+import SwiftUI
 
 struct HUDPropertyModel {
     let lottie: LottieAnimation?
     let icon: Image
-    
+
     var name: String
     var value: Float
-    
+
     var timeout: TimeInterval = 1
-    var timer: Timer? = nil
-    
-    @ViewBuilder
+    var timer: Timer?
+
     func getIcon() -> some View {
         icon
             .renderingMode(.template)

@@ -5,19 +5,17 @@
 //  Created by Monu Kumar on 19/04/25.
 //
 
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
 struct CameraPreviewView: NSViewRepresentable {
-    
-    func makeNSView(context: Context) -> CameraPreviewNSView {
-        return CameraPreviewNSView()
+    func makeNSView(context _: Context) -> CameraPreviewNSView {
+        CameraPreviewNSView()
     }
 
-    func updateNSView(_ nsView: CameraPreviewNSView, context: Context) {}
-    
+    func updateNSView(_: CameraPreviewNSView, context _: Context) {}
+
     class CameraPreviewNSView: NSView {
-        
         private let session = AVCaptureSession()
         private let sessionQueue = DispatchQueue(label: "com.mewnotch.cameraSessionQueue")
         private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -31,7 +29,7 @@ struct CameraPreviewView: NSViewRepresentable {
             super.init(coder: decoder)
             setup()
         }
-        
+
         deinit {
             let session = self.session
             let sessionQueue = self.sessionQueue
@@ -39,52 +37,52 @@ struct CameraPreviewView: NSViewRepresentable {
                 session.stopRunning()
             }
         }
-        
+
         private func setup() {
             // Setup Layer immediately (session is empty but exists)
             let previewLayer = AVCaptureVideoPreviewLayer(session: session)
             previewLayer.videoGravity = .resizeAspectFill
             previewLayer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
             previewLayer.frame = bounds
-            
-            self.layer = previewLayer
-            self.wantsLayer = true
+
+            layer = previewLayer
+            wantsLayer = true
             self.previewLayer = previewLayer
-            
+
             startSession()
         }
 
         private func startSession() {
             sessionQueue.async { [weak self] in
-                guard let self = self else { return }
-                
-                self.session.beginConfiguration()
-                self.session.sessionPreset = .high
-                
+                guard let self else { return }
+
+                session.beginConfiguration()
+                session.sessionPreset = .high
+
                 let discoverySession = AVCaptureDevice.DiscoverySession(
                     deviceTypes: [.builtInWideAngleCamera, .external],
                     mediaType: .video,
                     position: .unspecified
                 )
-                
+
                 guard let camera = discoverySession.devices.first else {
-                    self.session.commitConfiguration()
+                    session.commitConfiguration()
                     return
                 }
-                
+
                 do {
                     let input = try AVCaptureDeviceInput(device: camera)
-                    if self.session.canAddInput(input) {
-                        self.session.addInput(input)
+                    if session.canAddInput(input) {
+                        session.addInput(input)
                     }
                 } catch {
                     print("Error creating device input: \(error)")
                 }
-                
-                self.session.commitConfiguration()
-                
-                self.session.startRunning()
-                
+
+                session.commitConfiguration()
+
+                session.startRunning()
+
                 DispatchQueue.main.async {
                     if let connection = self.previewLayer?.connection {
                         if connection.isVideoMirroringSupported {

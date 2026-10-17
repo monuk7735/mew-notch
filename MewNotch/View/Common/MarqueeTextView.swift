@@ -8,25 +8,24 @@
 import SwiftUI
 
 public struct MarqueeTextView: View {
-    
     public var text: String
     public var font: NSFont
     public var leftFade: CGFloat
     public var rightFade: CGFloat
     public var startDelay: Double
     public var alignment: Alignment
-    
+
     @State private var animate = false
     var isCompact = false
-    
+
     public var body: some View {
-        let stringWidth  = text.widthOfString(
+        let stringWidth = text.widthOfString(
             usingFont: font
         )
         let stringHeight = text.heightOfString(
             usingFont: font
         )
-        
+
         let animation = Animation
             .linear(
                 duration: Double(
@@ -39,16 +38,16 @@ public struct MarqueeTextView: View {
             .repeatForever(
                 autoreverses: false
             )
-        
+
         let nullAnimation = Animation.linear(
             duration: 0
         )
-        
+
         GeometryReader { geo in
             let needsScrolling = (
                 stringWidth > geo.size.width
             )
-            
+
             ZStack {
                 if needsScrolling {
                     makeMarqueeTexts(
@@ -92,7 +91,7 @@ public struct MarqueeTextView: View {
                     .onChange(
                         of: text
                     ) {
-                        self.animate = false
+                        animate = false
                     }
                     .frame(
                         minWidth: 0,
@@ -104,25 +103,21 @@ public struct MarqueeTextView: View {
                 }
             }
             .onAppear {
-                self.animate = needsScrolling
+                animate = needsScrolling
             }
-            .onChange(
-                of: text
-            ) {
-                _,
-                newValue in
+            .onChange(of: text) { _, newValue in
                 let newStringWidth = newValue.widthOfString(
                     usingFont: font
                 )
                 if newStringWidth > geo.size.width {
-                    self.animate = false
-                    
+                    animate = false
+
                     DispatchQueue.main
                         .async {
-                            self.animate = true
+                            animate = true
                         }
                 } else {
-                    self.animate = false
+                    animate = false
                 }
             }
         }
@@ -133,68 +128,65 @@ public struct MarqueeTextView: View {
             maxWidth: isCompact ? stringWidth : nil
         )
         .onDisappear {
-            self.animate = false
+            animate = false
         }
     }
-    
+
     @ViewBuilder
     private func makeMarqueeTexts(
         stringWidth: CGFloat,
         stringHeight: CGFloat,
-        geoWidth: CGFloat,
+        geoWidth _: CGFloat,
         animation: Animation,
         nullAnimation: Animation
     ) -> some View {
-        Group {
-            Text(
-                text
+        Text(
+            text
+        )
+        .lineLimit(
+            1
+        )
+        .font(
+            .init(
+                font
             )
-            .lineLimit(
-                1
+        )
+        .offset(
+            x: animate ? -stringWidth - stringHeight * 2 : 0
+        )
+        .animation(
+            animate ? animation : nullAnimation,
+            value: animate
+        )
+        .fixedSize(
+            horizontal: true,
+            vertical: false
+        )
+
+        Text(
+            text
+        )
+        .lineLimit(
+            1
+        )
+        .font(
+            .init(
+                font
             )
-            .font(
-                .init(
-                    font
-                )
-            )
-            .offset(
-                x: animate ? -stringWidth - stringHeight * 2 : 0
-            )
-            .animation(
-                animate ? animation : nullAnimation,
-                value: animate
-            )
-            .fixedSize(
-                horizontal: true,
-                vertical: false
-            )
-            
-            Text(
-                text
-            )
-            .lineLimit(
-                1
-            )
-            .font(
-                .init(
-                    font
-                )
-            )
-            .offset(
-                x: animate ? 0 : stringWidth + stringHeight * 2
-            )
-            .animation(
-                animate ? animation : nullAnimation,
-                value: animate
-            )
-            .fixedSize(
-                horizontal: true,
-                vertical: false
-            )
-        }
+        )
+        .offset(
+            x: animate ? 0 : stringWidth + stringHeight * 2
+        )
+        .animation(
+            animate ? animation : nullAnimation,
+            value: animate
+        )
+        .fixedSize(
+            horizontal: true,
+            vertical: false
+        )
     }
-    
-    @ViewBuilder
+
     private func fadeMask(
         leftFade: CGFloat,
         rightFade: CGFloat
@@ -209,7 +201,7 @@ public struct MarqueeTextView: View {
                 .opacity(
                     0
                 )
-            
+
             LinearGradient(
                 gradient: Gradient(
                     colors: [
@@ -225,7 +217,7 @@ public struct MarqueeTextView: View {
             .frame(
                 width: leftFade
             )
-            
+
             LinearGradient(
                 gradient: Gradient(
                     colors: [
@@ -236,7 +228,7 @@ public struct MarqueeTextView: View {
                 startPoint: .leading,
                 endPoint: .trailing
             )
-            
+
             LinearGradient(
                 gradient: Gradient(
                     colors: [
@@ -253,7 +245,7 @@ public struct MarqueeTextView: View {
             .frame(
                 width: rightFade
             )
-            
+
             Rectangle()
                 .frame(
                     width: 2
@@ -263,7 +255,7 @@ public struct MarqueeTextView: View {
                 )
         }
     }
-    
+
     init(
         text: String,
         font: NSFont,
@@ -281,13 +273,13 @@ public struct MarqueeTextView: View {
     }
 }
 
-extension MarqueeTextView {
-    public func makeCompact(
+public extension MarqueeTextView {
+    func makeCompact(
         _ compact: Bool = true
     ) -> Self {
         var view = self
         view.isCompact = compact
-        
+
         return view
     }
 }
@@ -297,19 +289,19 @@ extension String {
         usingFont font: NSFont
     ) -> CGFloat {
         let fontAttributes = [NSAttributedString.Key.font: font]
-        let size = self.size(
+        let stringSize = (self as NSString).size(
             withAttributes: fontAttributes
         )
-        return size.width
+        return stringSize.width
     }
-    
+
     func heightOfString(
         usingFont font: NSFont
     ) -> CGFloat {
         let fontAttributes = [NSAttributedString.Key.font: font]
-        let size = self.size(
+        let stringSize = (self as NSString).size(
             withAttributes: fontAttributes
         )
-        return size.height
+        return stringSize.height
     }
 }

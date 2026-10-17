@@ -5,20 +5,18 @@
 //  Created by Monu Kumar on 03/07/25.
 //
 
-
 class AirDrop: NSObject, NSSharingServiceDelegate {
-    
     private let files: [URL]
     private var completion: ((Error?) -> Void)?
-    
+
     init(
         files: [URL]
     ) {
         self.files = files
-        
+
         super.init()
     }
-    
+
     func begin(completion: ((Error?) -> Void)? = nil) {
         self.completion = completion
         do {
@@ -27,7 +25,7 @@ class AirDrop: NSObject, NSSharingServiceDelegate {
             completion?(error)
         }
     }
-    
+
     private func send(
         _ files: [URL]
     ) throws {
@@ -59,21 +57,21 @@ class AirDrop: NSObject, NSSharingServiceDelegate {
                 ]
             )
         }
-        
+
         service.delegate = self
-        
+
         service.perform(
             withItems: files
         )
     }
-    
+
     // MARK: - NSSharingServiceDelegate
-    
-    func sharingService(_ sharingService: NSSharingService, didFailToShareItems items: [Any], error: Error) {
+
+    func sharingService(_: NSSharingService, didFailToShareItems _: [Any], error: Error) {
         completion?(error)
     }
-    
-    func sharingService(_ sharingService: NSSharingService, didShareItems items: [Any]) {
+
+    func sharingService(_: NSSharingService, didShareItems _: [Any]) {
         completion?(nil)
     }
 }

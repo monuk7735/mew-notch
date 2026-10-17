@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct SettingsIcon: View {
-    
     let icon: Image
     let color: MewNotch.IconColor
-    
+
     @ScaledMetric private var iconSize: CGFloat = 30
     @ScaledMetric private var cornerRadius: CGFloat = 7
-    
+
     var body: some View {
         icon
             .font(.headline)
@@ -29,11 +28,10 @@ struct SettingsIcon: View {
 }
 
 struct SettingsSidebarRow: View {
-    
     let title: LocalizedStringKey
     let icon: Image
     let color: MewNotch.IconColor
-    
+
     var body: some View {
         HStack(spacing: 12) {
             SettingsIcon(icon: icon, color: color)
@@ -46,15 +44,14 @@ struct SettingsSidebarRow: View {
 }
 
 struct SettingsRow<Content: View>: View {
-    
     let title: LocalizedStringKey
     let subtitle: LocalizedStringKey?
     let icon: Image
     let color: MewNotch.IconColor
     let content: Content
-    
+
     @ScaledMetric private var spacing: CGFloat = 16
-    
+
     init(
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey? = nil,
@@ -68,27 +65,27 @@ struct SettingsRow<Content: View>: View {
         self.color = color
         self.content = content()
     }
-    
+
     var body: some View {
         HStack(spacing: spacing) {
             SettingsIcon(icon: icon, color: color)
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.title3)
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
-                
-                if let subtitle = subtitle {
+
+                if let subtitle {
                     Text(subtitle)
                         .font(.body)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            
+
             Spacer()
-            
+
             content
         }
         .padding(.vertical, 8)
@@ -96,7 +93,7 @@ struct SettingsRow<Content: View>: View {
     }
 }
 
-// Convenience init for no content (just label)
+/// Convenience init for no content (just label)
 extension SettingsRow where Content == EmptyView {
     init(
         title: LocalizedStringKey,
@@ -108,7 +105,7 @@ extension SettingsRow where Content == EmptyView {
         self.subtitle = subtitle
         self.icon = icon
         self.color = color
-        self.content = EmptyView()
+        content = EmptyView()
     }
 }
 
@@ -120,7 +117,7 @@ extension SettingsRow where Content == EmptyView {
             icon: Image(systemName: "gear"),
             color: .gray
         )
-        
+
         SettingsRow(
             title: "Enabled",
             icon: Image(systemName: "bolt.fill"),
@@ -128,7 +125,7 @@ extension SettingsRow where Content == EmptyView {
         ) {
             Toggle("", isOn: .constant(true))
         }
-        
+
         SettingsRow(
             title: "Appearance",
             icon: Image(systemName: "paintpalette.fill"),

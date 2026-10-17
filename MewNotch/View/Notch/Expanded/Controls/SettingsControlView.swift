@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct SettingsControlView: View {
-    
     @Environment(\.openSettings) private var openSettings
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var body: some View {
         NotchControlButton(
             notchViewModel: notchViewModel,

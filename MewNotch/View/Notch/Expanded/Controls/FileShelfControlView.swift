@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct NotchTabSwitcherView: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var expandedNotchViewModel: ExpandedNotchViewModel
-    
+
     var spacing: CGFloat
-    
+
     @Namespace private var animation
-    
+
     var body: some View {
         HStack(spacing: spacing) {
-            tabButton(for: .Home)
-            tabButton(for: .Shelf)
+            tabButton(for: .home)
+            tabButton(for: .shelf)
         }
         .padding(3)
         .background {
@@ -29,21 +28,20 @@ struct NotchTabSwitcherView: View {
         .clipShape(Capsule())
         .padding(3)
     }
-    
-    @ViewBuilder
+
     private func tabButton(for type: ExpandedNotchViewModel.NotchViewType) -> some View {
         NotchControlButton(
             notchViewModel: notchViewModel,
             icon: type.imageSystemName,
             isSelected: expandedNotchViewModel.currentView == type,
-            padding: 0,
+            padding: 0
         ) {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 expandedNotchViewModel.currentView = type
             }
         }
 //        Button {
-//            
+//
 //        } label: {
 //            Image(systemName: type.imageSystemName)
 //                .resizable()

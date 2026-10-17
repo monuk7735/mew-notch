@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct BashView: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
     @StateObject private var bashDefaults = BashDefaults.shared
     @State private var output: String = "Running..."
     @State private var timer: Timer?
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if bashDefaults.showCommand {
@@ -21,18 +20,18 @@ struct BashView: View {
                     Image(systemName: "terminal.fill")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    
+
                     Text(bashDefaults.command)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                    
+
                     Spacer()
                 }
                 .padding(.bottom, 2)
             }
-            
+
             ScrollView {
                 Text(output)
                     .font(.system(.caption, design: .monospaced))
@@ -63,42 +62,42 @@ struct BashView: View {
             runCommand()
         }
     }
-    
+
     private func startTimer() {
         stopTimer()
         guard bashDefaults.autoRefresh else { return }
-        
+
         timer = Timer.scheduledTimer(withTimeInterval: bashDefaults.refreshInterval, repeats: true) { _ in
             runCommand()
         }
     }
-    
+
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
     }
-    
+
     private func runCommand() {
         let task = Process()
         let pipe = Pipe()
-        
+
         task.standardOutput = pipe
         task.standardError = pipe
         task.arguments = ["-c", bashDefaults.command]
         task.launchPath = "/bin/bash"
-        
+
         do {
             try task.run()
-            
+
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let outputString = String(data: data, encoding: .utf8) {
                 DispatchQueue.main.async {
-                    self.output = outputString.trimmingCharacters(in: .whitespacesAndNewlines)
+                    output = outputString.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
             }
         } catch {
             DispatchQueue.main.async {
-                self.output = "Error: \(error.localizedDescription)"
+                output = "Error: \(error.localizedDescription)"
             }
         }
     }

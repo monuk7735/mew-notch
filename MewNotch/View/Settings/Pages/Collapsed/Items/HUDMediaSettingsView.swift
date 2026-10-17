@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct HUDMediaSettingsView: View {
-    
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
-    
+
     var body: some View {
         Form {
             Section {
@@ -25,7 +24,7 @@ struct HUDMediaSettingsView: View {
             } header: {
                 Text("General")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Animated",
@@ -39,7 +38,7 @@ struct HUDMediaSettingsView: View {
             } header: {
                 Text("Appearance")
             }
-                
+
             Section {
                 SettingsRow(
                     title: "Show title on change",
@@ -50,7 +49,7 @@ struct HUDMediaSettingsView: View {
                     Toggle("", isOn: ~$mediaDefaults.showTitleChange)
                 }
                 .hide(when: !mediaDefaults.isEnabled)
-                
+
                 SettingsRow(
                     title: "Show new title for",
                     subtitle: mediaDefaults.titleChangeTimeout.localizedSecondsKey(),
@@ -59,7 +58,7 @@ struct HUDMediaSettingsView: View {
                 ) {
                     Slider(
                         value: $mediaDefaults.titleChangeTimeout,
-                        in: 1...10,
+                        in: 1 ... 10,
                         step: 1.0
                     )
                 }

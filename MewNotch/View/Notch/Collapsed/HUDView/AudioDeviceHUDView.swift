@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct AudioDeviceHUDView: View {
-    
     enum DeviceType: String {
-        case Input = "Input Device"
-        case Output = "Output Device"
+        case input = "Input Device"
+        case output = "Output Device"
     }
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
-    
-    var deviceType: DeviceType = .Output
-    
+
+    var deviceType: DeviceType = .output
+
     var hudModel: HUDPropertyModel?
-    
+
     var body: some View {
         if let deviceName = hudModel?.name, !deviceName.isEmpty {
             VStack(
@@ -28,7 +27,7 @@ struct AudioDeviceHUDView: View {
                 Text(deviceType.rawValue.capitalized)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text(deviceName)
                     .font(.body.bold())
                     .foregroundColor(.secondary)

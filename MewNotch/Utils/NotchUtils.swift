@@ -8,62 +8,61 @@
 import SwiftUI
 
 class NotchUtils {
-    
     static let shared = NotchUtils()
-    
+
     var collapsedCornerRadius: (
         top: CGFloat,
         bottom: CGFloat
     ) {
-        return (
+        (
             top: 8,
             bottom: 13
         )
     }
-    
+
     var expandedCornerRadius: (
         top: CGFloat,
         bottom: CGFloat
     ) {
-        return (
+        (
             top: 8,
             bottom: 24
         )
     }
-    
-    private init() { }
-    
+
+    private init() {}
+
     func hasNotch(
         screen: NSScreen
     ) -> Bool {
-        return screen.safeAreaInsets.top > 0
+        screen.safeAreaInsets.top > 0
     }
-    
+
     func notchSize(
         screen: NSScreen? = nil,
         force: Bool = false
     ) -> CGSize {
-        guard let screen = screen else {
+        guard let screen else {
             return .zero
         }
-        
+
         if !hasNotch(
             screen: screen
         ) {
             if !force {
                 return .zero
             }
-            
+
             return getSimulatedNotchSize(
                 screen: screen
             )
         }
-        
+
         return getRealNotchSize(
             screen: screen
         )
     }
-    
+
     private func getRealNotchSize(
         screen: NSScreen
     ) -> CGSize {
@@ -73,10 +72,10 @@ class NotchUtils {
         if let topLeftSpace: CGFloat = screen.auxiliaryTopLeftArea?.width, let topRightSpace: CGFloat = screen.auxiliaryTopRightArea?.width {
             notchWidth = screen.frame.width - topLeftSpace - topRightSpace
         }
-        
+
         notchHeight = screen.safeAreaInsets.top
-        
-        if NotchDefaults.shared.heightMode == .Match_Menu_Bar {
+
+        if NotchDefaults.shared.heightMode == .matchMenuBar {
             notchHeight = screen.frame.maxY - screen.visibleFrame.maxY
         }
 
@@ -85,7 +84,7 @@ class NotchUtils {
             height: notchHeight
         )
     }
-    
+
     private func getSimulatedNotchSize(
         screen: NSScreen
     ) -> CGSize {
@@ -95,7 +94,7 @@ class NotchUtils {
         if let topLeftSpace: CGFloat = screen.auxiliaryTopLeftArea?.width, let topRightSpace: CGFloat = screen.auxiliaryTopRightArea?.width {
             notchWidth = screen.frame.width - topLeftSpace - topRightSpace
         }
-        
+
         notchHeight = screen.frame.maxY - screen.visibleFrame.maxY
 
         return .init(

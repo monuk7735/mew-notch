@@ -8,31 +8,30 @@
 import SwiftUI
 
 class HUDPowerDefaults: HUDDefaultsProtocol {
-    
-    internal static var PREFIX: String = "HUD_Power_"
-    
+    static var PREFIX: String = "HUD_Power_"
+
     static let shared = HUDPowerDefaults()
-    
+
     private init() {}
-    
+
     @PrimitiveUserDefault(
         PREFIX + "Enabled",
         defaultValue: true
     )
     var isEnabled: Bool
-    
+
     @CodableUserDefault(
         PREFIX + "Style",
-        defaultValue: HUDStyle.Minimal
+        defaultValue: HUDStyle.minimal
     )
     var style: HUDStyle
-    
+
     @PrimitiveUserDefault(
         PREFIX + "AnimateChanges",
         defaultValue: true
     )
     var animateChanges: Bool
-    
+
     @PrimitiveUserDefault(
         PREFIX + "ShowTimeRemaining",
         defaultValue: true

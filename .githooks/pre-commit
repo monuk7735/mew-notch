@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if command -v mise >/dev/null 2>&1; then
+    mise run lint || {
+        echo "[ERROR] SwiftLint checks failed. Run 'mise run lint:fix' before committing."
+        exit 1
+    }
+else
+    if command -v swiftlint >/dev/null 2>&1; then
+        swiftlint lint || {
+            echo "[ERROR] SwiftLint checks failed. Fix violations before committing."
+            exit 1
+        }
+    fi
+fi

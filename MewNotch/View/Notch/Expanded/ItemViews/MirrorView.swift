@@ -5,36 +5,35 @@
 //  Created by Monu Kumar on 19/04/25.
 //
 
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
 struct MirrorView: View {
-    
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
     @StateObject private var mirrorDefaults = MirrorDefaults.shared
-    
+
     @State private var isCameraViewShown: Bool = false
     @State private var cameraAuthStatus: AVAuthorizationStatus = .notDetermined
-    
-    // Helper to request/check auth
+
+    /// Helper to request/check auth
     func updateCameraAuthorization(animate: Bool = true) {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         if animate {
-            withAnimation { self.cameraAuthStatus = status }
+            withAnimation { cameraAuthStatus = status }
         } else {
-            self.cameraAuthStatus = status
+            cameraAuthStatus = status
         }
     }
 
     func requestCameraAuthorization() {
         AVCaptureDevice.requestAccess(for: .video) { _ in
-            self.updateCameraAuthorization()
+            updateCameraAuthorization()
         }
     }
-    
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius)
@@ -60,7 +59,7 @@ struct MirrorView: View {
                     )
                     .clipShape(RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius))
                 )
-            
+
             if cameraAuthStatus == .authorized {
                 if isCameraViewShown {
                     CameraPreviewView()
@@ -85,7 +84,7 @@ struct MirrorView: View {
                                     endPoint: .bottom
                                 )
                             )
-                        
+
                         Text("Mirror")
                             .font(.system(size: 10, weight: .medium, design: .rounded))
                             .foregroundStyle(.white.opacity(0.6))
@@ -99,11 +98,11 @@ struct MirrorView: View {
                         .scaledToFit()
                         .frame(height: 16)
                         .foregroundStyle(.secondary)
-                    
+
                     Text("Mirror")
                         .font(.system(size: 10, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
-                    
+
                     Text(cameraAuthStatus == .notDetermined ? "Tap to Allow Camera" : "Camera Access Required")
                         .font(.system(size: 8))
                         .foregroundStyle(.secondary)
@@ -122,20 +121,24 @@ struct MirrorView: View {
             handleTap()
         }
         .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active { updateCameraAuthorization() }
+            if newPhase == .active {
+                updateCameraAuthorization()
+            }
         }
         .onChange(of: notchViewModel.isExpanded) { _, isExpanded in
-            if !isExpanded { isCameraViewShown = false }
+            if !isExpanded {
+                isCameraViewShown = false
+            }
         }
         .onAppear {
             updateCameraAuthorization(animate: false)
-            
-            if self.cameraAuthStatus == .authorized && mirrorDefaults.autoStart {
+
+            if cameraAuthStatus == .authorized, mirrorDefaults.autoStart {
                 isCameraViewShown.toggle()
             }
         }
     }
-    
+
     private func handleTap() {
         if cameraAuthStatus == .authorized {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {

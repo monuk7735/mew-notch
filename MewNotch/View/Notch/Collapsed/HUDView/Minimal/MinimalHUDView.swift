@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct MinimalHUDView<Content: View>: View {
-    
     enum Variant {
         case left
         case right
     }
-    
+
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var variant: Variant
-    
+
     var content: () -> Content
-    
+
     var body: some View {
         content()
             .padding(notchViewModel.minimalHUDPadding)

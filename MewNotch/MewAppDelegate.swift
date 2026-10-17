@@ -8,69 +8,62 @@
 import SwiftUI
 
 class MewAppDelegate: NSObject, NSApplicationDelegate {
-    
     @Environment(\.openWindow) var openWindow
     @Environment(\.openSettings) var openSettingsWindow
-    
-    private var timer: Timer? = nil
-    
+
+    private var timer: Timer?
+
     func applicationShouldTerminateAfterLastWindowClosed(
-        _ sender: NSApplication
+        _: NSApplication
     ) -> Bool {
-        return false
+        false
     }
-    
-    func applicationWillTerminate(
-        _ notification: Notification
-    ) {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
+
     func applicationDidFinishLaunching(
-        _ notification: Notification
+        _: Notification
     ) {
         if AppDefaults.shared.disableSystemHUD {
             MediaKeyManager.shared.start()
         }
-        
+
         // Need to Initialise once to set system listeners
         AudioInput.sharedInstance()
         AudioOutput.sharedInstance()
         Brightness.sharedInstance()
         PowerStatus.sharedInstance()
         NowPlaying.shared.startListener()
-        
+
         timer = .scheduledTimer(
             withTimeInterval: 30,
             repeats: false
         ) { _ in
             NotchManager.shared.refreshNotches(killAllWindows: true)
         }
-        
+
         NotchManager.shared.refreshNotches(
             addToSeparateSpace: false
         )
-        
+
         NSApp.setActivationPolicy(.accessory)
     }
-    
+
     func applicationShouldHandleReopen(
-        _ sender: NSApplication,
+        _: NSApplication,
         hasVisibleWindows: Bool
     ) -> Bool {
         if !hasVisibleWindows {
             openSettingsWindow.callAsFunctionBringingToFront()
         }
-        
+
         return !hasVisibleWindows
     }
-    
+
     func applicationShouldTerminate(
-        _ sender: NSApplication
+        _: NSApplication
     ) -> NSApplication.TerminateReply {
         timer?.invalidate()
         MediaKeyManager.shared.stop()
-        
+
         return .terminateNow
     }
 }

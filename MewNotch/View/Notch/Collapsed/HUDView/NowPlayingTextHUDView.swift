@@ -6,11 +6,10 @@
 import SwiftUI
 
 struct NowPlayingTextHUDView: View {
-    
     @ObservedObject var notchViewModel: NotchViewModel
-    
+
     var hudModel: HUDPropertyModel?
-    
+
     var body: some View {
         if let title = hudModel?.name, !title.isEmpty {
             VStack(
@@ -19,7 +18,7 @@ struct NowPlayingTextHUDView: View {
                 Text("Now Playing")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text(title)
                     .font(.body.bold())
                     .foregroundColor(.secondary)

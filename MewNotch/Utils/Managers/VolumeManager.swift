@@ -8,43 +8,42 @@
 import AppKit
 
 class VolumeManager {
-    
     static let shared = VolumeManager()
-    
+
     var outputAudio: AudioOutput = .sharedInstance()
     var inputAudio: AudioInput = .sharedInstance()
-    
+
     private init() {}
-    
+
     func isInputMuted() -> Bool {
-        return inputAudio.isMute
+        inputAudio.isMute
     }
-    
+
     func isOutputMuted() -> Bool {
-        return outputAudio.isMute
+        outputAudio.isMute
     }
-    
+
     func getInputDeviceName() -> String {
-        return inputAudio.deviceName
+        inputAudio.deviceName
     }
-    
+
     func getOutputDeviceName() -> String {
-        return outputAudio.deviceName
+        outputAudio.deviceName
     }
-    
+
     func getInputVolume() -> Float {
         if isInputMuted() {
             return 0.0
         }
-        
+
         return inputAudio.volume
     }
-    
+
     func getOutputVolume() -> Float {
         if isOutputMuted() {
             return 0.0
         }
-        
+
         return outputAudio.volume
     }
 }

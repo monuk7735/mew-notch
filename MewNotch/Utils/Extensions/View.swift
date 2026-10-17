@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct HiddenViewModifier: ViewModifier {
-    
     var hidden: Bool
-    
+
     func body(
         content: Content
     ) -> some View {
@@ -23,10 +22,9 @@ struct HiddenViewModifier: ViewModifier {
 }
 
 struct ConditionalLiquidGlass: ViewModifier {
-    
     var enabled: Bool
     var shape: any Shape
-    
+
     func body(content: Content) -> some View {
         if #available(macOS 26.0, *), enabled {
             content.glassEffect(
@@ -45,24 +43,24 @@ extension View {
     ) -> some View {
         modifier(HiddenViewModifier(hidden: hidden))
     }
-    
+
     func onMultiDrag(
         _ items: @escaping () -> [NSPasteboardWriting]
     ) -> some View {
-        self.overlay(DragSource(items: items))
+        overlay(DragSource(items: items))
     }
-    
+
     func glassEffect(
         when enabled: Bool,
         in shape: any Shape
     ) -> some View {
         modifier(ConditionalLiquidGlass(enabled: enabled, shape: shape))
     }
-    
+
     @ViewBuilder
-    func `if`<T: View>(
+    func `if`(
         _ enabled: Bool,
-        modifier: (Self) -> T
+        modifier: (Self) -> some View
     ) -> some View {
         if enabled {
             modifier(self)

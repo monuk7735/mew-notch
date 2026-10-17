@@ -5,23 +5,22 @@
 //  Created by Monu Kumar on 03/01/2026.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 final class NotchSettingsViewModel: ObservableObject {
-    
     @Published var screens: [NSScreen] = NSScreen.screens
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     init() {
         addListenerForScreenUpdates()
     }
-    
+
     deinit {
-        removeListenerForScreenUpdates()
+        NotificationCenter.default.removeObserver(self)
     }
-    
+
     func addListenerForScreenUpdates() {
         NotificationCenter.default.addObserver(
             self,
@@ -30,23 +29,19 @@ final class NotchSettingsViewModel: ObservableObject {
             object: nil
         )
     }
-    
-    func removeListenerForScreenUpdates() {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
+
     @objc
     func refreshScreens() {
         DispatchQueue.main.async {
             self.screens = NSScreen.screens
         }
     }
-    
+
     func refreshNotches() {
         NotchManager.shared.refreshNotches()
     }
-    
+
     func refreshNotchesAndKillWindows() {
-         NotchManager.shared.refreshNotches(killAllWindows: true)
+        NotchManager.shared.refreshNotches(killAllWindows: true)
     }
 }
