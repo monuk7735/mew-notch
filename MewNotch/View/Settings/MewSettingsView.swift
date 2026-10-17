@@ -100,11 +100,6 @@ struct MewSettingsView: View {
                 window.styleMask.insert(.closable)
                 
                 window.minSize = NSSize(width: 800, height: 500)
-
-                // Size and position are declared on the Settings scene instead
-                // (defaultSize / defaultPosition). Changing them here ran after this
-                // view appeared, which is after the window was already on screen, so
-                // the resize and the centring were both visible as a jump.
             }
         }
     }
