@@ -58,23 +58,11 @@ struct NotchView: View {
 
     @ViewBuilder
     private var floatingHUDView: some View {
-        if collapsedNotchViewModel.hasActiveContent {
-            CompactFloatingHUDView(
-                namespace: namespace,
-                notchViewModel: notchViewModel,
-                collapsedNotchViewModel: collapsedNotchViewModel
-            )
-            .glassEffect(when: notchDefaults.applyGlassEffect, in: Capsule())
-            .background {
-                if !notchDefaults.applyGlassEffect {
-                    Color.black
-                }
-            }
-            .clipShape(Capsule())
-            .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
-            .padding(.top, 8)
-            .transition(.move(edge: .top).combined(with: .opacity))
-        }
+        CompactFloatingHUDView(
+            namespace: namespace,
+            notchViewModel: notchViewModel,
+            collapsedNotchViewModel: collapsedNotchViewModel
+        )
     }
 
     private var hardwareNotchView: some View {
