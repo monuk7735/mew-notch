@@ -28,6 +28,8 @@ class CollapsedNotchViewModel: ObservableObject {
     
     @Published var lastPowerStatus: String = ""
     @Published var lastBrightness: Float = 0.0
+    @Published var lastAudioInputVolume: Float = 0.0
+    private let volumeHUDThreshold: Float = 0.04
     
     init() {
         self.startListeners()
@@ -201,12 +203,35 @@ class CollapsedNotchViewModel: ObservableObject {
             return
         }
         
+        let newVolume = VolumeManager.shared.getInputVolume()
+        
+        guard newVolume != lastAudioInputVolume,
+              abs(lastAudioInputVolume - newVolume) >= volumeHUDThreshold else {
+            return
+        }
+        
+        lastAudioInputVolume = newVolume
+        
+        if inputAudioVolumeHUD != nil {
+            withAnimation {
+                self.inputAudioVolumeHUD?.value = newVolume
+            }
+            
+            self.resetHUDTimer(&self.inputAudioVolumeHUD) {
+                withAnimation {
+                    self.inputAudioVolumeHUD = nil
+                }
+            }
+            
+            return
+        }
+        
         withAnimation {
             self.inputAudioVolumeHUD = .init(
                 lottie: nil,
                 icon: .init(systemName: "microphone.fill"),
-                name: "Input Volume",
-                value: VolumeManager.shared.getInputVolume(),
+                name: NSLocalizedString("Input Volume", comment: ""),
+                value: newVolume,
                 timer: inputAudioVolumeHUD?.timer
             )
         }
@@ -249,7 +274,7 @@ class CollapsedNotchViewModel: ObservableObject {
             self.outputAudioVolumeHUD = .init(
                 lottie: MewNotch.Lotties.speaker,
                 icon: MewNotch.Assets.iconSpeaker,
-                name: "Output Volume",
+                name: NSLocalizedString("Output Volume", comment: ""),
                 value: VolumeManager.shared.getOutputVolume(),
                 timer: outputAudioVolumeHUD?.timer
             )
