@@ -34,7 +34,7 @@ struct HUDBrightnessSettingsView: View {
                 ) {
                     Picker("", selection: ~$viewModel.defaults.style) {
                         ForEach(HUDStyle.allCases) { style in
-                            Text(style.rawValue.capitalized).tag(style)
+                            Text(style.displayName).tag(style)
                         }
                     }
                     .labelsHidden()
@@ -66,7 +66,7 @@ struct HUDBrightnessSettingsView: View {
                 
                 SettingsRow(
                     title: "Step Size",
-                    subtitle: "\(Int(viewModel.localStep * 100))%",
+                    subtitle: viewModel.localStep.localizedPercentageKey(),
                     icon: MewNotch.Assets.icChartBar,
                     color: MewNotch.Colors.stepSize
                 ) {

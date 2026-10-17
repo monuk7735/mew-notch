@@ -47,7 +47,7 @@ struct CollapsedItemsSettingsView: View {
 }
 
 struct HudTabButton: View {
-    let title: String
+    let title: LocalizedStringKey
     let icon: Image
     let tag: Int
     @Binding var selection: Int
