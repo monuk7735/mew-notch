@@ -65,6 +65,16 @@ class NotchDefaults: ObservableObject {
     }
 
     @PrimitiveUserDefault(
+        PREFIX + "YieldBrightnessToBetterDisplay",
+        defaultValue: true
+    )
+    var yieldBrightnessToBetterDisplay: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
         PREFIX + "ShownOnLockScreen",
         defaultValue: true
     )

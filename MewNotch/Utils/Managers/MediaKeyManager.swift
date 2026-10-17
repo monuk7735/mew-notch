@@ -130,11 +130,17 @@ class MediaKeyManager {
                     return true
                 }
             case nxKeytypeBrightnessUp:
+                if NotchDefaults.shared.yieldBrightnessToBetterDisplay && BetterDisplayManager.shared.isBetterDisplayRunning {
+                    return false
+                }
                 if HUDBrightnessDefaults.shared.isEnabled {
                     handleBrightness(change: Float(HUDBrightnessDefaults.shared.step))
                     return true
                 }
             case nxKeytypeBrightnessDown:
+                if NotchDefaults.shared.yieldBrightnessToBetterDisplay && BetterDisplayManager.shared.isBetterDisplayRunning {
+                    return false
+                }
                 if HUDBrightnessDefaults.shared.isEnabled {
                     handleBrightness(change: -Float(HUDBrightnessDefaults.shared.step))
                     return true
@@ -147,6 +153,9 @@ class MediaKeyManager {
             case nxKeytypeSoundUp, nxKeytypeSoundDown, nxKeytypeMute:
                 return HUDAudioOutputDefaults.shared.isEnabled
             case nxKeytypeBrightnessUp, nxKeytypeBrightnessDown:
+                if NotchDefaults.shared.yieldBrightnessToBetterDisplay && BetterDisplayManager.shared.isBetterDisplayRunning {
+                    return false
+                }
                 return HUDBrightnessDefaults.shared.isEnabled
             default:
                 break

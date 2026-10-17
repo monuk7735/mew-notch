@@ -71,6 +71,15 @@ struct BetterDisplayOSDNotification: Codable {
 class BetterDisplayManager {
     static let shared = BetterDisplayManager()
 
+    var isBetterDisplayRunning: Bool {
+        let bundleIDs = [
+            "pro.betterdisplay.BetterDisplay",
+            "me.waydabber.BetterDisplay"
+        ]
+        return !NSRunningApplication.runningApplications(withBundleIdentifier: bundleIDs[0]).isEmpty
+            || !NSRunningApplication.runningApplications(withBundleIdentifier: bundleIDs[1]).isEmpty
+    }
+
     private let notificationNames = [
         "pro.betterdisplay.BetterDisplay.osd",
         "me.waydabber.BetterDisplay.osd"
