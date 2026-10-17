@@ -126,7 +126,7 @@ struct CollapsedNotchView: View {
                     hudModel: collapsedNotchViewModel.brightnessHUD
                 )
             }
-            .padding(.horizontal, notchViewModel.isHardwareNotched ? 0 : 10)
+            .padding(.horizontal, 0)
 
             PowerHUDView(
                 notchViewModel: notchViewModel,

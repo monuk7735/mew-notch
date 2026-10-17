@@ -42,6 +42,10 @@ struct NotchView: View {
             return true
         }
 
+        if collapsedNotchViewModel.isAuxiliaryScreen {
+            return collapsedNotchViewModel.hasActiveContent
+        }
+
         return notchViewModel.isExpanded ||
             notchViewModel.isHovered ||
             notchViewModel.isDropTarget ||
@@ -107,13 +111,14 @@ struct NotchView: View {
                     }
                 }
                 .onHover {
+                    guard !collapsedNotchViewModel.isAuxiliaryScreen else { return }
                     notchViewModel.onHover(
                         $0,
                         shouldExpand: notchDefaults.expandOnHover || notchDefaults.applyGlassEffect
                     )
                 }
                 .overlay {
-                    if !notchViewModel.isHardwareNotched, !isVisible {
+                    if !notchViewModel.isHardwareNotched, !isVisible, !collapsedNotchViewModel.isAuxiliaryScreen {
                         Color.clear
                             .frame(width: 140, height: 36)
                             .contentShape(Rectangle())
@@ -128,6 +133,7 @@ struct NotchView: View {
                 .dropDestination(
                     for: URL.self,
                     action: { fileURLs, _ in
+                        guard !collapsedNotchViewModel.isAuxiliaryScreen else { return false }
                         DispatchQueue.global(qos: .utility).async {
                             guard let groupModel = ShelfFileGroupModel(
                                 urls: fileURLs
@@ -166,9 +172,10 @@ struct NotchView: View {
                         )
                     }
                 }
-                .onTapGesture(
-                    perform: notchViewModel.onTap
-                )
+                .onTapGesture {
+                    guard !collapsedNotchViewModel.isAuxiliaryScreen else { return }
+                    notchViewModel.onTap()
+                }
 
                 Spacer()
             }

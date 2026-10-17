@@ -48,8 +48,10 @@ extension CollapsedNotchViewModel {
         let iconID = osdInfo.systemIconID ?? 0
         let isBrightness = target.contains("brightness") || iconID == 1
 
-        // Brightness HUDs specifically targeted for this display are excluded from auxiliary suppression
-        if !shouldShowHUDOnThisScreen, !(isBrightness && isTargetedForThisDisplay) {
+        // Auxiliary screens only support display-targeted brightness
+        if isAuxiliaryScreen {
+            guard isBrightness && isTargetedForThisDisplay else { return }
+        } else if !shouldShowHUDOnThisScreen, !(isBrightness && isTargetedForThisDisplay) {
             return
         }
 
@@ -112,7 +114,7 @@ extension CollapsedNotchViewModel {
             if targetDisplayID != currentDisplayID {
                 return
             }
-        } else if !shouldShowHUDOnThisScreen {
+        } else if isAuxiliaryScreen || !shouldShowHUDOnThisScreen {
             return
         }
 

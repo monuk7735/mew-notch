@@ -27,14 +27,20 @@ class CollapsedNotchViewModel: ObservableObject {
     var screen: NSScreen?
 
     var hasActiveHUD: Bool {
-        outputAudioVolumeHUD != nil || outputAudioDeviceHUD != nil ||
+        if isAuxiliaryScreen {
+            return (brightnessHUD != nil && HUDBrightnessDefaults.shared.isEnabled) || lockStatusHUD != nil
+        }
+        return outputAudioVolumeHUD != nil || outputAudioDeviceHUD != nil ||
             inputAudioVolumeHUD != nil || inputAudioDeviceHUD != nil ||
             brightnessHUD != nil || powerStatusHUD != nil ||
             lockStatusHUD != nil || nowPlayingChangesHUD != nil
     }
 
     var hasActiveMedia: Bool {
-        nowPlayingMedia != nil && HUDMediaDefaults.shared.isEnabled
+        if isAuxiliaryScreen {
+            return false
+        }
+        return nowPlayingMedia != nil && HUDMediaDefaults.shared.isEnabled
     }
 
     var hasActiveContent: Bool {
@@ -169,8 +175,6 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func screenLocked(notification _: Notification) {
-        guard shouldShowHUDOnThisScreen else { return }
-
         withAnimation {
             self.lockStatusHUD = .init(
                 lottie: AppAnimation.brightness,
@@ -183,8 +187,6 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func screenUnlocked(notification _: Notification) {
-        guard shouldShowHUDOnThisScreen else { return }
-
         withAnimation {
             self.lockStatusHUD?.value = 0.0
         }
@@ -197,7 +199,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioInputDeviceChanges() {
-        if !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -219,7 +221,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioInputVolumeChanges() {
-        if !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -265,7 +267,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioOutputDeviceChanges() {
-        if !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -287,7 +289,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioOutputVolumeChanges() {
-        if !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -309,7 +311,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handlePowerStatusChanges() {
-        if !HUDPowerDefaults.shared.showTimeRemaining || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDPowerDefaults.shared.showTimeRemaining || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -345,6 +347,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func handleNowPlayingMediaChanges() {
+        if isAuxiliaryScreen { return }
+
         if !NowPlaying.shared.playing {
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + 2
