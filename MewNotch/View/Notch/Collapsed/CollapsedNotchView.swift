@@ -12,25 +12,16 @@ struct CollapsedNotchView: View {
     var namespace: Namespace.ID
     @ObservedObject var notchViewModel: NotchViewModel
 
-    @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel
+    @ObservedObject var collapsedNotchViewModel: CollapsedNotchViewModel
     @StateObject var notchDefaults = NotchDefaults.shared
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
-
-    init(
-        namespace: Namespace.ID,
-        notchViewModel: NotchViewModel
-    ) {
-        self.namespace = namespace
-        self.notchViewModel = notchViewModel
-        _collapsedNotchViewModel = StateObject(wrappedValue: CollapsedNotchViewModel(screen: notchViewModel.screen))
-    }
 
     var body: some View {
         VStack(
             spacing: 0
         ) {
             HStack(
-                spacing: 0
+                spacing: notchViewModel.isHardwareNotched ? 0 : 8
             ) {
                 MinimalHUDLeftView(
                     notchViewModel: notchViewModel,
@@ -68,7 +59,9 @@ struct CollapsedNotchView: View {
                 )
 
                 OnlyNotchView(
-                    notchSize: notchViewModel.notchSize
+                    notchSize: notchViewModel.notchSize,
+                    isHardwareNotched: notchViewModel.isHardwareNotched,
+                    hasActiveContent: collapsedNotchViewModel.hasActiveContent
                 )
 
                 NowPlayingHUDRightView(
@@ -110,6 +103,7 @@ struct CollapsedNotchView: View {
                     hudModel: collapsedNotchViewModel.brightnessHUD
                 )
             }
+            .padding(.horizontal, notchViewModel.isHardwareNotched ? 0 : 10)
 
             PowerHUDView(
                 notchViewModel: notchViewModel,

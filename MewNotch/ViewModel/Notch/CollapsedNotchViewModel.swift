@@ -26,6 +26,21 @@ class CollapsedNotchViewModel: ObservableObject {
     private let volumeHUDThreshold: Float = 0.04
     var screen: NSScreen?
 
+    var hasActiveHUD: Bool {
+        outputAudioVolumeHUD != nil || outputAudioDeviceHUD != nil ||
+            inputAudioVolumeHUD != nil || inputAudioDeviceHUD != nil ||
+            brightnessHUD != nil || powerStatusHUD != nil ||
+            lockStatusHUD != nil || nowPlayingChangesHUD != nil
+    }
+
+    var hasActiveMedia: Bool {
+        nowPlayingMedia != nil && HUDMediaDefaults.shared.isEnabled
+    }
+
+    var hasActiveContent: Bool {
+        hasActiveHUD || hasActiveMedia
+    }
+
     init(screen: NSScreen? = nil) {
         self.screen = screen
         startListeners()

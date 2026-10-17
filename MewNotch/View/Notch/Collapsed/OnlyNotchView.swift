@@ -9,15 +9,22 @@ import SwiftUI
 
 struct OnlyNotchView: View {
     var notchSize: CGSize = .zero
+    var isHardwareNotched: Bool = true
+    var hasActiveContent: Bool = false
 
     var body: some View {
-        Text(
-            ""
-        )
-        .frame(
-            width: notchSize.width,
-            height: notchSize.height
-        )
+        if isHardwareNotched {
+            Text("")
+                .frame(
+                    width: notchSize.width,
+                    height: notchSize.height
+                )
+        } else if !hasActiveContent {
+            Capsule()
+                .fill(Color.white.opacity(0.2))
+                .frame(width: 32, height: 4)
+                .frame(width: 48, height: notchSize.height)
+        }
     }
 }
 

@@ -17,6 +17,7 @@ struct NotchView: View {
 
     @StateObject var notchViewModel: NotchViewModel
     @StateObject var expandedNotchViewModel: ExpandedNotchViewModel = .init()
+    @StateObject var collapsedNotchViewModel: CollapsedNotchViewModel
 
     init(
         screen: NSScreen
@@ -26,6 +27,22 @@ struct NotchView: View {
                 screen: screen
             )
         )
+        _collapsedNotchViewModel = .init(
+            wrappedValue: .init(
+                screen: screen
+            )
+        )
+    }
+
+    var isNotchVisible: Bool {
+        if notchViewModel.isHardwareNotched {
+            return true
+        }
+
+        return notchViewModel.isExpanded ||
+            notchViewModel.isHovered ||
+            notchViewModel.isDropTarget ||
+            collapsedNotchViewModel.hasActiveContent
     }
 
     var body: some View {
@@ -34,13 +51,15 @@ struct NotchView: View {
                 Spacer()
 
                 let currentShape = notchViewModel.currentShape
+                let isVisible = isNotchVisible
 
                 ZStack(
                     alignment: .top
                 ) {
                     let collapsedNotchView = CollapsedNotchView(
                         namespace: namespace,
-                        notchViewModel: notchViewModel
+                        notchViewModel: notchViewModel,
+                        collapsedNotchViewModel: collapsedNotchViewModel
                     )
 
                     ExpandedNotchView(
@@ -79,7 +98,7 @@ struct NotchView: View {
                 .shadow(
                     color: notchViewModel.isHardwareNotched
                         ? Color.black.opacity(notchViewModel.isHovered ? 0.3 : 0)
-                        : Color.black.opacity(0.25),
+                        : (isVisible ? Color.black.opacity(0.25) : .clear),
                     radius: notchViewModel.isHardwareNotched
                         ? (notchViewModel.isHovered ? 5 : 0)
                         : (notchViewModel.isExpanded ? 16 : 8),
@@ -87,6 +106,9 @@ struct NotchView: View {
                     y: notchViewModel.isHardwareNotched ? 0 : (notchViewModel.isExpanded ? 6 : 3)
                 )
                 .padding(.top, notchViewModel.isHardwareNotched ? 0 : 8)
+                .opacity(isVisible ? 1 : 0)
+                .scaleEffect(isVisible ? 1 : 0.8, anchor: .top)
+                .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isVisible)
                 .background(
                     GeometryReader { proxy in
                         Color.clear
@@ -104,6 +126,19 @@ struct NotchView: View {
                         $0,
                         shouldExpand: notchDefaults.expandOnHover || notchDefaults.applyGlassEffect
                     )
+                }
+                .overlay {
+                    if !notchViewModel.isHardwareNotched, !isVisible {
+                        Color.clear
+                            .frame(width: 140, height: 36)
+                            .contentShape(Rectangle())
+                            .onHover {
+                                notchViewModel.onHover(
+                                    $0,
+                                    shouldExpand: notchDefaults.expandOnHover || notchDefaults.applyGlassEffect
+                                )
+                            }
+                    }
                 }
                 .dropDestination(
                     for: URL.self,
