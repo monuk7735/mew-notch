@@ -194,11 +194,11 @@ struct NotchView: View {
             }
         )
         .onPreferenceChange(NotchFramePreferenceKey.self) { frame in
+            if frame.width > 0, frame.height > 0 {
+                notchContentSize = frame.size
+            }
             if meltProgress > 0.95 || notchViewModel.isHardwareNotched {
                 notchViewModel.updateNotchFrame(frame)
-                if frame.width > 0, frame.height > 0 {
-                    notchContentSize = frame.size
-                }
             }
         }
     }

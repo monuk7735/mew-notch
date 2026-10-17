@@ -169,6 +169,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func screenLocked(notification _: Notification) {
+        guard shouldShowHUDOnThisScreen else { return }
+
         withAnimation {
             self.lockStatusHUD = .init(
                 lottie: AppAnimation.brightness,
@@ -181,6 +183,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func screenUnlocked(notification _: Notification) {
+        guard shouldShowHUDOnThisScreen else { return }
+
         withAnimation {
             self.lockStatusHUD?.value = 0.0
         }
@@ -193,7 +197,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioInputDeviceChanges() {
-        if !HUDAudioInputDefaults.shared.isEnabled {
+        if !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -215,7 +219,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioInputVolumeChanges() {
-        if !HUDAudioInputDefaults.shared.isEnabled {
+        if !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -261,7 +265,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioOutputDeviceChanges() {
-        if !HUDAudioOutputDefaults.shared.isEnabled {
+        if !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -283,7 +287,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioOutputVolumeChanges() {
-        if !HUDAudioOutputDefaults.shared.isEnabled {
+        if !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -307,7 +311,7 @@ class CollapsedNotchViewModel: ObservableObject {
     @objc private func handleBrightnessChanges(
         _ notification: NSNotification
     ) {
-        if !HUDBrightnessDefaults.shared.isEnabled {
+        if !HUDBrightnessDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -344,7 +348,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handlePowerStatusChanges() {
-        if !HUDPowerDefaults.shared.showTimeRemaining {
+        if !HUDPowerDefaults.shared.showTimeRemaining || !shouldShowHUDOnThisScreen {
             return
         }
 
@@ -404,7 +408,7 @@ class CollapsedNotchViewModel: ObservableObject {
             withAnimation {
                 self.nowPlayingMedia = nowPlayingMedia
 
-                if titleChanged, !nowPlayingMedia.title.isEmpty, HUDMediaDefaults.shared.isEnabled {
+                if titleChanged, !nowPlayingMedia.title.isEmpty, HUDMediaDefaults.shared.isEnabled, self.shouldShowHUDOnThisScreen {
                     self.nowPlayingChangesHUD = .init(
                         lottie: nil,
                         icon: AppAsset.speaker,
@@ -419,78 +423,6 @@ class CollapsedNotchViewModel: ObservableObject {
                             self.nowPlayingChangesHUD = nil
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-// MARK: - BetterDisplay OSD Handler
-
-extension CollapsedNotchViewModel {
-    @objc func handleBetterDisplayOSDNotification(_ notification: Notification) {
-        guard let osdInfo = notification.object as? BetterDisplayOSDNotification else { return }
-
-        // Display targeting:
-        // If BetterDisplay specifies a target displayID, verify against this screen's displayID.
-        if let targetDisplayID = osdInfo.displayID,
-           let currentDisplayID = screen?.displayID,
-           targetDisplayID != 0 {
-            if targetDisplayID != currentDisplayID {
-                return
-            }
-        }
-
-        let target = osdInfo.controlTarget?.lowercased() ?? ""
-        let iconID = osdInfo.systemIconID ?? 0
-
-        let rawVal = osdInfo.value ?? 0
-        let maxVal = osdInfo.maxValue ?? (rawVal > 1.0 ? 100.0 : 1.0)
-        let normalizedVal: Float = maxVal > 0 ? Float(rawVal / maxVal) : Float(rawVal)
-
-        // Handle Brightness HUD
-        if target.contains("brightness") || iconID == 1 {
-            if !HUDBrightnessDefaults.shared.isEnabled {
-                return
-            }
-
-            withAnimation {
-                self.brightnessHUD = .init(
-                    lottie: AppAnimation.brightness,
-                    icon: AppAsset.brightness,
-                    name: osdInfo.text ?? "Brightness",
-                    value: normalizedVal,
-                    timer: brightnessHUD?.timer
-                )
-            }
-
-            resetHUDTimer(&brightnessHUD) {
-                withAnimation {
-                    self.brightnessHUD = nil
-                }
-            }
-        }
-        // Handle Volume HUD
-        else if target.contains("volume") || target.contains("sound") || target.contains("mute") || iconID == 3 || iconID == 4 {
-            if !HUDAudioOutputDefaults.shared.isEnabled {
-                return
-            }
-
-            let isMuted = iconID == 4 || target.contains("mute")
-
-            withAnimation {
-                self.outputAudioVolumeHUD = .init(
-                    lottie: isMuted ? nil : AppAnimation.speaker,
-                    icon: AppAsset.speaker,
-                    name: osdInfo.text ?? (isMuted ? "Muted" : "Output Volume"),
-                    value: isMuted ? 0.0 : normalizedVal,
-                    timer: outputAudioVolumeHUD?.timer
-                )
-            }
-
-            resetHUDTimer(&outputAudioVolumeHUD) {
-                withAnimation {
-                    self.outputAudioVolumeHUD = nil
                 }
             }
         }

@@ -17,11 +17,34 @@ struct CollapsedNotchView: View {
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
 
     var body: some View {
+        Group {
+            if notchViewModel.isHardwareNotched {
+                hardwareCollapsedNotchView
+            } else {
+                CompactFloatingHUDView(
+                    namespace: namespace,
+                    notchViewModel: notchViewModel,
+                    collapsedNotchViewModel: collapsedNotchViewModel
+                )
+            }
+        }
+        .onReceive(
+            notchDefaults.objectWillChange
+        ) {
+            collapsedNotchViewModel.hideHUDs()
+
+            DispatchQueue.main.async {
+                notchViewModel.refreshNotchSize()
+            }
+        }
+    }
+
+    private var hardwareCollapsedNotchView: some View {
         VStack(
             spacing: 0
         ) {
             HStack(
-                spacing: notchViewModel.isHardwareNotched ? 0 : 8
+                spacing: 0
             ) {
                 MinimalHUDLeftView(
                     notchViewModel: notchViewModel,
@@ -170,15 +193,6 @@ struct CollapsedNotchView: View {
                 defaults: HUDAudioOutputDefaults.shared,
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
             )
-        }
-        .onReceive(
-            notchDefaults.objectWillChange
-        ) {
-            collapsedNotchViewModel.hideHUDs()
-
-            DispatchQueue.main.async {
-                notchViewModel.refreshNotchSize()
-            }
         }
     }
 }

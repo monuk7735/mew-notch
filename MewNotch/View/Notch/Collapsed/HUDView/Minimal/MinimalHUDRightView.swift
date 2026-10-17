@@ -30,10 +30,9 @@ struct MinimalHUDRightView<T: HUDDefaultsProtocol>: View {
                     )
                     .fixedSize(horizontal: true, vertical: false)
                     .font(
-                        .title2.weight(
-                            .medium
-                        )
+                        .system(size: 14, weight: .semibold, design: .rounded)
                     )
+                    .monospacedDigit()
                     .foregroundStyle(Color.white)
                 }
                 .if(!defaults.animateChanges) { view in
