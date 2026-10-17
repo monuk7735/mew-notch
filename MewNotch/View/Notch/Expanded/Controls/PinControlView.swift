@@ -13,7 +13,7 @@ struct PinControlView: View {
     var body: some View {
         NotchControlButton(
             notchViewModel: notchViewModel,
-            icon: notchViewModel.isPinned ? "pin" : "pin",
+            icon: .pin,
             isSelected: notchViewModel.isPinned
         ) {
             withAnimation {

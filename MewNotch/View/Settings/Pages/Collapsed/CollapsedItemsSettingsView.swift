@@ -13,10 +13,10 @@ struct CollapsedItemsSettingsView: View {
     var body: some View {
         VStack(spacing: 0) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4), spacing: 12) {
-                HudTabButton(title: "Audio", icon: MewNotch.Assets.icAudio, tag: 0, selection: $selectedTab)
-                HudTabButton(title: "Brightness", icon: MewNotch.Assets.icBrightnessFill, tag: 1, selection: $selectedTab)
-                HudTabButton(title: "Power", icon: MewNotch.Assets.icPower, tag: 2, selection: $selectedTab)
-                HudTabButton(title: "Media", icon: MewNotch.Assets.icMedia, tag: 3, selection: $selectedTab)
+                HudTabButton(title: "Audio", icon: .audio, tag: 0, selection: $selectedTab)
+                HudTabButton(title: "Brightness", icon: .brightnessFill, tag: 1, selection: $selectedTab)
+                HudTabButton(title: "Power", icon: .power, tag: 2, selection: $selectedTab)
+                HudTabButton(title: "Media", icon: .media, tag: 3, selection: $selectedTab)
             }
             .padding()
 
@@ -50,6 +50,20 @@ struct HudTabButton: View {
     let icon: Image
     let tag: Int
     @Binding var selection: Int
+
+    init(title: LocalizedStringKey, icon: Image, tag: Int, selection: Binding<Int>) {
+        self.title = title
+        self.icon = icon
+        self.tag = tag
+        _selection = selection
+    }
+
+    init(title: LocalizedStringKey, icon: AppIcon, tag: Int, selection: Binding<Int>) {
+        self.title = title
+        self.icon = icon.image
+        self.tag = tag
+        _selection = selection
+    }
 
     var isSelected: Bool {
         selection == tag

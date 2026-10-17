@@ -17,7 +17,7 @@ struct BashView: View {
         VStack(alignment: .leading, spacing: 4) {
             if bashDefaults.showCommand {
                 HStack {
-                    Image(systemName: "terminal.fill")
+                    AppIcon.terminalFill.image
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -41,7 +41,7 @@ struct BashView: View {
         .padding()
         .frame(width: notchViewModel.notchSize.width * bashDefaults.widthMultiplier)
         .frame(maxHeight: .infinity)
-        .background(Color.black.opacity(0.3))
+        .background(AppColor.Surface.overlay)
         .cornerRadius(12)
         .onAppear {
             runCommand()

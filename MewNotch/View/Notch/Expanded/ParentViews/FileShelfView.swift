@@ -33,7 +33,7 @@ struct FileShelfView: View {
 
             ZStack {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(white: 0.1).opacity(0.5))
+                    .fill(AppColor.Surface.darkSubtle.opacity(0.5))
 
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .stroke(
@@ -63,7 +63,7 @@ struct FileShelfView: View {
 
                 if expandedNotchViewModel.shelfFileGroups.isEmpty {
                     VStack(spacing: 8) {
-                        Image(systemName: "tray.and.arrow.down.fill")
+                        AppIcon.trayArrowDown.image
                             .font(.system(size: 24))
                             .foregroundStyle(.white.opacity(0.7))
 
@@ -75,7 +75,7 @@ struct FileShelfView: View {
 
                 if showError, let errorMessage {
                     VStack(spacing: 8) {
-                        Image(systemName: "exclamationmark.triangle.fill")
+                        AppIcon.warning.image
                             .font(.title2)
                             .foregroundStyle(.yellow)
                         Text(errorMessage)
@@ -131,7 +131,7 @@ struct AirDropView: View {
             }
         } label: {
             VStack(spacing: 6) {
-                Image(systemName: "shareplay")
+                AppIcon.shareplay.image
                     .resizable()
                     .scaledToFit()
                     .padding(.horizontal, 32)
@@ -146,7 +146,7 @@ struct AirDropView: View {
             .background {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
 
-                    .fill(Color(white: 0.15))
+                    .fill(AppColor.Surface.dark)
                     .overlay {
                         if isHovered || isTargeted {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)

@@ -32,7 +32,7 @@ struct NotchTabSwitcherView: View {
     private func tabButton(for type: ExpandedNotchViewModel.NotchViewType) -> some View {
         NotchControlButton(
             notchViewModel: notchViewModel,
-            icon: type.imageSystemName,
+            icon: type.icon,
             isSelected: expandedNotchViewModel.currentView == type,
             padding: 0
         ) {

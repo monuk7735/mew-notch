@@ -16,8 +16,8 @@ struct HUDMediaSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows media playing app with animation",
-                    icon: MewNotch.Assets.icMedia,
-                    color: MewNotch.Colors.nowPlaying
+                    icon: .media,
+                    color: AppColor.nowPlaying
                 ) {
                     Toggle("", isOn: ~$mediaDefaults.isEnabled)
                 }
@@ -29,8 +29,8 @@ struct HUDMediaSettingsView: View {
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
-                    icon: MewNotch.Assets.icVideo,
-                    color: MewNotch.Colors.video
+                    icon: .video,
+                    color: AppColor.video
                 ) {
                     Toggle("", isOn: ~$mediaDefaults.animateChanges)
                 }
@@ -43,8 +43,8 @@ struct HUDMediaSettingsView: View {
                 SettingsRow(
                     title: "Show title on change",
                     subtitle: "Shows new media name on change",
-                    icon: MewNotch.Assets.icMedia,
-                    color: MewNotch.Colors.nowPlaying
+                    icon: .media,
+                    color: AppColor.nowPlaying
                 ) {
                     Toggle("", isOn: ~$mediaDefaults.showTitleChange)
                 }
@@ -53,8 +53,8 @@ struct HUDMediaSettingsView: View {
                 SettingsRow(
                     title: "Show new title for",
                     subtitle: mediaDefaults.titleChangeTimeout.localizedSecondsKey(),
-                    icon: MewNotch.Assets.icTimer,
-                    color: MewNotch.Colors.timer
+                    icon: .timer,
+                    color: AppColor.timer
                 ) {
                     Slider(
                         value: $mediaDefaults.titleChangeTimeout,

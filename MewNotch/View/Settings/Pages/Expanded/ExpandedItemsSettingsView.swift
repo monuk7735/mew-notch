@@ -75,7 +75,7 @@ struct ExpandedItemsSettingsView: View {
                 } else {
                     ContentUnavailableView(
                         "Select an Item",
-                        systemImage: "arrow.up",
+                        systemImage: AppIcon.arrowUp.systemName,
                         description: Text("Select an item above to configure its settings.")
                     )
                 }
@@ -138,7 +138,7 @@ struct ExpandedItemTabButton: View {
                 VStack(spacing: 16) {
                     // Top: Icon
                     VStack(spacing: 12) {
-                        Image(systemName: item.imageSystemName)
+                        item.icon.image
                             .font(.system(size: 24))
                             .foregroundStyle(isSelected ? Color.primary : Color.secondary)
 
@@ -152,7 +152,7 @@ struct ExpandedItemTabButton: View {
                     HStack(spacing: 8) {
                         // Left Arrow
                         Button(action: onMoveLeft) {
-                            Image(systemName: "chevron.left")
+                            AppIcon.chevronLeft.image
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                                 .frame(width: 24, height: 24)
@@ -174,7 +174,7 @@ struct ExpandedItemTabButton: View {
 
                         // Right Arrow
                         Button(action: onMoveRight) {
-                            Image(systemName: "chevron.right")
+                            AppIcon.chevronRight.image
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                                 .frame(width: 24, height: 24)

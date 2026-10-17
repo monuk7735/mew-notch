@@ -25,7 +25,7 @@ struct ScreenLockHUDView: View {
                     Rectangle()
                         .mask {
                             LottieView(
-                                animation: MewNotch.Lotties.lock
+                                animation: AppAnimation.lock
                             )
                             .currentProgress(1 - progress)
                             .scaleEffect(1.2)

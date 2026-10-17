@@ -16,40 +16,40 @@ struct ExpandedNowPlayingSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Corner Radius",
-                    icon: MewNotch.Assets.icCornerRadius,
-                    color: MewNotch.Colors.albumArt
+                    icon: .cornerRadius,
+                    color: AppColor.albumArt
                 ) {
                     Slider(value: $nowPlayingDefaults.albumArtCornerRadius, in: 15 ... 50, step: 1)
                 }
 
                 SettingsRow(
                     title: "Show Artist",
-                    icon: MewNotch.Assets.icArtist,
-                    color: MewNotch.Colors.artist
+                    icon: .artist,
+                    color: AppColor.artist
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showArtist)
                 }
 
                 SettingsRow(
                     title: "Show Album",
-                    icon: MewNotch.Assets.icAlbumName,
-                    color: MewNotch.Colors.albumName
+                    icon: .albumName,
+                    color: AppColor.albumName
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showAlbum)
                 }
 
                 SettingsRow(
                     title: "Show App Icon",
-                    icon: MewNotch.Assets.icAppIcon,
-                    color: MewNotch.Colors.appIcon
+                    icon: .appIcon,
+                    color: AppColor.appIcon
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.showAppIcon)
                 }
 
                 SettingsRow(
                     title: "Enable Seekbar",
-                    icon: MewNotch.Assets.icSeekbar,
-                    color: MewNotch.Colors.seekbar
+                    icon: .seekbar,
+                    color: AppColor.seekbar
                 ) {
                     Toggle("", isOn: $nowPlayingDefaults.enableSeekbar)
                 }

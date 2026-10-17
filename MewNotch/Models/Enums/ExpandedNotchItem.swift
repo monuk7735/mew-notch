@@ -27,14 +27,18 @@ enum ExpandedNotchItem: String, CaseIterable, Codable, Identifiable {
         }
     }
 
-    var imageSystemName: String {
+    var icon: AppIcon {
         switch self {
         case .mirror:
-            "video.fill"
+            .video
         case .nowPlaying:
-            "music.note"
+            .media
         case .bash:
-            "terminal"
+            .terminal
         }
+    }
+
+    var imageSystemName: String {
+        icon.systemName
     }
 }

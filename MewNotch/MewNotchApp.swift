@@ -57,7 +57,7 @@ struct MewNotchApp: App {
                 NotchOptionsView()
             },
             label: {
-                MewNotch.Assets.iconMenuBar
+                AppAsset.menuBarIcon
                     .renderingMode(.template)
             }
         )

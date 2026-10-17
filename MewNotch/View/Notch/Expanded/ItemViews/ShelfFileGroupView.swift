@@ -34,7 +34,7 @@ struct ShelfFileGroupView: View {
             .frame(width: 80, height: 80)
             .background {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(white: 0.2))
+                    .fill(AppColor.Surface.darkElevated)
                     .overlay {
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .stroke(.white.opacity(0.1), lineWidth: 1)
@@ -48,11 +48,11 @@ struct ShelfFileGroupView: View {
                 Button {
                     onDelete()
                 } label: {
-                    Image(systemName: "xmark")
+                    AppIcon.close.image
                         .font(.system(size: 8, weight: .bold))
                         .foregroundStyle(.white)
                         .padding(6)
-                        .background(Circle().fill(Color.red.opacity(0.9)))
+                        .background(Circle().fill(AppColor.Interactive.destructive))
                 }
                 .buttonStyle(.plain)
                 .offset(x: 4, y: -4)

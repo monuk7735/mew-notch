@@ -249,7 +249,7 @@ struct NowPlayingDetailView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: nowPlayingDefaults.albumArtCornerRadius)
                     .fill(Color.gray.opacity(0.3))
-                Image(systemName: "music.note")
+                AppIcon.media.image
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40, height: 40)

@@ -16,13 +16,17 @@ class ExpandedNotchViewModel: ObservableObject {
         case home = "Home"
         case shelf = "Shelf"
 
-        var imageSystemName: String {
+        var icon: AppIcon {
             switch self {
             case .home:
-                "house"
+                .home
             case .shelf:
-                "folder"
+                .folder
             }
+        }
+
+        var imageSystemName: String {
+            icon.systemName
         }
     }
 

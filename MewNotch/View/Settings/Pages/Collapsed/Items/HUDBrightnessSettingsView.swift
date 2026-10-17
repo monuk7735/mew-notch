@@ -16,8 +16,8 @@ struct HUDBrightnessSettingsView: View {
                 SettingsRow(
                     title: "Enabled",
                     subtitle: "Shows brightness changes",
-                    icon: MewNotch.Assets.icBrightnessFill,
-                    color: MewNotch.Colors.brightness
+                    icon: .brightnessFill,
+                    color: AppColor.brightness
                 ) {
                     Toggle("", isOn: ~$viewModel.defaults.isEnabled)
                 }
@@ -28,8 +28,8 @@ struct HUDBrightnessSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Style",
-                    icon: MewNotch.Assets.icPaintbrush,
-                    color: MewNotch.Colors.style
+                    icon: .paintbrush,
+                    color: AppColor.style
                 ) {
                     Picker("", selection: ~$viewModel.defaults.style) {
                         ForEach(HUDStyle.allCases) { style in
@@ -43,8 +43,8 @@ struct HUDBrightnessSettingsView: View {
                 SettingsRow(
                     title: "Animated",
                     subtitle: "Animate value changes",
-                    icon: MewNotch.Assets.icVideo,
-                    color: MewNotch.Colors.video
+                    icon: .video,
+                    color: AppColor.video
                 ) {
                     Toggle("", isOn: $viewModel.defaults.animateChanges)
                 }
@@ -56,8 +56,8 @@ struct HUDBrightnessSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Show Auto Brightness Changes",
-                    icon: MewNotch.Assets.icBoltBadgeAutomatic,
-                    color: MewNotch.Colors.autoBrightness
+                    icon: .boltBadgeAutomatic,
+                    color: AppColor.autoBrightness
                 ) {
                     Toggle("", isOn: ~$viewModel.defaults.showAutoBrightnessChanges)
                 }
@@ -66,8 +66,8 @@ struct HUDBrightnessSettingsView: View {
                 SettingsRow(
                     title: "Step Size",
                     subtitle: viewModel.localStep.localizedPercentageKey(),
-                    icon: MewNotch.Assets.icChartBar,
-                    color: MewNotch.Colors.stepSize
+                    icon: .chartBar,
+                    color: AppColor.stepSize
                 ) {
                     Slider(
                         value: $viewModel.localStep,
