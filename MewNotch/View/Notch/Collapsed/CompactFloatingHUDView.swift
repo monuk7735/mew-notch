@@ -89,22 +89,29 @@ struct CompactLockHUDView: View {
     @State private var progress: CGFloat = 0
 
     var body: some View {
-        TimelineView(.animation) { _ in
-            Rectangle()
-                .fill(Color.white)
-                .mask {
-                    LottieView(
-                        animation: AppAnimation.lock
+        HStack(spacing: 8) {
+            TimelineView(.animation) { _ in
+                Rectangle()
+                    .fill(Color.white)
+                    .mask {
+                        LottieView(
+                            animation: AppAnimation.lock
+                        )
+                        .currentProgress(1 - progress)
+                        .scaleEffect(1.2)
+                    }
+                    .frame(
+                        width: 16,
+                        height: 16
                     )
-                    .currentProgress(1 - progress)
-                    .scaleEffect(1.2)
-                }
-                .frame(
-                    width: notchViewModel.notchSize.height * 0.65,
-                    height: notchViewModel.notchSize.height * 0.65
-                )
+            }
+
+            Text(hud.name)
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.white)
+                .fixedSize(horizontal: true, vertical: false)
         }
-        .padding(.horizontal, 8)
+        .padding(.horizontal, 10)
         .onAppear {
             progress = CGFloat(hud.value)
         }
