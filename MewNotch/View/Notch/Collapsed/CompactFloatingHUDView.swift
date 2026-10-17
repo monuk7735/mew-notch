@@ -113,21 +113,19 @@ struct CompactLockHUDView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            TimelineView(.animation) { _ in
-                Rectangle()
-                    .fill(Color.white)
-                    .mask {
-                        LottieView(
-                            animation: AppAnimation.lock
-                        )
-                        .currentProgress(1 - progress)
-                        .scaleEffect(1.2)
-                    }
-                    .frame(
-                        width: 16,
-                        height: 16
+            Rectangle()
+                .fill(Color.white)
+                .mask {
+                    LottieView(
+                        animation: AppAnimation.lock
                     )
-            }
+                    .currentProgress(1 - progress)
+                    .scaleEffect(1.2)
+                }
+                .frame(
+                    width: 16,
+                    height: 16
+                )
 
             Text(hud.name)
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
