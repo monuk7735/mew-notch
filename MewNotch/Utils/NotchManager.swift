@@ -17,7 +17,20 @@ class NotchManager {
     var lockScreenWindows: [NSScreen: NSWindow] = [:]
 
     private var monitorTask: Task<Void, Never>?
-    private(set) var isScreenLocked: Bool = false
+    private var internalIsScreenLocked: Bool = false
+
+    var isScreenLocked: Bool {
+        get {
+            if let sessionDict = CGSessionCopyCurrentDictionary() as? [String: Any],
+               let isLocked = sessionDict["CGSSessionScreenIsLocked"] as? Bool {
+                return isLocked
+            }
+            return internalIsScreenLocked
+        }
+        set {
+            internalIsScreenLocked = newValue
+        }
+    }
 
     private init() {
         if let sessionDict = CGSessionCopyCurrentDictionary() as? [String: Any],

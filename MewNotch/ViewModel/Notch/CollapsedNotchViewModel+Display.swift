@@ -77,7 +77,9 @@ extension CollapsedNotchViewModel {
 
         // Handle Brightness HUD
         if isBrightness {
-            guard HUDBrightnessDefaults.shared.isEnabled else { return }
+            guard HUDBrightnessDefaults.shared.isEnabled,
+                  !isCurrentlyLocked || NotchDefaults.shared.lockScreenShowBrightnessHUD
+            else { return }
 
             withAnimation {
                 self.brightnessHUD = .init(
@@ -95,7 +97,9 @@ extension CollapsedNotchViewModel {
                 }
             }
         } else if target.contains("volume") || target.contains("sound") || target.contains("mute") || iconID == 3 || iconID == 4 {
-            guard HUDAudioOutputDefaults.shared.isEnabled else { return }
+            guard HUDAudioOutputDefaults.shared.isEnabled,
+                  !isCurrentlyLocked || NotchDefaults.shared.lockScreenShowAudioOutputHUD
+            else { return }
 
             let isMuted = iconID == 4 || target.contains("mute")
 
@@ -158,6 +162,51 @@ extension CollapsedNotchViewModel {
         resetHUDTimer(&brightnessHUD) {
             withAnimation {
                 self.brightnessHUD = nil
+            }
+        }
+    }
+
+    @objc func screenLocked(notification _: Notification) {
+        if !NotchDefaults.shared.lockScreenShowBrightnessHUD {
+            brightnessHUD = nil
+        }
+        if !NotchDefaults.shared.lockScreenShowAudioOutputHUD {
+            outputAudioVolumeHUD = nil
+            outputAudioDeviceHUD = nil
+        }
+        if !NotchDefaults.shared.lockScreenShowAudioInputHUD {
+            inputAudioVolumeHUD = nil
+            inputAudioDeviceHUD = nil
+        }
+        if !NotchDefaults.shared.lockScreenShowPowerHUD {
+            powerStatusHUD = nil
+        }
+        if !NotchDefaults.shared.lockScreenShowMediaHUD {
+            nowPlayingChangesHUD = nil
+        }
+
+        guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
+        withAnimation {
+            self.lockStatusHUD = .init(
+                lottie: AppAnimation.brightness,
+                icon: AppAsset.speaker,
+                name: "Screen Locked",
+                value: 1.0,
+                timer: lockStatusHUD?.timer
+            )
+        }
+    }
+
+    @objc func screenUnlocked(notification _: Notification) {
+        guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
+        withAnimation {
+            self.lockStatusHUD?.name = "Screen Unlocked"
+            self.lockStatusHUD?.value = 0.0
+        }
+
+        resetHUDTimer(&lockStatusHUD) {
+            withAnimation {
+                self.lockStatusHUD = nil
             }
         }
     }

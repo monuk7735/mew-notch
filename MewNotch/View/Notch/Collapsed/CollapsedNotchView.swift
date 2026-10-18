@@ -41,17 +41,26 @@ struct CollapsedNotchView: View {
                     defaults: HUDBrightnessDefaults.shared,
                     hudModel: collapsedNotchViewModel.brightnessHUD
                 )
+                .hide(
+                    when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowBrightnessHUD
+                )
 
                 MinimalHUDLeftView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioInputDefaults.shared,
                     hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
                 )
+                .hide(
+                    when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioInputHUD
+                )
 
                 MinimalHUDLeftView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioOutputDefaults.shared,
                     hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
+                )
+                .hide(
+                    when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioOutputHUD
                 )
 
                 ScreenLockHUDView(
@@ -104,17 +113,26 @@ struct CollapsedNotchView: View {
                     defaults: HUDAudioOutputDefaults.shared,
                     hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
                 )
+                .hide(
+                    when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioOutputHUD
+                )
 
                 MinimalHUDRightView(
                     notchViewModel: notchViewModel,
                     defaults: HUDAudioInputDefaults.shared,
                     hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
                 )
+                .hide(
+                    when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioInputHUD
+                )
 
                 MinimalHUDRightView(
                     notchViewModel: notchViewModel,
                     defaults: HUDBrightnessDefaults.shared,
                     hudModel: collapsedNotchViewModel.brightnessHUD
+                )
+                .hide(
+                    when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowBrightnessHUD
                 )
             }
             .padding(.horizontal, 0)
@@ -124,17 +142,26 @@ struct CollapsedNotchView: View {
                 defaults: HUDPowerDefaults.shared,
                 hudModel: collapsedNotchViewModel.powerStatusHUD
             )
+            .hide(
+                when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowPowerHUD
+            )
 
             AudioDeviceHUDView(
                 notchViewModel: notchViewModel,
                 deviceType: .input,
                 hudModel: collapsedNotchViewModel.inputAudioDeviceHUD
             )
+            .hide(
+                when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioInputHUD
+            )
 
             AudioDeviceHUDView(
                 notchViewModel: notchViewModel,
                 deviceType: .output,
                 hudModel: collapsedNotchViewModel.outputAudioDeviceHUD
+            )
+            .hide(
+                when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioOutputHUD
             )
 
             NowPlayingTextHUDView(
@@ -152,17 +179,26 @@ struct CollapsedNotchView: View {
                 defaults: HUDBrightnessDefaults.shared,
                 hudModel: collapsedNotchViewModel.brightnessHUD
             )
+            .hide(
+                when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowBrightnessHUD
+            )
 
             ProgressHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDAudioInputDefaults.shared,
                 hudModel: collapsedNotchViewModel.inputAudioVolumeHUD
             )
+            .hide(
+                when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioInputHUD
+            )
 
             ProgressHUDView(
                 notchViewModel: notchViewModel,
                 defaults: HUDAudioOutputDefaults.shared,
                 hudModel: collapsedNotchViewModel.outputAudioVolumeHUD
+            )
+            .hide(
+                when: collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowAudioOutputHUD
             )
         }
     }
