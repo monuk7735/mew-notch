@@ -3,12 +3,12 @@
     <channel>
         <title>MewNotch</title>
         <item>
-            <title>2.3.0</title>
-            <pubDate>Sun, 18 Oct 2026 00:34:50 +0000</pubDate>
-            <sparkle:version>230</sparkle:version>
-            <sparkle:shortVersionString>2.3.0</sparkle:shortVersionString>
+            <title>2.3.1</title>
+            <pubDate>Sun, 18 Oct 2026 22:22:45 +0000</pubDate>
+            <sparkle:version>231</sparkle:version>
+            <sparkle:shortVersionString>2.3.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/monuk7735/mew-notch/releases/download/2.3.0/MewNotch-2.3.0.dmg" length="6490143" type="application/octet-stream" sparkle:edSignature="I6fxgJhSaLE/rOiUlijIljmjzjxMudi5rmCkBK4eM1SIwOJwLqPPQfhZqIiqlp1iUDKOTNh0ME06p+wKL8BfAw=="/>
+            <enclosure url="https://github.com/monuk7735/mew-notch/releases/download/2.3.1/MewNotch-2.3.1.dmg" length="6640315" type="application/octet-stream" sparkle:edSignature="gHuc10UBOMsFp3BN7iIAimkxtER/YSw9BiYGzzB2geOChf4TseHcu32GRTA9fPM6LfAmE+0l7F1upIm2DcCOCw=="/>
         </item>
     </channel>
 </rss>
