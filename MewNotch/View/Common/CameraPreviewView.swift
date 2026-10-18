@@ -57,7 +57,7 @@ struct CameraPreviewView: NSViewRepresentable {
                 guard let self else { return }
 
                 session.beginConfiguration()
-                session.sessionPreset = .high
+                session.sessionPreset = .medium
 
                 let discoverySession = AVCaptureDevice.DiscoverySession(
                     deviceTypes: [.builtInWideAngleCamera, .external],

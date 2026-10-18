@@ -119,26 +119,20 @@ struct NowPlayingDetailView: View {
 
     private var mediaTitlesView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            MarqueeTextView(
-                text: nowPlayingModel.title,
-                font: NSFont.preferredFont(forTextStyle: .headline),
-                leftFade: 12,
-                rightFade: 12,
-                startDelay: 2,
-                alignment: .leading
-            )
+            Text(nowPlayingModel.title)
+                .font(.headline)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .help(nowPlayingModel.title)
 
             let subtitle = subtitleText
             if !subtitle.isEmpty {
-                MarqueeTextView(
-                    text: subtitle,
-                    font: NSFont.preferredFont(forTextStyle: .subheadline),
-                    leftFade: 12,
-                    rightFade: 12,
-                    startDelay: 2,
-                    alignment: .leading
-                )
-                .foregroundStyle(.secondary)
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .help(subtitle)
             }
         }
         .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)

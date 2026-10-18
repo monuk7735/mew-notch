@@ -26,6 +26,7 @@ struct NowPlayingHUDRightView: View {
                 LottieView(
                     animation: AppAnimation.visualizer
                 )
+                .configuration(.init(renderingEngine: .coreAnimation))
                 .animationSpeed(0.2)
                 .playbackMode(
                     nowPlayingModel.isPlaying

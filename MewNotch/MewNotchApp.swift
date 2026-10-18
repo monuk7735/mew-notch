@@ -6,7 +6,6 @@
 //
 
 import Sparkle
-import SwiftData
 import SwiftUI
 
 @main
@@ -21,26 +20,6 @@ struct MewNotchApp: App {
     @ObservedObject private var appDefaults = AppDefaults.shared
 
     @State private var isMenuShown: Bool = true
-
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([])
-
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false
-        )
-
-        do {
-            return try ModelContainer(
-                for: schema,
-                configurations: [modelConfiguration]
-            )
-        } catch {
-            fatalError(
-                "Could not create ModelContainer: \(error)"
-            )
-        }
-    }()
 
     init() {
         _isMenuShown = .init(
@@ -71,7 +50,6 @@ struct MewNotchApp: App {
 
         Settings {
             MewSettingsView()
-                .modelContainer(sharedModelContainer)
         }
         .windowResizability(.contentSize)
         .defaultSize(width: 800, height: 500)
