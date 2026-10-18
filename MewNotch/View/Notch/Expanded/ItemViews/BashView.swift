@@ -15,19 +15,30 @@ struct BashView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if bashDefaults.showCommand {
-                HStack {
+            if bashDefaults.headerStyle != .none {
+                HStack(spacing: 6) {
+                    if bashDefaults.textAlignment != .leading {
+                        Spacer()
+                    }
+
                     AppIcon.terminalFill.image
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.secondary)
 
-                    Text(bashDefaults.command)
+                    let headerText = bashDefaults.headerStyle == .title
+                        ? (bashDefaults.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Bash" : bashDefaults.title)
+                        : bashDefaults.command
+
+                    Text(headerText)
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .fontWeight(bashDefaults.headerStyle == .title ? .medium : .regular)
+                        .foregroundStyle(Color.secondary)
                         .lineLimit(1)
                         .truncationMode(.tail)
 
-                    Spacer()
+                    if bashDefaults.textAlignment != .trailing {
+                        Spacer()
+                    }
                 }
                 .padding(.bottom, 2)
             }
@@ -35,7 +46,8 @@ struct BashView: View {
             ScrollView {
                 Text(output)
                     .font(.system(.caption, design: .monospaced))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(bashDefaults.textAlignment.textAlignment)
+                    .frame(maxWidth: .infinity, alignment: bashDefaults.textAlignment.frameAlignment)
             }
         }
         .padding()
@@ -43,6 +55,21 @@ struct BashView: View {
         .frame(maxHeight: .infinity)
         .background(AppColor.Surface.overlay)
         .cornerRadius(12)
+        .contextMenu {
+            Button {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(output, forType: .string)
+            } label: {
+                Label("Copy Output", systemImage: "doc.on.doc")
+            }
+
+            Button {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(bashDefaults.command, forType: .string)
+            } label: {
+                Label("Copy Command", systemImage: "terminal")
+            }
+        }
         .onAppear {
             runCommand()
             startTimer()
@@ -78,26 +105,57 @@ struct BashView: View {
     }
 
     private func runCommand() {
-        let task = Process()
-        let pipe = Pipe()
+        let commandToRun = bashDefaults.command
 
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", bashDefaults.command]
-        task.launchPath = "/bin/bash"
+        DispatchQueue.global(qos: .userInitiated).async {
+            let task = Process()
+            let pipe = Pipe()
 
-        do {
-            try task.run()
-
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            if let outputString = String(data: data, encoding: .utf8) {
-                DispatchQueue.main.async {
-                    output = outputString.trimmingCharacters(in: .whitespacesAndNewlines)
+            var environment = ProcessInfo.processInfo.environment
+            let userHome = NSHomeDirectory()
+            let paths = [
+                "/opt/homebrew/bin",
+                "/opt/homebrew/sbin",
+                "/usr/local/bin",
+                "/usr/local/sbin",
+                "\(userHome)/.local/bin",
+                "/usr/bin",
+                "/bin",
+                "/usr/sbin",
+                "/sbin"
+            ]
+            let currentPath = environment["PATH"] ?? ""
+            let combinedPath = (paths + currentPath.split(separator: ":").map(String.init))
+                .reduce(into: [String]()) { result, path in
+                    if !result.contains(path) {
+                        result.append(path)
+                    }
                 }
-            }
-        } catch {
-            DispatchQueue.main.async {
-                output = "Error: \(error.localizedDescription)"
+                .joined(separator: ":")
+            environment["PATH"] = combinedPath
+            environment["HOME"] = userHome
+            task.environment = environment
+
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.arguments = ["-c", commandToRun]
+            task.launchPath = "/bin/bash"
+
+            do {
+                try task.run()
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                task.waitUntilExit()
+
+                let exitStatus = task.terminationStatus
+                let outputString = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+                DispatchQueue.main.async {
+                    output = outputString.isEmpty ? (exitStatus != 0 ? "Exited with code \(exitStatus)" : "No Output") : outputString
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    output = "Error: \(error.localizedDescription)"
+                }
             }
         }
     }

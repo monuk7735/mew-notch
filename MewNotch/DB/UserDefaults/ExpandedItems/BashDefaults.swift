@@ -12,7 +12,43 @@ class BashDefaults: ObservableObject {
 
     private static var PREFIX: String = "Bash_"
 
-    private init() {}
+    private init() {
+        if UserDefaults.standard.object(forKey: Self.PREFIX + "HeaderStyle") == nil,
+           let legacyShowCommand = UserDefaults.standard.object(forKey: Self.PREFIX + "ShowCommand") as? Bool {
+            headerStyle = legacyShowCommand ? .command : .none
+            UserDefaults.standard.removeObject(forKey: Self.PREFIX + "ShowCommand")
+        }
+    }
+
+    @CodableUserDefault(
+        PREFIX + "Title",
+        defaultValue: "Bash"
+    )
+    var title: String {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @CodableUserDefault(
+        PREFIX + "HeaderStyle",
+        defaultValue: BashHeaderStyle.title
+    )
+    var headerStyle: BashHeaderStyle {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @CodableUserDefault(
+        PREFIX + "TextAlignment",
+        defaultValue: BashTextAlignment.leading
+    )
+    var textAlignment: BashTextAlignment {
+        didSet {
+            objectWillChange.send()
+        }
+    }
 
     @CodableUserDefault(
         PREFIX + "Command",
@@ -54,13 +90,8 @@ class BashDefaults: ObservableObject {
         }
     }
 
-    @PrimitiveUserDefault(
-        PREFIX + "ShowCommand",
-        defaultValue: true
-    )
     var showCommand: Bool {
-        didSet {
-            objectWillChange.send()
-        }
+        get { headerStyle != .none }
+        set { headerStyle = newValue ? .command : .none }
     }
 }
