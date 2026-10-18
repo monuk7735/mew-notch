@@ -9,7 +9,7 @@ DERIVED_DATA = ".build/DerivedData"
 
 [tasks.resolve]
 description = "Resolve Swift Package dependencies"
-run = "xcodebuild -resolvePackageDependencies -project $PROJECT -derivedDataPath $DERIVED_DATA"
+run = "xcodebuild -resolvePackageDependencies -project $PROJECT -scheme $SCHEME -derivedDataPath $DERIVED_DATA"
 
 [tasks.build]
 description = "Build MewNotch for macOS"
