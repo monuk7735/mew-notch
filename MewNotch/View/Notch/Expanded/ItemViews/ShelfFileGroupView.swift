@@ -22,6 +22,10 @@ struct ShelfFileGroupView: View {
     @State private var localClickMonitor: Any?
     @State private var globalClickMonitor: Any?
 
+    private var currentWindow: NSWindow? {
+        NotchManager.shared.windows[notchViewModel.screen]
+    }
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack(spacing: 4) {
@@ -103,7 +107,15 @@ struct ShelfFileGroupView: View {
                 commitRename()
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { notification in
+            guard isRenaming else { return }
+            if let resigningWindow = notification.object as? NSWindow,
+               let window = currentWindow,
+               resigningWindow === window {
+                commitRename()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in
             if isRenaming {
                 commitRename()
             }
@@ -222,10 +234,20 @@ struct ShelfFileGroupView: View {
         withAnimation(.easeInOut(duration: 0.15)) {
             isRenaming = true
         }
+
+        NSRunningApplication.current.activate(options: [.activateAllWindows])
+        currentWindow?.makeKey()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            currentWindow?.makeKey()
             isFieldFocused = true
+            setupClickMonitors()
+            DispatchQueue.main.async {
+                if let textView = currentWindow?.firstResponder as? NSTextView {
+                    textView.selectAll(nil)
+                }
+            }
         }
-        setupClickMonitors()
     }
 
     private func commitRename() {
@@ -238,6 +260,8 @@ struct ShelfFileGroupView: View {
         withAnimation(.easeInOut(duration: 0.15)) {
             isRenaming = false
         }
+        currentWindow?.resignKey()
+        NSApp.deactivate()
         if !notchViewModel.isHovered, !notchViewModel.isPinned {
             notchViewModel.collapse()
         }
@@ -249,6 +273,8 @@ struct ShelfFileGroupView: View {
         withAnimation(.easeInOut(duration: 0.15)) {
             isRenaming = false
         }
+        currentWindow?.resignKey()
+        NSApp.deactivate()
         if !notchViewModel.isHovered, !notchViewModel.isPinned {
             notchViewModel.collapse()
         }
@@ -270,17 +296,15 @@ struct ShelfFileGroupView: View {
         localClickMonitor = NSEvent.addLocalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown]
         ) { event in
-            if isRenaming {
-                if let window = event.window,
-                   let firstResponder = window.firstResponder as? NSView {
-                    let clickPoint = event.locationInWindow
-                    let pointInResponder = firstResponder.convert(clickPoint, from: nil)
-                    if !firstResponder.bounds.insetBy(dx: -4, dy: -4).contains(pointInResponder) {
-                        DispatchQueue.main.async {
-                            commitRename()
-                        }
-                    }
-                } else {
+            if isRenaming,
+               let eventWindow = event.window,
+               let window = currentWindow,
+               eventWindow === window,
+               let firstResponder = window.firstResponder as? NSView,
+               firstResponder is NSTextView {
+                let clickPoint = event.locationInWindow
+                let pointInResponder = firstResponder.convert(clickPoint, from: nil)
+                if !firstResponder.bounds.insetBy(dx: -4, dy: -4).contains(pointInResponder) {
                     DispatchQueue.main.async {
                         commitRename()
                     }
