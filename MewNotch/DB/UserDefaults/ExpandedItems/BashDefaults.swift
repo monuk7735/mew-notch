@@ -13,11 +13,10 @@ class BashDefaults: ObservableObject {
     private static var PREFIX: String = "Bash_"
 
     private init() {
-        if UserDefaults.standard.object(forKey: Self.PREFIX + "HeaderStyle") == nil {
-            if let legacyShowCommand = UserDefaults.standard.object(forKey: Self.PREFIX + "ShowCommand") as? Bool {
-                headerStyle = legacyShowCommand ? .command : .none
-                UserDefaults.standard.removeObject(forKey: Self.PREFIX + "ShowCommand")
-            }
+        if UserDefaults.standard.object(forKey: Self.PREFIX + "HeaderStyle") == nil,
+           let legacyShowCommand = UserDefaults.standard.object(forKey: Self.PREFIX + "ShowCommand") as? Bool {
+            headerStyle = legacyShowCommand ? .command : .none
+            UserDefaults.standard.removeObject(forKey: Self.PREFIX + "ShowCommand")
         }
     }
 
