@@ -121,7 +121,8 @@ class NotchManager {
     private var hideWorkItems: [NSWindow: DispatchWorkItem] = [:]
 
     func showAuxiliaryWindow(for screen: NSScreen, isLockScreen: Bool = false) {
-        guard !NotchUtils.shared.hasNotch(screen: screen),
+        guard !isLockScreen || notchDefaults.shownOnLockScreen,
+              !NotchUtils.shared.hasNotch(screen: screen),
               let panel = isLockScreen ? lockScreenWindows[screen] : windows[screen] else { return }
         hideWorkItems[panel]?.cancel()
         hideWorkItems.removeValue(forKey: panel)

@@ -15,7 +15,7 @@ struct LockScreenSettingsView: View {
             Section {
                 SettingsRow(
                     title: "Show on Lock Screen",
-                    subtitle: "Displays the notch on the lock screen",
+                    subtitle: "Displays the notch on the lock screen for all enabled displays",
                     icon: .lock,
                     color: AppColor.lock
                 ) {
