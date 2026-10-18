@@ -139,18 +139,21 @@ struct SettingsRow<Content: View>: View {
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
                     .lineLimit(nil)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let subtitle {
                     Text(subtitle)
                         .font(.body)
                         .foregroundColor(.secondary)
                         .lineLimit(nil)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-
-            Spacer()
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             content
+                .labelsHidden()
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 8)
