@@ -30,24 +30,6 @@ struct LockScreenSettingsView: View {
 
             Section {
                 SettingsRow(
-                    title: "Audio Output",
-                    subtitle: "Volume and output device changes",
-                    icon: .audio,
-                    color: AppColor.audio
-                ) {
-                    Toggle("", isOn: $notchDefaults.lockScreenShowAudioOutputHUD)
-                }
-
-                SettingsRow(
-                    title: "Audio Input",
-                    subtitle: "Microphone and input device changes",
-                    icon: .microphone,
-                    color: AppColor.audio
-                ) {
-                    Toggle("", isOn: $notchDefaults.lockScreenShowAudioInputHUD)
-                }
-
-                SettingsRow(
                     title: "Brightness",
                     subtitle: "Display brightness changes",
                     icon: .brightnessFill,
@@ -57,12 +39,12 @@ struct LockScreenSettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "Power",
-                    subtitle: "Battery level and charging status",
-                    icon: .power,
-                    color: AppColor.power
+                    title: "Audio Output",
+                    subtitle: "Volume and output device changes",
+                    icon: .audio,
+                    color: AppColor.audio
                 ) {
-                    Toggle("", isOn: $notchDefaults.lockScreenShowPowerHUD)
+                    Toggle("", isOn: $notchDefaults.lockScreenShowAudioOutputHUD)
                 }
 
                 SettingsRow(
@@ -75,12 +57,30 @@ struct LockScreenSettingsView: View {
                 }
 
                 SettingsRow(
+                    title: "Power",
+                    subtitle: "Battery level and charging status",
+                    icon: .power,
+                    color: AppColor.power
+                ) {
+                    Toggle("", isOn: $notchDefaults.lockScreenShowPowerHUD)
+                }
+
+                SettingsRow(
                     title: "Lock Status Alerts",
                     subtitle: "Screen locked and unlocked notifications",
                     icon: .lock,
                     color: AppColor.lock
                 ) {
                     Toggle("", isOn: $notchDefaults.lockScreenShowLockStatusHUD)
+                }
+
+                SettingsRow(
+                    title: "Audio Input",
+                    subtitle: "Microphone and input device changes",
+                    icon: .microphone,
+                    color: AppColor.audio
+                ) {
+                    Toggle("", isOn: $notchDefaults.lockScreenShowAudioInputHUD)
                 }
             } header: {
                 Text("HUD Updates")
