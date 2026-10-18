@@ -58,6 +58,9 @@ struct CollapsedNotchView: View {
                     notchViewModel: notchViewModel,
                     hudModel: collapsedNotchViewModel.lockStatusHUD
                 )
+                .hide(
+                    when: !notchDefaults.lockScreenShowLockStatusHUD
+                )
 
                 NowPlayingHUDLeftView(
                     namespace: namespace,
@@ -65,7 +68,7 @@ struct CollapsedNotchView: View {
                     nowPlayingModel: collapsedNotchViewModel.nowPlayingMedia
                 )
                 .hide(
-                    when: !mediaDefaults.isEnabled
+                    when: !mediaDefaults.isEnabled || (collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowMediaHUD)
                 )
                 .hide(
                     when: notchViewModel.isExpanded
@@ -80,7 +83,7 @@ struct CollapsedNotchView: View {
                     nowPlayingModel: collapsedNotchViewModel.nowPlayingMedia
                 )
                 .hide(
-                    when: !mediaDefaults.isEnabled
+                    when: !mediaDefaults.isEnabled || (collapsedNotchViewModel.isCurrentlyLocked && !notchDefaults.lockScreenShowMediaHUD)
                 )
                 .hide(
                     when: notchViewModel.isExpanded

@@ -25,10 +25,28 @@ class CollapsedNotchViewModel: ObservableObject {
     @Published var lastAudioInputVolume: Float = 0.0
     private let volumeHUDThreshold: Float = 0.04
     var screen: NSScreen?
+    var isLockScreen: Bool = false
+
+    var isCurrentlyLocked: Bool {
+        isLockScreen || NotchManager.shared.isScreenLocked
+    }
 
     var hasActiveHUD: Bool {
         if isAuxiliaryScreen {
-            return (brightnessHUD != nil && HUDBrightnessDefaults.shared.isEnabled) || lockStatusHUD != nil
+            let showBrightness = brightnessHUD != nil && HUDBrightnessDefaults.shared.isEnabled &&
+                (!isCurrentlyLocked || NotchDefaults.shared.lockScreenShowBrightnessHUD)
+            let showLockStatus = lockStatusHUD != nil &&
+                (!isCurrentlyLocked || NotchDefaults.shared.lockScreenShowLockStatusHUD)
+            return showBrightness || showLockStatus
+        }
+        if isCurrentlyLocked {
+            let audioOut = (outputAudioVolumeHUD != nil || outputAudioDeviceHUD != nil) && NotchDefaults.shared.lockScreenShowAudioOutputHUD
+            let audioIn = (inputAudioVolumeHUD != nil || inputAudioDeviceHUD != nil) && NotchDefaults.shared.lockScreenShowAudioInputHUD
+            let brightness = brightnessHUD != nil && NotchDefaults.shared.lockScreenShowBrightnessHUD
+            let power = powerStatusHUD != nil && NotchDefaults.shared.lockScreenShowPowerHUD
+            let lockStatus = lockStatusHUD != nil && NotchDefaults.shared.lockScreenShowLockStatusHUD
+            let mediaChanges = nowPlayingChangesHUD != nil && NotchDefaults.shared.lockScreenShowMediaHUD
+            return audioOut || audioIn || brightness || power || lockStatus || mediaChanges
         }
         return outputAudioVolumeHUD != nil || outputAudioDeviceHUD != nil ||
             inputAudioVolumeHUD != nil || inputAudioDeviceHUD != nil ||
@@ -37,7 +55,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     var hasActiveMedia: Bool {
-        if isAuxiliaryScreen {
+        if isAuxiliaryScreen || (isCurrentlyLocked && !NotchDefaults.shared.lockScreenShowMediaHUD) {
             return false
         }
         return nowPlayingMedia != nil && HUDMediaDefaults.shared.isEnabled
@@ -47,8 +65,9 @@ class CollapsedNotchViewModel: ObservableObject {
         hasActiveHUD || hasActiveMedia
     }
 
-    init(screen: NSScreen? = nil) {
+    init(screen: NSScreen? = nil, isLockScreen: Bool = false) {
         self.screen = screen
+        self.isLockScreen = isLockScreen
         startListeners()
 
         // Use existing model when Notch is refreshed
@@ -175,6 +194,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func screenLocked(notification _: Notification) {
+        guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
         withAnimation {
             self.lockStatusHUD = .init(
                 lottie: AppAnimation.brightness,
@@ -187,6 +207,7 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc func screenUnlocked(notification _: Notification) {
+        guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
         withAnimation {
             self.lockStatusHUD?.name = "Screen Unlocked"
             self.lockStatusHUD?.value = 0.0
@@ -200,7 +221,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioInputDeviceChanges() {
-        if isAuxiliaryScreen || !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen ||
+            (isCurrentlyLocked && !NotchDefaults.shared.lockScreenShowAudioInputHUD) {
             return
         }
 
@@ -222,7 +244,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioInputVolumeChanges() {
-        if isAuxiliaryScreen || !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioInputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen ||
+            (isCurrentlyLocked && !NotchDefaults.shared.lockScreenShowAudioInputHUD) {
             return
         }
 
@@ -268,7 +291,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioOutputDeviceChanges() {
-        if isAuxiliaryScreen || !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen ||
+            (isCurrentlyLocked && !NotchDefaults.shared.lockScreenShowAudioOutputHUD) {
             return
         }
 
@@ -290,7 +314,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handleAudioOutputVolumeChanges() {
-        if isAuxiliaryScreen || !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDAudioOutputDefaults.shared.isEnabled || !shouldShowHUDOnThisScreen ||
+            (isCurrentlyLocked && !NotchDefaults.shared.lockScreenShowAudioOutputHUD) {
             return
         }
 
@@ -312,7 +337,8 @@ class CollapsedNotchViewModel: ObservableObject {
     }
 
     @objc private func handlePowerStatusChanges() {
-        if isAuxiliaryScreen || !HUDPowerDefaults.shared.showTimeRemaining || !shouldShowHUDOnThisScreen {
+        if isAuxiliaryScreen || !HUDPowerDefaults.shared.showTimeRemaining || !shouldShowHUDOnThisScreen ||
+            (isCurrentlyLocked && !NotchDefaults.shared.lockScreenShowPowerHUD) {
             return
         }
 
@@ -376,7 +402,8 @@ class CollapsedNotchViewModel: ObservableObject {
             withAnimation {
                 self.nowPlayingMedia = nowPlayingMedia
 
-                if titleChanged, !nowPlayingMedia.title.isEmpty, HUDMediaDefaults.shared.isEnabled, self.shouldShowHUDOnThisScreen {
+                if titleChanged, !nowPlayingMedia.title.isEmpty, HUDMediaDefaults.shared.isEnabled, self.shouldShowHUDOnThisScreen,
+                   !self.isCurrentlyLocked || NotchDefaults.shared.lockScreenShowMediaHUD {
                     self.nowPlayingChangesHUD = .init(
                         lottie: nil,
                         icon: AppAsset.speaker,

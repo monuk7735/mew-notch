@@ -75,6 +75,66 @@ class NotchDefaults: ObservableObject {
     }
 
     @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowAudioOutputHUD",
+        defaultValue: true
+    )
+    var lockScreenShowAudioOutputHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowAudioInputHUD",
+        defaultValue: true
+    )
+    var lockScreenShowAudioInputHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowBrightnessHUD",
+        defaultValue: true
+    )
+    var lockScreenShowBrightnessHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowPowerHUD",
+        defaultValue: true
+    )
+    var lockScreenShowPowerHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowMediaHUD",
+        defaultValue: true
+    )
+    var lockScreenShowMediaHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowLockStatusHUD",
+        defaultValue: true
+    )
+    var lockScreenShowLockStatusHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
         PREFIX + "resetViewOnCollapse",
         defaultValue: true
     )

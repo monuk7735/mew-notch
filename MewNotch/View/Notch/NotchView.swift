@@ -33,7 +33,8 @@ struct NotchView: View {
         )
         _collapsedNotchViewModel = .init(
             wrappedValue: .init(
-                screen: screen
+                screen: screen,
+                isLockScreen: isLockScreen
             )
         )
     }

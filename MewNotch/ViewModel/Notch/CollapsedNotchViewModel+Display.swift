@@ -118,7 +118,9 @@ extension CollapsedNotchViewModel {
     }
 
     @objc func handleBrightnessChanges(_ notification: NSNotification) {
-        guard HUDBrightnessDefaults.shared.isEnabled else {
+        guard HUDBrightnessDefaults.shared.isEnabled,
+              !isCurrentlyLocked || NotchDefaults.shared.lockScreenShowBrightnessHUD
+        else {
             return
         }
 
