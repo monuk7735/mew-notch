@@ -93,11 +93,19 @@ struct ExpandedNotchView: View {
         .onChange(
             of: notchViewModel.isExpanded
         ) { old, new in
-            guard notchDefaults.resetViewOnCollapse else { return }
             if old != new, !new {
-                withAnimation {
-                    expandedNotchViewModel.currentView = .home
+                if let target = notchDefaults.defaultView.viewType {
+                    withAnimation {
+                        expandedNotchViewModel.currentView = target
+                    }
                 }
+            }
+        }
+        .onChange(
+            of: notchDefaults.defaultView
+        ) { _, newDefault in
+            if !notchViewModel.isExpanded, let target = newDefault.viewType {
+                expandedNotchViewModel.currentView = target
             }
         }
     }

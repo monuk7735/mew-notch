@@ -22,6 +22,11 @@ class NotchDefaults: ObservableObject {
             currentOrder.append(contentsOf: missingItems)
             expandedItemsOrder = currentOrder
         }
+
+        if UserDefaults.standard.object(forKey: Self.PREFIX + "DefaultView") == nil,
+           let legacyReset = UserDefaults.standard.object(forKey: Self.PREFIX + "resetViewOnCollapse") as? Bool {
+            defaultView = legacyReset ? .home : .lastUsed
+        }
     }
 
     @PrimitiveUserDefault(
@@ -134,11 +139,11 @@ class NotchDefaults: ObservableObject {
         }
     }
 
-    @PrimitiveUserDefault(
-        PREFIX + "resetViewOnCollapse",
-        defaultValue: true
+    @CodableUserDefault(
+        PREFIX + "DefaultView",
+        defaultValue: NotchDefaultView.home
     )
-    var resetViewOnCollapse: Bool {
+    var defaultView: NotchDefaultView {
         didSet {
             objectWillChange.send()
         }

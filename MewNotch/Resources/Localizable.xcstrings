@@ -907,6 +907,7 @@
     },
     "Height" : {
       "comment" : "Container height slider label",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1114,6 +1115,7 @@
     },
     "Manual" : {
       "comment" : "Option to set notch height manually",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1131,6 +1133,7 @@
     },
     "Match Menu Bar" : {
       "comment" : "Option to set notch height matching system menu bar",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1148,6 +1151,7 @@
     },
     "Match Notch" : {
       "comment" : "Option to set notch height matching hardware notch",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

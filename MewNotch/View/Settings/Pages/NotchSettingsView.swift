@@ -66,12 +66,17 @@ struct NotchSettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "Reset View on Collapse",
-                    subtitle: notchDefaults.resetViewOnCollapse ? "Notch resets to Home when Collapsed" : "Notch will retain state when Collapsed",
-                    icon: .reset,
+                    title: "Default View",
+                    subtitle: "View displayed when expanding the notch",
+                    icon: .home,
                     color: AppColor.notch
                 ) {
-                    Toggle("", isOn: $notchDefaults.resetViewOnCollapse)
+                    Picker("", selection: $notchDefaults.defaultView) {
+                        ForEach(NotchDefaultView.allCases) { item in
+                            Text(item.displayName).tag(item)
+                        }
+                    }
+                    .labelsHidden()
                 }
 
             } header: {
