@@ -17,6 +17,8 @@ struct FileShelfView: View {
     @State private var errorMessage: String?
     @State private var showError: Bool = false
 
+    @State private var isShelfDropTarget: Bool = false
+
     var body: some View {
         HStack(spacing: 12) {
             AirDropView(
@@ -37,39 +39,51 @@ struct FileShelfView: View {
 
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .stroke(
-                        .white.opacity(0.3),
-                        style: StrokeStyle(lineWidth: 1, dash: [5, 5])
+                        isShelfDropTarget ? Color.blue
+                            : (expandedNotchViewModel.shelfFileGroups.isEmpty ? Color.white.opacity(0.3) : Color.white.opacity(0.12)),
+                        style: StrokeStyle(
+                            lineWidth: isShelfDropTarget ? 2 : 1,
+                            dash: (expandedNotchViewModel.shelfFileGroups.isEmpty || isShelfDropTarget) ? [5, 5] : []
+                        )
                     )
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(expandedNotchViewModel.shelfFileGroups) { fileGroupModel in
                             ShelfFileGroupView(
-                                shelfGroupModel: fileGroupModel
-                            ) {
-                                withAnimation {
-                                    expandedNotchViewModel.shelfFileGroups.removeAll {
-                                        $0.id == fileGroupModel.id
-                                    }
+                                notchViewModel: notchViewModel,
+                                shelfGroupModel: fileGroupModel,
+                                onRename: { newName in
+                                    expandedNotchViewModel.renameShelfGroup(id: fileGroupModel.id, to: newName)
+                                },
+                                onDelete: {
+                                    expandedNotchViewModel.removeShelfGroup(id: fileGroupModel.id)
                                 }
-                            }
+                            )
                         }
-
-                        Color.clear
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
-                    .padding(12)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+                    .frame(maxHeight: .infinity)
                 }
 
                 if expandedNotchViewModel.shelfFileGroups.isEmpty {
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         AppIcon.trayArrowDown.image
-                            .font(.system(size: 24))
-                            .foregroundStyle(.white.opacity(0.7))
+                            .font(.system(size: 22))
+                            .foregroundStyle(isShelfDropTarget ? Color.blue : Color.white.opacity(0.7))
 
-                        Text("Drop Files Here")
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.7))
+                        VStack(spacing: 2) {
+                            Text(isShelfDropTarget ? "Drop to Add to Shelf" : "Drop Files or Paste")
+                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                                .foregroundStyle(isShelfDropTarget ? Color.blue : Color.white.opacity(0.7))
+
+                            if !isShelfDropTarget {
+                                Text("(only supported with right click for now)")
+                                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                                    .foregroundStyle(Color.white.opacity(0.4))
+                            }
+                        }
                     }
                 }
 
@@ -98,6 +112,67 @@ struct FileShelfView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .dropDestination(
+                for: URL.self,
+                action: { fileURLs, _ in
+                    guard !ShelfStorageManager.isDraggingFromShelf else { return false }
+                    let externalURLs = fileURLs.filter { !ShelfStorageManager.shared.isShelfURL($0) }
+                    guard !externalURLs.isEmpty else { return false }
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        guard let groupModel = ShelfFileGroupModel(
+                            urls: externalURLs
+                        ) else {
+                            return
+                        }
+
+                        DispatchQueue.main.async {
+                            expandedNotchViewModel.addShelfGroup(
+                                groupModel
+                            )
+                        }
+                    }
+
+                    return true
+                },
+                isTargeted: { targeted in
+                    if targeted, ShelfStorageManager.isDraggingFromShelf {
+                        isShelfDropTarget = false
+                        return
+                    }
+                    isShelfDropTarget = targeted
+                }
+            )
+            .contextMenu {
+                Button {
+                    expandedNotchViewModel.pasteFromClipboard()
+                } label: {
+                    Label("Paste from Clipboard", systemImage: "doc.on.clipboard")
+                }
+
+                if !expandedNotchViewModel.shelfFileGroups.isEmpty {
+                    Divider()
+
+                    Button(role: .destructive) {
+                        for group in expandedNotchViewModel.shelfFileGroups {
+                            group.cleanup()
+                        }
+                        withAnimation {
+                            expandedNotchViewModel.shelfFileGroups.removeAll()
+                        }
+                    } label: {
+                        Label("Clear Shelf", systemImage: "trash")
+                    }
+                }
+            }
+            .background {
+                Button("") {
+                    expandedNotchViewModel.pasteFromClipboard()
+                }
+                .keyboardShortcut("v", modifiers: .command)
+                .opacity(0)
+                .frame(width: 0, height: 0)
+            }
         }
         .frame(
             width: notchViewModel.notchSize.width * 2.2,

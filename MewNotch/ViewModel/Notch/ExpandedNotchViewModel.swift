@@ -72,4 +72,69 @@ class ExpandedNotchViewModel: ObservableObject {
             }
         }
     }
+
+    func addShelfGroup(_ group: ShelfFileGroupModel) {
+        withAnimation {
+            shelfFileGroups.append(group)
+        }
+    }
+
+    func removeShelfGroup(id: UUID) {
+        guard let group = shelfFileGroups.first(where: { $0.id == id }) else { return }
+        group.cleanup()
+        withAnimation {
+            shelfFileGroups.removeAll { $0.id == id }
+        }
+    }
+
+    func renameShelfGroup(id: UUID, to newName: String) {
+        guard let index = shelfFileGroups.firstIndex(where: { $0.id == id }) else { return }
+        var updatedGroup = shelfFileGroups[index]
+        updatedGroup.rename(to: newName)
+        withAnimation {
+            shelfFileGroups[index] = updatedGroup
+        }
+    }
+
+    func pasteFromClipboard() {
+        let pasteboard = NSPasteboard.general
+        var fileURLs: [URL] = []
+
+        let options: [NSPasteboard.ReadingOptionKey: Any] = [.urlReadingFileURLsOnly: true]
+        if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: options) as? [URL], !urls.isEmpty {
+            fileURLs = urls
+        } else if let filePaths = pasteboard.propertyList(forType: .init("NSFilenamesPboardType")) as? [String], !filePaths.isEmpty {
+            fileURLs = filePaths.map { URL(fileURLWithPath: $0) }
+        }
+
+        if !fileURLs.isEmpty {
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let group = ShelfFileGroupModel(urls: fileURLs) {
+                    DispatchQueue.main.async {
+                        self.addShelfGroup(group)
+                    }
+                }
+            }
+            return
+        }
+
+        var imageData: Data?
+        if let pngData = pasteboard.data(forType: .png) {
+            imageData = pngData
+        } else if let tiffData = pasteboard.data(forType: .tiff) ?? NSImage(pasteboard: pasteboard)?.tiffRepresentation,
+                  let bitmap = NSBitmapImageRep(data: tiffData),
+                  let pngData = bitmap.representation(using: .png, properties: [:]) {
+            imageData = pngData
+        }
+
+        if let imageData {
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let group = ShelfFileGroupModel(imageData: imageData) {
+                    DispatchQueue.main.async {
+                        self.addShelfGroup(group)
+                    }
+                }
+            }
+        }
+    }
 }

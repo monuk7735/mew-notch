@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+class MewHostingView<Content: View>: NSHostingView<Content> {
+    override func acceptsFirstMouse(for _: NSEvent?) -> Bool {
+        true
+    }
+}
+
 class MewPanel: NSPanel {
     override init(
         contentRect: NSRect,
@@ -22,6 +28,7 @@ class MewPanel: NSPanel {
         )
 
         isFloatingPanel = true
+        becomesKeyOnlyIfNeeded = true
         isOpaque = false
         titleVisibility = .hidden
         titlebarAppearsTransparent = true
@@ -42,7 +49,7 @@ class MewPanel: NSPanel {
     }
 
     override var canBecomeKey: Bool {
-        false
+        true
     }
 
     override var canBecomeMain: Bool {
