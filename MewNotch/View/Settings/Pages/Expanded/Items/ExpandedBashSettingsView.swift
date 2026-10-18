@@ -38,6 +38,9 @@ struct ExpandedBashSettingsView: View {
                         TextField("Title", text: $bashDefaults.title)
                             .textFieldStyle(.roundedBorder)
                             .frame(maxWidth: 160)
+                            .onSubmit {
+                                NSApp.keyWindow?.makeFirstResponder(nil)
+                            }
                     }
                 }
 
@@ -72,7 +75,7 @@ struct ExpandedBashSettingsView: View {
                     icon: .textAlignLeft,
                     color: AppColor.bashCommand
                 ) {
-                    Picker("", selection: $bashDefaults.textAlignment) {
+                    Picker("", selection: ~$bashDefaults.textAlignment) {
                         ForEach(BashTextAlignment.allCases) { alignment in
                             Text(alignment.displayName).tag(alignment)
                         }
@@ -125,6 +128,7 @@ struct ExpandedBashSettingsView: View {
             }
         }
         .formStyle(.grouped)
+        .resignKeyboardOnTapOutside()
     }
 }
 

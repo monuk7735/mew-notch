@@ -68,4 +68,47 @@ extension View {
             self
         }
     }
+
+    func resignKeyboardOnTapOutside() -> some View {
+        modifier(ResignKeyboardOnTapOutsideModifier())
+    }
+}
+
+struct ResignKeyboardOnTapOutsideModifier: ViewModifier {
+    @State private var eventMonitor: Any?
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                eventMonitor = NSEvent.addLocalMonitorForEvents(
+                    matching: [.leftMouseDown, .rightMouseDown]
+                ) { event in
+                    guard let window = event.window,
+                          let firstResponder = window.firstResponder as? NSView,
+                          firstResponder is NSTextView || firstResponder is NSTextField else {
+                        return event
+                    }
+
+                    let clickPoint = event.locationInWindow
+                    if let hitView = window.contentView?.hitTest(clickPoint) {
+                        let isInsideCurrentResponder = (hitView === firstResponder) ||
+                            hitView.isDescendant(of: firstResponder) ||
+                            firstResponder.isDescendant(of: hitView)
+                        if !isInsideCurrentResponder {
+                            window.makeFirstResponder(nil)
+                        }
+                    } else {
+                        window.makeFirstResponder(nil)
+                    }
+
+                    return event
+                }
+            }
+            .onDisappear {
+                if let monitor = eventMonitor {
+                    NSEvent.removeMonitor(monitor)
+                    eventMonitor = nil
+                }
+            }
+    }
 }
