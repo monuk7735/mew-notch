@@ -36,13 +36,14 @@
 - **External Display & BetterDisplay Support** - Tracks brightness changes across external displays with seamless BetterDisplay integration and a sleek, compact floating HUD.
 - **Sound Level Display** - Shows input/output volume changes directly on the notch with customizable step sizes.
 - **System HUD Suppression** - Option to completely hide the stock macOS HUDs for a cleaner experience.
-- **File Shelf** - Drag and drop files to the notch for quick access or AirDrop sharing. Files persist across restarts and work seamlessly even with **Show on Lock Screen** enabled.
+- **File Shelf** - Drag and drop files to the notch for quick access or AirDrop sharing. Files persist across restarts, support multi-file packaging/renaming, and work seamlessly even with **Show on Lock Screen** enabled.
 - **Power State** - Show current power source. Toggle "Time Remaining" display for a cleaner look.
-- **Notch on Lock Screen** - The notch HUD is visible even on the macOS lock screen.
+- **Dedicated Lock Screen Settings** - Independently configure notch dimensions (width & height), default expanded views, and visibility for the macOS lock screen.
 - **Multi-language Support** - Available in English and Simplified Chinese (简体中文).
-- **Now Playing** - Control now playing media directly from notch. Shows title changes automatically with customizable pop-up timeouts and interactive seekbar.
-- **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch. Now with customizable corner radius.
-- **Bash Script View** - Run and display bash commands directly in the expanded notch.
+- **Now Playing** - Control now playing media directly from the notch with native SwiftUI layouts, hover tooltips, and throttled background updates.
+- **Mirror** - Get a quick peek on how you're looking using the mirror in the expanded notch with customizable corner radius and efficient capture streaming.
+- **Customizable Bash Script View** - Run and display custom bash commands with selectable header styles (Custom Title, Command, or None), customizable text alignment (Leading, Center, Trailing), click-to-copy context menus, and enriched environment paths.
+- **Optimized System Performance** - Minimal resource footprint (~57 MB baseline memory), zero unused database runtime overhead, and GPU-accelerated CoreAnimation rendering.
 - **Customizable Interactions** - Tailor the notch exactly to your liking with adjustable hover expand delays and toggles for HUD animations.
 - **Custom Layout** - Reorder notch items to suit your workflow.
 - **Auto Updates** - Built-in updater (Sparkle) to keep your app always up to date.
