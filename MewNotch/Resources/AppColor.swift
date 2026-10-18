@@ -41,7 +41,6 @@ enum AppColor {
     static let timer = Color.Notch.gray
 
     // Notch Configuration
-    static let height = Color.Notch.orange
     static let glass = Color.Notch.cyan
     static let hover = Color.Notch.indigo
     static let haptic = Color.Notch.teal

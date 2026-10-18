@@ -144,16 +144,6 @@ class NotchDefaults: ObservableObject {
         }
     }
 
-    @CodableUserDefault(
-        PREFIX + "HeightMode",
-        defaultValue: NotchHeightMode.matchNotch
-    )
-    var heightMode: NotchHeightMode {
-        didSet {
-            objectWillChange.send()
-        }
-    }
-
     @PrimitiveUserDefault(
         PREFIX + "GlassEffect",
         defaultValue: false

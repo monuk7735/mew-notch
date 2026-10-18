@@ -78,21 +78,8 @@ struct NotchSettingsView: View {
                 Text("Displays")
             }
 
-            Section {
-                SettingsRow(
-                    title: "Height",
-                    icon: .height,
-                    color: AppColor.height
-                ) {
-                    Picker("", selection: $notchDefaults.heightMode) {
-                        ForEach([NotchHeightMode.matchNotch, NotchHeightMode.matchMenuBar]) { item in
-                            Text(item.displayName).tag(item)
-                        }
-                    }
-                    .labelsHidden()
-                }
-
-                if #available(macOS 26.0, *) {
+            if #available(macOS 26.0, *) {
+                Section {
                     SettingsRow(
                         title: "Apply Glass Effect",
                         subtitle: "Forces 'Expand on Hover' to be enabled",
@@ -101,9 +88,9 @@ struct NotchSettingsView: View {
                     ) {
                         Toggle("", isOn: ~$notchDefaults.applyGlassEffect)
                     }
+                } header: {
+                    Text("Interface")
                 }
-            } header: {
-                Text("Interface")
             }
 
             Section {
