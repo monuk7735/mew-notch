@@ -7,6 +7,7 @@
 
 import AppKit
 import Foundation
+import UniformTypeIdentifiers
 
 struct ShelfFileModel: Identifiable, Codable {
     let id: UUID
@@ -239,7 +240,7 @@ struct ShelfFileGroupModel: Identifiable, Codable {
             let icon: NSImage = if let folderURL, FileManager.default.fileExists(atPath: folderURL.path) {
                 NSWorkspace.shared.icon(forFile: folderURL.path)
             } else {
-                NSWorkspace.shared.icon(forFileType: "public.folder")
+                NSWorkspace.shared.icon(for: .folder)
             }
             icon.size = NSSize(width: 128, height: 128)
             return icon
