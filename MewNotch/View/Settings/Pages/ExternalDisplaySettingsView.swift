@@ -58,8 +58,8 @@ struct ExternalDisplaySettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .padding(.vertical, 8)
-        .padding(.horizontal, 16)
+        .navigationTitle("External Display")
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 

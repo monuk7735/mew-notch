@@ -133,17 +133,18 @@ struct SettingsRow<Content: View>: View {
         HStack(spacing: spacing) {
             SettingsIcon(icon: icon, color: color)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.title3)
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
+                    .lineLimit(nil)
 
                 if let subtitle {
                     Text(subtitle)
                         .font(.body)
                         .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(nil)
                 }
             }
 
