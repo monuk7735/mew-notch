@@ -18,6 +18,7 @@ struct OnlyNotchView: View {
             width: notchSize.width,
             height: notchSize.height
         )
+        .contentShape(Rectangle())
     }
 }
 

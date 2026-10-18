@@ -182,6 +182,7 @@ struct NotchView: View {
                 )
             }
         }
+        .contentShape(Rectangle())
         .onTapGesture {
             guard !isLockScreen else { return }
             notchViewModel.onTap()

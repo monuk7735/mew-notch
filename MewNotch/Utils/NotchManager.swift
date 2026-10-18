@@ -166,7 +166,7 @@ class NotchManager {
         var panel: NSWindow! = windows[screen]
 
         if panel == nil {
-            let view: NSView = NSHostingView(
+            let view: NSView = MewHostingView(
                 rootView: NotchView(
                     screen: screen,
                     isLockScreen: false
