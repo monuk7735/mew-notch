@@ -138,12 +138,13 @@ struct NotchView: View {
                 bottomRadius: notchViewModel.cornerRadius.bottom
             )
         }
+        .contentShape(Rectangle())
         .scaleEffect(
-            notchViewModel.isHovered ? 1.1 : 1.0,
+            notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.1 : 1.0,
             anchor: .top
         )
         .shadow(
-            radius: notchViewModel.isHovered ? 5 : 0
+            radius: notchViewModel.isHovered || notchViewModel.isExpanded ? 5 : 0
         )
         .onHover {
             guard !isLockScreen else { return }
