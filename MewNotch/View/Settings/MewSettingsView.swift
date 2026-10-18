@@ -17,6 +17,7 @@ struct MewSettingsView: View {
 
         case general = "General"
         case notch = "Notch"
+        case lockScreen = "LockScreen"
         case externalDisplay = "ExternalDisplay"
 
         case expandedItems = "ExpandedItems"
@@ -45,6 +46,11 @@ struct MewSettingsView: View {
                             SettingsSidebarRow(title: "Notch", icon: .notch, color: AppColor.notch)
                         }
                         .id(SettingsPages.notch)
+
+                        NavigationLink(destination: LockScreenSettingsView()) {
+                            SettingsSidebarRow(title: "Lock Screen", icon: .lock, color: AppColor.lock)
+                        }
+                        .id(SettingsPages.lockScreen)
 
                         NavigationLink(destination: ExternalDisplaySettingsView()) {
                             SettingsSidebarRow(title: "External Display", icon: .display, color: AppColor.notch)

@@ -54,18 +54,6 @@ struct NotchSettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "Show on Lock Screen",
-                    subtitle: "Displays the notch on the lock screen",
-                    icon: .lock,
-                    color: AppColor.lock
-                ) {
-                    Toggle("", isOn: $notchDefaults.shownOnLockScreen)
-                        .onChange(of: notchDefaults.shownOnLockScreen) { _, _ in
-                            viewModel.refreshNotchesAndKillWindows()
-                        }
-                }
-
-                SettingsRow(
                     title: "Hide on Full Screen",
                     subtitle: "Hides the notch when a full screen app is detected",
                     icon: .display,
