@@ -83,11 +83,13 @@ struct LockScreenSettingsView: View {
                     Toggle("", isOn: $notchDefaults.lockScreenShowAudioInputHUD)
                 }
             } header: {
-                Text("HUD Updates")
-            } footer: {
-                Text("Choose which HUD indicators are allowed to display while the screen is locked.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("HUD Updates")
+                    Text("Choose which HUD indicators are allowed to display while the screen is locked.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .textCase(.none)
+                }
             }
             .disabled(!notchDefaults.shownOnLockScreen)
         }
