@@ -55,6 +55,21 @@ struct DragSource: NSViewRepresentable {
             .copy
         }
 
+        func draggingSession(
+            _: NSDraggingSession,
+            willBeginAt _: NSPoint
+        ) {
+            ShelfStorageManager.isDraggingFromShelf = true
+        }
+
+        func draggingSession(
+            _: NSDraggingSession,
+            endedAt _: NSPoint,
+            operation _: NSDragOperation
+        ) {
+            ShelfStorageManager.isDraggingFromShelf = false
+        }
+
         @objc func beginDrag(
             _ gesture: NSPanGestureRecognizer
         ) {

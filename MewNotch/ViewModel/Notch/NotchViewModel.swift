@@ -32,6 +32,8 @@ class NotchViewModel: ObservableObject {
     @Published var isHovered: Bool = false
     @Published var isExpanded: Bool = false
     @Published var isPinned: Bool = false
+    @Published var isMenuOpen: Bool = false
+    @Published var isRenaming: Bool = false
 
     private var hoverTimer: Timer?
 
@@ -40,6 +42,42 @@ class NotchViewModel: ObservableObject {
     ) {
         self.screen = screen
         refreshNotchSize()
+        startTrackingObservers()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    private func startTrackingObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMenuDidBeginTracking),
+            name: NSMenu.didBeginTrackingNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMenuDidEndTracking),
+            name: NSMenu.didEndTrackingNotification,
+            object: nil
+        )
+    }
+
+    @objc private func handleMenuDidBeginTracking() {
+        DispatchQueue.main.async {
+            self.isMenuOpen = true
+        }
+    }
+
+    @objc private func handleMenuDidEndTracking() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+            guard let self else { return }
+            isMenuOpen = false
+            if !isHovered, !isPinned, !isRenaming {
+                collapse()
+            }
+        }
     }
 
     func refreshNotchSize() {
@@ -76,6 +114,10 @@ class NotchViewModel: ObservableObject {
 
         hoverTimer?.invalidate()
 
+        withAnimation {
+            self.isHovered = isHovered
+        }
+
         if isHovered {
             if shouldExpand {
                 hoverTimer = .scheduledTimer(
@@ -92,20 +134,21 @@ class NotchViewModel: ObservableObject {
                     onTap()
                 }
             }
-        } else if !isPinned {
-            withAnimation {
-                self.isExpanded = false
-
-                self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
-                self.extraNotchPadSize = .init(
-                    width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
-                    height: 0
-                )
-            }
+        } else if !isPinned, !isMenuOpen, !isRenaming {
+            collapse()
         }
+    }
 
+    func collapse() {
+        guard !isPinned, !isMenuOpen, !isRenaming else { return }
         withAnimation {
-            self.isHovered = isHovered
+            self.isExpanded = false
+
+            self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
+            self.extraNotchPadSize = .init(
+                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
+                height: 0
+            )
         }
     }
 

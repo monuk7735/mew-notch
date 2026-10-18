@@ -139,28 +139,32 @@ struct NotchView: View {
             isEnabled: !isLockScreen,
             for: URL.self,
             action: { fileURLs, _ in
-                DispatchQueue.global(qos: .utility).async {
+                guard !ShelfStorageManager.isDraggingFromShelf else { return false }
+                let externalURLs = fileURLs.filter { !ShelfStorageManager.shared.isShelfURL($0) }
+                guard !externalURLs.isEmpty else { return false }
+                DispatchQueue.global(qos: .userInitiated).async {
                     guard let groupModel = ShelfFileGroupModel(
-                        urls: fileURLs
+                        urls: externalURLs
                     ) else {
-                        print("groupModel could not be initialized")
                         return
                     }
 
                     DispatchQueue.main.async {
-                        withAnimation {
-                            expandedNotchViewModel.shelfFileGroups.append(
-                                groupModel
-                            )
-                        }
+                        expandedNotchViewModel.addShelfGroup(
+                            groupModel
+                        )
                     }
                 }
 
                 return true
             },
-            isTargeted: {
+            isTargeted: { targeted in
                 guard !isLockScreen else { return }
-                notchViewModel.isDropTarget = $0
+                if targeted, ShelfStorageManager.isDraggingFromShelf {
+                    notchViewModel.isDropTarget = false
+                    return
+                }
+                notchViewModel.isDropTarget = targeted
             }
         )
         .onChange(

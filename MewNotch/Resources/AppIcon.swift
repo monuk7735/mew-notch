@@ -86,6 +86,11 @@ struct AppIcon: Sendable, Hashable, ExpressibleByStringLiteral {
     static let close = AppIcon("xmark")
     static let trayArrowDown = AppIcon("tray.and.arrow.down.fill")
     static let shareplay = AppIcon("shareplay")
+    static let pencil = AppIcon("pencil")
+    static let eye = AppIcon("eye")
+    static let doc = AppIcon("doc")
+    static let docOnDoc = AppIcon("doc.on.doc")
+    static let trash = AppIcon("trash")
 
     // Navigation & Directional Icons
     static let chevronLeft = AppIcon("chevron.left")
