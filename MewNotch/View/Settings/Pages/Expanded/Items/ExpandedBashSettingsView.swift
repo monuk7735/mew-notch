@@ -14,7 +14,34 @@ struct ExpandedBashSettingsView: View {
     var body: some View {
         Form {
             Section {
-                VStack(alignment: .leading, spacing: 12) {
+                SettingsRow(
+                    title: "Header Style",
+                    subtitle: "Choose what to display at the top of the widget",
+                    icon: .textAlignLeft,
+                    color: AppColor.bashCommand
+                ) {
+                    Picker("", selection: ~$bashDefaults.headerStyle) {
+                        ForEach(BashHeaderStyle.allCases) { style in
+                            Text(style.displayName).tag(style)
+                        }
+                    }
+                    .labelsHidden()
+                }
+
+                if bashDefaults.headerStyle == .title {
+                    SettingsRow(
+                        title: "Custom Title",
+                        subtitle: "Label displayed in the widget header",
+                        icon: .pencil,
+                        color: AppColor.bashCommand
+                    ) {
+                        TextField("Title", text: $bashDefaults.title)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: 160)
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Command")
                         .font(.headline)
 
@@ -33,19 +60,24 @@ struct ExpandedBashSettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 4)
             } header: {
-                Text("Bash Script")
+                Text("Command & Header")
             }
 
             Section {
                 SettingsRow(
-                    title: "Show Command",
-                    subtitle: "Display the command text in the notch",
+                    title: "Text Alignment",
+                    subtitle: "Alignment of the command output text",
                     icon: .textAlignLeft,
                     color: AppColor.bashCommand
                 ) {
-                    Toggle("", isOn: $bashDefaults.showCommand)
+                    Picker("", selection: $bashDefaults.textAlignment) {
+                        ForEach(BashTextAlignment.allCases) { alignment in
+                            Text(alignment.displayName).tag(alignment)
+                        }
+                    }
+                    .labelsHidden()
                 }
 
                 SettingsRow(
@@ -60,7 +92,11 @@ struct ExpandedBashSettingsView: View {
                         step: 0.1
                     )
                 }
+            } header: {
+                Text("Appearance")
+            }
 
+            Section {
                 SettingsRow(
                     title: "Auto-Refresh",
                     subtitle: "Automatically execute the command periodically",
