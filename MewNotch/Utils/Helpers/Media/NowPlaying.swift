@@ -78,6 +78,7 @@ final class NowPlaying {
     private var appIcon: NSImage?
 
     private var albumArt: NSImage?
+    private var lastArtworkDataString: String?
 
     private var album: String?
     private var artist: String?
@@ -211,7 +212,7 @@ final class NowPlaying {
         }
 
         process.executableURL = URL(fileURLWithPath: "/usr/bin/perl")
-        process.arguments = [scriptURL.path, frameworkPath, "stream", "--no-diff"]
+        process.arguments = [scriptURL.path, frameworkPath, "stream", "--no-diff", "--debounce=250"]
 
         let pipeReader = JSONPipeReader()
         process.standardOutput = await pipeReader.getPipe()
@@ -256,13 +257,18 @@ final class NowPlaying {
         playbackRate = payload[PayloadItem.playbackRate.rawValue]?.doubleValue
         appBundleIdentifier = payload[PayloadItem.bundleIdentifier.rawValue]?.stringValue
 
-        if let artworkDataString = payload[PayloadItem.artworkData.rawValue]?.stringValue, let data = Data(
-            base64Encoded: artworkDataString.trimmingCharacters(
-                in: .whitespacesAndNewlines
-            )
-        ), let nsImage = NSImage(data: data) {
-            albumArt = nsImage
+        if let rawArtworkString = payload[PayloadItem.artworkData.rawValue]?.stringValue {
+            let artworkDataString = rawArtworkString.trimmingCharacters(in: .whitespacesAndNewlines)
+            if artworkDataString != lastArtworkDataString {
+                lastArtworkDataString = artworkDataString
+                if let data = Data(base64Encoded: artworkDataString), let nsImage = NSImage(data: data) {
+                    albumArt = nsImage
+                } else {
+                    albumArt = nil
+                }
+            }
         } else {
+            lastArtworkDataString = nil
             albumArt = nil
         }
 
