@@ -33,11 +33,13 @@
 ## Features
 
 - **Brightness Display** - Displays brightness adjustments in real-time, including optional auto-brightness changes and custom step sizes.
+- **External Display & BetterDisplay Support** - Tracks brightness changes across external displays with seamless BetterDisplay integration and a sleek, compact floating HUD.
 - **Sound Level Display** - Shows input/output volume changes directly on the notch with customizable step sizes.
 - **System HUD Suppression** - Option to completely hide the stock macOS HUDs for a cleaner experience.
-- **File Shelf** - Drag and drop files to the notch for quick access. **Now with Persistence!** Files stay there even after restarts.
+- **File Shelf** - Drag and drop files to the notch for quick access or AirDrop sharing. Files persist across restarts and work seamlessly even with **Show on Lock Screen** enabled.
 - **Power State** - Show current power source. Toggle "Time Remaining" display for a cleaner look.
-- **Notch on Lock Screen** - The notch HUD is now visible even on the macOS lock screen.
+- **Notch on Lock Screen** - The notch HUD is visible even on the macOS lock screen.
+- **Multi-language Support** - Available in English and Simplified Chinese (简体中文).
 - **Now Playing** - Control now playing media directly from notch. Shows title changes automatically with customizable pop-up timeouts and interactive seekbar.
 - **Mirror** - Get a quick peek on how you're looking by using the mirror in expanded notch. Now with customizable corner radius.
 - **Bash Script View** - Run and display bash commands directly in the expanded notch.
@@ -110,7 +112,7 @@ This command simply removes the "quarantine" flag that macOS places on apps down
 - [x] ~~Explore different options for Now Playing media support on macOS 15.4 and above.~~
 - [x] ~~Shelf for files in expanded notch view~~
 - [x] ~~Persist Shelf Files across restarts~~
-- [ ] Making shelf work with **Show on Lockscreen** enabled (Currently mutually exclusive for security).
+- [x] ~~Making shelf work with **Show on Lockscreen** enabled~~
 - [ ] HUD for displaying keyboard backlight changes.
 - [ ] Explore additional notch-based utilities.
 
