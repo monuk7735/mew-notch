@@ -53,7 +53,7 @@ struct MewSettingsView: View {
                         .id(SettingsPages.lockScreen)
 
                         NavigationLink(destination: ExternalDisplaySettingsView()) {
-                            SettingsSidebarRow(title: "External Display", icon: .display, color: AppColor.notch)
+                            SettingsSidebarRow(title: "External Display", icon: .display, color: AppColor.externalDisplay)
                         }
                         .id(SettingsPages.externalDisplay)
                     }
