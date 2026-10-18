@@ -90,23 +90,5 @@ struct ExpandedNotchView: View {
             height: notchViewModel.isExpanded ? nil : 0
         )
         .opacity(notchViewModel.isExpanded ? 1 : 0)
-        .onChange(
-            of: notchViewModel.isExpanded
-        ) { old, new in
-            if old != new, !new {
-                if let target = notchDefaults.defaultView.viewType {
-                    withAnimation {
-                        expandedNotchViewModel.currentView = target
-                    }
-                }
-            }
-        }
-        .onChange(
-            of: notchDefaults.defaultView
-        ) { _, newDefault in
-            if !notchViewModel.isExpanded, let target = newDefault.viewType {
-                expandedNotchViewModel.currentView = target
-            }
-        }
     }
 }

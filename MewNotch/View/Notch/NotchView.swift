@@ -75,6 +75,22 @@ struct NotchView: View {
                 }
             }
         }
+        .onChange(of: notchDefaults.defaultView) { _, newDefault in
+            if let target = newDefault.viewType {
+                withAnimation {
+                    expandedNotchViewModel.currentView = target
+                }
+            }
+        }
+        .onChange(of: notchViewModel.isExpanded) { old, isExpanded in
+            if old != isExpanded {
+                if let target = notchDefaults.defaultView.viewType {
+                    withAnimation {
+                        expandedNotchViewModel.currentView = target
+                    }
+                }
+            }
+        }
     }
 
     @ViewBuilder

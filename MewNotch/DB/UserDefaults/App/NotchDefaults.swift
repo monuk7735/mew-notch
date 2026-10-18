@@ -23,9 +23,11 @@ class NotchDefaults: ObservableObject {
             expandedItemsOrder = currentOrder
         }
 
-        if UserDefaults.standard.object(forKey: Self.PREFIX + "DefaultView") == nil,
-           let legacyReset = UserDefaults.standard.object(forKey: Self.PREFIX + "resetViewOnCollapse") as? Bool {
-            defaultView = legacyReset ? .home : .lastUsed
+        if let legacyReset = UserDefaults.standard.object(forKey: Self.PREFIX + "resetViewOnCollapse") as? Bool {
+            if UserDefaults.standard.object(forKey: Self.PREFIX + "DefaultView") == nil {
+                defaultView = legacyReset ? .home : .lastUsed
+            }
+            UserDefaults.standard.removeObject(forKey: Self.PREFIX + "resetViewOnCollapse")
         }
     }
 
