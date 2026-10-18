@@ -35,61 +35,40 @@ struct MewSettingsView: View {
             List(
                 selection: $selectedPage
             ) {
-                Section(
-                    content: {
-                        NavigationLink(destination: GeneraSettingsView()) {
-                            SettingsSidebarRow(title: "General", icon: .general, color: AppColor.general)
-                        }
-                        .id(SettingsPages.general)
+                Section {
+                    SettingsSidebarRow(title: "General", icon: .general, color: AppColor.general)
+                        .tag(SettingsPages.general)
 
-                        NavigationLink(destination: NotchSettingsView()) {
-                            SettingsSidebarRow(title: "Notch", icon: .notch, color: AppColor.notch)
-                        }
-                        .id(SettingsPages.notch)
+                    SettingsSidebarRow(title: "Notch", icon: .notch, color: AppColor.notch)
+                        .tag(SettingsPages.notch)
 
-                        NavigationLink(destination: LockScreenSettingsView()) {
-                            SettingsSidebarRow(title: "Lock Screen", icon: .lock, color: AppColor.lock)
-                        }
-                        .id(SettingsPages.lockScreen)
+                    SettingsSidebarRow(title: "Lock Screen", icon: .lock, color: AppColor.lock)
+                        .tag(SettingsPages.lockScreen)
 
-                        NavigationLink(destination: ExternalDisplaySettingsView()) {
-                            SettingsSidebarRow(title: "External Display", icon: .display, color: AppColor.externalDisplay)
-                        }
-                        .id(SettingsPages.externalDisplay)
-                    }
-                )
-
-                Section(
-                    content: {
-                        NavigationLink(destination: CollapsedItemsSettingsView()) {
-                            SettingsSidebarRow(title: "Collapsed", icon: .hud, color: AppColor.hud)
-                        }
-                        .id(SettingsPages.collapsedItems)
-
-                        NavigationLink(destination: ExpandedItemsSettingsView()) {
-                            SettingsSidebarRow(title: "Expanded", icon: .media, color: AppColor.nowPlaying)
-                        }
-                        .id(SettingsPages.expandedItems)
-                    },
-                    header: {
-                        Text("Notch Items")
-                    }
-                )
+                    SettingsSidebarRow(title: "External Display", icon: .display, color: AppColor.externalDisplay)
+                        .tag(SettingsPages.externalDisplay)
+                }
 
                 Section {
-                    NavigationLink(destination: AboutAppView()) {
-                        SettingsSidebarRow(title: "About", icon: .about, color: AppColor.about)
-                    }
-                    .id(SettingsPages.about)
+                    SettingsSidebarRow(title: "Collapsed", icon: .hud, color: AppColor.hud)
+                        .tag(SettingsPages.collapsedItems)
+
+                    SettingsSidebarRow(title: "Expanded", icon: .media, color: AppColor.nowPlaying)
+                        .tag(SettingsPages.expandedItems)
+                } header: {
+                    Text("Notch Items")
+                }
+
+                Section {
+                    SettingsSidebarRow(title: "About", icon: .about, color: AppColor.about)
+                        .tag(SettingsPages.about)
                 }
             }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 180, max: 200)
+            .navigationSplitViewColumnWidth(min: 180, ideal: 190, max: 220)
             .listStyle(.sidebar)
         } detail: {
-            Group {
-                GeneraSettingsView()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            detailView(for: selectedPage)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .navigationSplitViewStyle(.balanced)
         .frame(minWidth: 800, minHeight: 500)
@@ -111,6 +90,26 @@ struct MewSettingsView: View {
 
                 window.minSize = NSSize(width: 800, height: 500)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func detailView(for page: SettingsPages) -> some View {
+        switch page {
+        case .general:
+            GeneraSettingsView()
+        case .notch:
+            NotchSettingsView()
+        case .lockScreen:
+            LockScreenSettingsView()
+        case .externalDisplay:
+            ExternalDisplaySettingsView()
+        case .collapsedItems:
+            CollapsedItemsSettingsView()
+        case .expandedItems:
+            ExpandedItemsSettingsView()
+        case .about:
+            AboutAppView()
         }
     }
 }
