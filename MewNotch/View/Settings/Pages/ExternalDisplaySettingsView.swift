@@ -41,25 +41,10 @@ struct ExternalDisplaySettingsView: View {
             } header: {
                 Text("BetterDisplay")
             }
-
-            Section {
-                SettingsRow(
-                    title: "Lock Screen Alerts",
-                    subtitle: "Show lock status on all monitors",
-                    icon: .lock,
-                    color: AppColor.lock
-                ) {
-                    Text("Always On")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            } header: {
-                Text("Features")
-            }
         }
         .formStyle(.grouped)
-        .padding(.vertical, 8)
-        .padding(.horizontal, 16)
+        .navigationTitle("External Display")
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 

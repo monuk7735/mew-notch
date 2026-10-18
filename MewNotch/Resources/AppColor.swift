@@ -27,10 +27,12 @@ enum AppColor {
     // Navigation / General
     static let general = Color.Notch.gray
     static let notch = Color.Notch.blue
+    static let lock = Color.Notch.yellow
+    static let externalDisplay = Color.Notch.teal
     static let mirror = Color.Notch.purple
     static let nowPlaying = Color.Notch.pink
     static let hud = Color.Notch.orange
-    static let about = Color.Notch.gray
+    static let about = Color.Notch.indigo
 
     // HUD Categories
     static let audio = Color.Notch.blue
@@ -39,8 +41,6 @@ enum AppColor {
     static let timer = Color.Notch.gray
 
     // Notch Configuration
-    static let lock = Color.Notch.gray
-    static let height = Color.Notch.orange
     static let glass = Color.Notch.cyan
     static let hover = Color.Notch.indigo
     static let haptic = Color.Notch.teal

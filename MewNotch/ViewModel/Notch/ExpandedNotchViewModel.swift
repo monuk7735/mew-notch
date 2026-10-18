@@ -30,7 +30,7 @@ class ExpandedNotchViewModel: ObservableObject {
         }
     }
 
-    @Published var currentView: NotchViewType = .home
+    @Published var currentView: NotchViewType = NotchDefaults.shared.defaultView.viewType ?? .home
 
     @Published var nowPlayingMedia: NowPlayingMediaModel?
 

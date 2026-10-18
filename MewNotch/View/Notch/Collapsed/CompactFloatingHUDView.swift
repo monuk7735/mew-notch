@@ -21,7 +21,8 @@ struct CompactFloatingHUDView: View {
     var body: some View {
         VStack(spacing: 8) {
             if let brightness = collapsedNotchViewModel.brightnessHUD,
-               HUDBrightnessDefaults.shared.isEnabled {
+               HUDBrightnessDefaults.shared.isEnabled,
+               !collapsedNotchViewModel.isCurrentlyLocked || notchDefaults.lockScreenShowBrightnessHUD {
                 CompactSliderHUDView(
                     hud: brightness,
                     style: HUDBrightnessDefaults.shared.style,
@@ -32,7 +33,8 @@ struct CompactFloatingHUDView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
 
-            if let lock = collapsedNotchViewModel.lockStatusHUD {
+            if let lock = collapsedNotchViewModel.lockStatusHUD,
+               !collapsedNotchViewModel.isCurrentlyLocked || notchDefaults.lockScreenShowLockStatusHUD {
                 CompactLockHUDView(
                     notchViewModel: notchViewModel,
                     hud: lock,

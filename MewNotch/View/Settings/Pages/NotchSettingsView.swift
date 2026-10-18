@@ -54,18 +54,6 @@ struct NotchSettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "Show on Lock Screen",
-                    subtitle: "Displays the notch on the lock screen",
-                    icon: .lock,
-                    color: AppColor.lock
-                ) {
-                    Toggle("", isOn: $notchDefaults.shownOnLockScreen)
-                        .onChange(of: notchDefaults.shownOnLockScreen) { _, _ in
-                            viewModel.refreshNotchesAndKillWindows()
-                        }
-                }
-
-                SettingsRow(
                     title: "Hide on Full Screen",
                     subtitle: "Hides the notch when a full screen app is detected",
                     icon: .display,
@@ -78,33 +66,25 @@ struct NotchSettingsView: View {
                 }
 
                 SettingsRow(
-                    title: "Reset View on Collapse",
-                    subtitle: notchDefaults.resetViewOnCollapse ? "Notch resets to Home when Collapsed" : "Notch will retain state when Collapsed",
-                    icon: .reset,
+                    title: "Default View",
+                    subtitle: "View displayed when expanding the notch",
+                    icon: .home,
                     color: AppColor.notch
                 ) {
-                    Toggle("", isOn: $notchDefaults.resetViewOnCollapse)
-                }
-
-            } header: {
-                Text("Displays")
-            }
-
-            Section {
-                SettingsRow(
-                    title: "Height",
-                    icon: .height,
-                    color: AppColor.height
-                ) {
-                    Picker("", selection: $notchDefaults.heightMode) {
-                        ForEach([NotchHeightMode.matchNotch, NotchHeightMode.matchMenuBar]) { item in
+                    Picker("", selection: $notchDefaults.defaultView) {
+                        ForEach(NotchDefaultView.allCases) { item in
                             Text(item.displayName).tag(item)
                         }
                     }
                     .labelsHidden()
                 }
 
-                if #available(macOS 26.0, *) {
+            } header: {
+                Text("Displays")
+            }
+
+            if #available(macOS 26.0, *) {
+                Section {
                     SettingsRow(
                         title: "Apply Glass Effect",
                         subtitle: "Forces 'Expand on Hover' to be enabled",
@@ -113,9 +93,9 @@ struct NotchSettingsView: View {
                     ) {
                         Toggle("", isOn: ~$notchDefaults.applyGlassEffect)
                     }
+                } header: {
+                    Text("Interface")
                 }
-            } header: {
-                Text("Interface")
             }
 
             Section {

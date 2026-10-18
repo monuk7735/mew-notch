@@ -40,7 +40,6 @@ struct AppIcon: Sendable, Hashable, ExpressibleByStringLiteral {
     static let display = AppIcon("display")
     static let lock = AppIcon("lock.fill")
     static let reset = AppIcon("arrow.counterclockwise")
-    static let height = AppIcon("ruler.fill")
     static let glass = AppIcon("sparkles")
     static let hover = AppIcon("cursorarrow.rays")
     static let haptic = AppIcon("hand.tap.fill")

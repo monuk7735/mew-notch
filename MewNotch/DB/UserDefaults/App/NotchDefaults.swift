@@ -22,6 +22,13 @@ class NotchDefaults: ObservableObject {
             currentOrder.append(contentsOf: missingItems)
             expandedItemsOrder = currentOrder
         }
+
+        if let legacyReset = UserDefaults.standard.object(forKey: Self.PREFIX + "resetViewOnCollapse") as? Bool {
+            if UserDefaults.standard.object(forKey: Self.PREFIX + "DefaultView") == nil {
+                defaultView = legacyReset ? .home : .lastUsed
+            }
+            UserDefaults.standard.removeObject(forKey: Self.PREFIX + "resetViewOnCollapse")
+        }
     }
 
     @PrimitiveUserDefault(
@@ -75,20 +82,70 @@ class NotchDefaults: ObservableObject {
     }
 
     @PrimitiveUserDefault(
-        PREFIX + "resetViewOnCollapse",
+        PREFIX + "LockScreen_ShowAudioOutputHUD",
         defaultValue: true
     )
-    var resetViewOnCollapse: Bool {
+    var lockScreenShowAudioOutputHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowAudioInputHUD",
+        defaultValue: true
+    )
+    var lockScreenShowAudioInputHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowBrightnessHUD",
+        defaultValue: true
+    )
+    var lockScreenShowBrightnessHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowPowerHUD",
+        defaultValue: true
+    )
+    var lockScreenShowPowerHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowMediaHUD",
+        defaultValue: true
+    )
+    var lockScreenShowMediaHUD: Bool {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "LockScreen_ShowLockStatusHUD",
+        defaultValue: true
+    )
+    var lockScreenShowLockStatusHUD: Bool {
         didSet {
             objectWillChange.send()
         }
     }
 
     @CodableUserDefault(
-        PREFIX + "HeightMode",
-        defaultValue: NotchHeightMode.matchNotch
+        PREFIX + "DefaultView",
+        defaultValue: NotchDefaultView.home
     )
-    var heightMode: NotchHeightMode {
+    var defaultView: NotchDefaultView {
         didSet {
             objectWillChange.send()
         }

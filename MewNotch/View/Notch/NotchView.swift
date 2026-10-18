@@ -33,7 +33,8 @@ struct NotchView: View {
         )
         _collapsedNotchViewModel = .init(
             wrappedValue: .init(
-                screen: screen
+                screen: screen,
+                isLockScreen: isLockScreen
             )
         )
     }
@@ -71,6 +72,22 @@ struct NotchView: View {
                     NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
                 } else {
                     NotchManager.shared.hideAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen, delay: 0.4)
+                }
+            }
+        }
+        .onChange(of: notchDefaults.defaultView) { _, newDefault in
+            if let target = newDefault.viewType {
+                withAnimation {
+                    expandedNotchViewModel.currentView = target
+                }
+            }
+        }
+        .onChange(of: notchViewModel.isExpanded) { old, isExpanded in
+            if old != isExpanded {
+                if let target = notchDefaults.defaultView.viewType {
+                    withAnimation {
+                        expandedNotchViewModel.currentView = target
+                    }
                 }
             }
         }
@@ -121,12 +138,13 @@ struct NotchView: View {
                 bottomRadius: notchViewModel.cornerRadius.bottom
             )
         }
+        .contentShape(Rectangle())
         .scaleEffect(
-            notchViewModel.isHovered ? 1.1 : 1.0,
+            notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.1 : 1.0,
             anchor: .top
         )
         .shadow(
-            radius: notchViewModel.isHovered ? 5 : 0
+            radius: notchViewModel.isHovered || notchViewModel.isExpanded ? 5 : 0
         )
         .onHover {
             guard !isLockScreen else { return }

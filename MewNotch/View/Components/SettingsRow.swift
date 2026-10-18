@@ -10,29 +10,49 @@ import SwiftUI
 struct SettingsIcon: View {
     let icon: Image
     let color: Color
+    var size: CGFloat = 30
+    var cornerRadius: CGFloat = 7
+    var font: Font = .headline
 
-    @ScaledMetric private var iconSize: CGFloat = 30
-    @ScaledMetric private var cornerRadius: CGFloat = 7
-
-    init(icon: Image, color: Color) {
+    init(
+        icon: Image,
+        color: Color,
+        size: CGFloat = 30,
+        cornerRadius: CGFloat = 7,
+        font: Font = .headline
+    ) {
         self.icon = icon
         self.color = color
+        self.size = size
+        self.cornerRadius = cornerRadius
+        self.font = font
     }
 
-    init(icon: AppIcon, color: Color) {
-        self.icon = icon.image
-        self.color = color
+    init(
+        icon: AppIcon,
+        color: Color,
+        size: CGFloat = 30,
+        cornerRadius: CGFloat = 7,
+        font: Font = .headline
+    ) {
+        self.init(
+            icon: icon.image,
+            color: color,
+            size: size,
+            cornerRadius: cornerRadius,
+            font: font
+        )
     }
 
     var body: some View {
         icon
-            .font(.headline)
+            .font(font)
             .foregroundStyle(.white)
-            .frame(width: iconSize, height: iconSize)
+            .frame(width: size, height: size)
             .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(color.gradient)
-                    .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                    .shadow(color: .black.opacity(0.12), radius: 1, x: 0, y: 0.5)
             )
     }
 }
@@ -55,11 +75,16 @@ struct SettingsSidebarRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
-            SettingsIcon(icon: icon, color: color)
+        HStack(spacing: 9) {
+            SettingsIcon(
+                icon: icon,
+                color: color,
+                size: 20,
+                cornerRadius: 5,
+                font: .system(size: 11, weight: .semibold)
+            )
             Text(title)
-                .font(.headline)
-                .fontWeight(.medium)
+                .font(.system(size: 13, weight: .regular))
         }
         .padding(.vertical, 2)
     }
@@ -108,23 +133,27 @@ struct SettingsRow<Content: View>: View {
         HStack(spacing: spacing) {
             SettingsIcon(icon: icon, color: color)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.title3)
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
+                    .lineLimit(nil)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let subtitle {
                     Text(subtitle)
                         .font(.body)
                         .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(nil)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-
-            Spacer()
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             content
+                .labelsHidden()
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 8)

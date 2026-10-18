@@ -51,25 +51,22 @@ struct ExpandedNotchView: View {
             }
             .zIndex(5)
 
-            ZStack {
-                NotchHomeView(
-                    namespace: namespace,
-                    notchViewModel: notchViewModel,
-                    expandedNotchViewModel: expandedNotchViewModel,
-                    collapsedNotchView: collapsedNotchView
-                )
-                .opacity(
-                    expandedNotchViewModel.currentView != .home ? 0 : 1
-                )
-
+            Group {
                 switch expandedNotchViewModel.currentView {
                 case .home:
-                    EmptyView()
+                    NotchHomeView(
+                        namespace: namespace,
+                        notchViewModel: notchViewModel,
+                        expandedNotchViewModel: expandedNotchViewModel,
+                        collapsedNotchView: collapsedNotchView
+                    )
+                    .transition(.opacity)
                 case .shelf:
                     FileShelfView(
                         notchViewModel: notchViewModel,
                         expandedNotchViewModel: expandedNotchViewModel
                     )
+                    .transition(.opacity)
                 }
             }
         }
@@ -90,15 +87,5 @@ struct ExpandedNotchView: View {
             height: notchViewModel.isExpanded ? nil : 0
         )
         .opacity(notchViewModel.isExpanded ? 1 : 0)
-        .onChange(
-            of: notchViewModel.isExpanded
-        ) { old, new in
-            guard notchDefaults.resetViewOnCollapse else { return }
-            if old != new, !new {
-                withAnimation {
-                    expandedNotchViewModel.currentView = .home
-                }
-            }
-        }
     }
 }
