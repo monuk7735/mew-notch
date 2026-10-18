@@ -68,27 +68,21 @@ struct FileShelfView: View {
                 }
 
                 if expandedNotchViewModel.shelfFileGroups.isEmpty {
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         AppIcon.trayArrowDown.image
-                            .font(.system(size: 24))
+                            .font(.system(size: 22))
                             .foregroundStyle(isShelfDropTarget ? Color.blue : Color.white.opacity(0.7))
 
-                        Text(isShelfDropTarget ? "Drop to Add to Shelf" : "Drop Files or Screenshots Here")
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
-                            .foregroundStyle(isShelfDropTarget ? Color.blue : Color.white.opacity(0.7))
+                        VStack(spacing: 2) {
+                            Text(isShelfDropTarget ? "Drop to Add to Shelf" : "Drop Files or Paste")
+                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                                .foregroundStyle(isShelfDropTarget ? Color.blue : Color.white.opacity(0.7))
 
-                        if !isShelfDropTarget {
-                            Button {
-                                expandedNotchViewModel.pasteFromClipboard()
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "doc.on.clipboard")
-                                    Text("Paste from Clipboard")
-                                }
-                                .font(.system(size: 11, weight: .regular))
-                                .foregroundStyle(Color.white.opacity(0.5))
+                            if !isShelfDropTarget {
+                                Text("(only supported with right click for now)")
+                                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                                    .foregroundStyle(Color.white.opacity(0.4))
                             }
-                            .buttonStyle(.plain)
                         }
                     }
                 }
