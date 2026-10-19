@@ -193,13 +193,14 @@ extension CollapsedNotchViewModel {
         }
 
         guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
+        lockStatusHUD?.timer?.invalidate()
         withAnimation {
             self.lockStatusHUD = .init(
                 lottie: AppAnimation.brightness,
                 icon: AppAsset.speaker,
                 name: "Screen Locked",
                 value: 1.0,
-                timer: lockStatusHUD?.timer
+                timer: nil
             )
         }
     }
