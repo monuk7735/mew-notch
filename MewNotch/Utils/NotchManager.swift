@@ -227,7 +227,7 @@ class NotchManager {
         }
     }
 
-    private func setupLockScreenWindow(for screen: NSScreen, isHardwareNotched: Bool, addToSeparateSpace: Bool) {
+    private func setupLockScreenWindow(for screen: NSScreen, isHardwareNotched _: Bool, addToSeparateSpace: Bool) {
         var lockPanel: NSWindow! = lockScreenWindows[screen]
 
         if lockPanel == nil {
@@ -265,7 +265,7 @@ class NotchManager {
             WindowManager.shared?.moveToLockScreen(lockPanel)
         }
 
-        if isScreenLocked, isHardwareNotched {
+        if isScreenLocked, shouldPersistWindow(for: screen) {
             lockPanel.orderFrontRegardless()
         } else {
             lockPanel.orderOut(nil)

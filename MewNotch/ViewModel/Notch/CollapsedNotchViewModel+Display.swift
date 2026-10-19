@@ -174,6 +174,7 @@ extension CollapsedNotchViewModel {
     }
 
     @objc func screenLocked(notification _: Notification) {
+        isDeviceScreenLocked = true
         if !NotchDefaults.shared.lockScreenShowBrightnessHUD {
             brightnessHUD = nil
         }
@@ -193,25 +194,28 @@ extension CollapsedNotchViewModel {
         }
 
         guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
+        lockStatusHUD?.timer?.invalidate()
         withAnimation {
             self.lockStatusHUD = .init(
                 lottie: AppAnimation.brightness,
                 icon: AppAsset.speaker,
                 name: "Screen Locked",
                 value: 1.0,
-                timer: lockStatusHUD?.timer
+                timer: nil
             )
         }
     }
 
     @objc func screenUnlocked(notification _: Notification) {
+        isDeviceScreenLocked = false
         guard NotchDefaults.shared.lockScreenShowLockStatusHUD else { return }
         withAnimation {
             self.lockStatusHUD?.name = "Screen Unlocked"
             self.lockStatusHUD?.value = 0.0
         }
 
-        resetHUDTimer(&lockStatusHUD) {
+        resetHUDTimer(&lockStatusHUD) { [weak self] in
+            guard let self, !self.isCurrentlyLocked else { return }
             withAnimation {
                 self.lockStatusHUD = nil
             }
