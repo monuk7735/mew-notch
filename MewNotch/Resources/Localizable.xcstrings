@@ -763,7 +763,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "检测是否正在运行"
+            "value" : "检测外接显示器亮度调节应用 BetterDisplay 是否正在运行"
           }
         }
       }
