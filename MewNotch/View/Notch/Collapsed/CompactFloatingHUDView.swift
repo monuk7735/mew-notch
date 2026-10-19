@@ -12,7 +12,7 @@ struct CompactFloatingHUDView: View {
     var namespace: Namespace.ID
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var collapsedNotchViewModel: CollapsedNotchViewModel
-    @ObservedObject var notchDefaults = NotchDefaults.shared
+    @StateObject private var notchDefaults = NotchDefaults.shared
 
     private var hudHeight: CGFloat {
         max(24, min(30, notchViewModel.notchSize.height))

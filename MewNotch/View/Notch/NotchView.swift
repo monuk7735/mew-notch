@@ -13,7 +13,7 @@ struct NotchView: View {
 
     @Environment(\.openSettings) private var openSettings
 
-    @ObservedObject var notchDefaults = NotchDefaults.shared
+    @StateObject var notchDefaults = NotchDefaults.shared
 
     @StateObject var notchViewModel: NotchViewModel
     @StateObject var expandedNotchViewModel: ExpandedNotchViewModel = .init()
