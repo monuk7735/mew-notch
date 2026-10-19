@@ -13,7 +13,7 @@ struct NotchView: View {
 
     @Environment(\.openSettings) private var openSettings
 
-    @StateObject var notchDefaults = NotchDefaults.shared
+    @ObservedObject var notchDefaults = NotchDefaults.shared
 
     @StateObject var notchViewModel: NotchViewModel
     @StateObject var expandedNotchViewModel: ExpandedNotchViewModel = .init()
@@ -47,7 +47,14 @@ struct NotchView: View {
                 if notchViewModel.isHardwareNotched {
                     hardwareNotchView
                 } else {
-                    floatingHUDView
+                    switch notchDefaults.externalNotchStyle {
+                    case .hudOnly:
+                        floatingHUDView
+                    case .floatingIsland:
+                        floatingIslandNotchView
+                    case .simulatedNotch:
+                        hardwareNotchView
+                    }
                 }
 
                 Spacer()
@@ -62,18 +69,29 @@ struct NotchView: View {
             }
         }
         .onAppear {
-            if !notchViewModel.isHardwareNotched, collapsedNotchViewModel.hasActiveContent {
+            if !notchViewModel.isHardwareNotched,
+               notchDefaults.externalNotchStyle == .hudOnly,
+               collapsedNotchViewModel.hasActiveContent {
                 NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
             }
         }
         .onChange(of: collapsedNotchViewModel.hasActiveContent) { _, hasActive in
-            if !notchViewModel.isHardwareNotched {
+            if !notchViewModel.isHardwareNotched, notchDefaults.externalNotchStyle == .hudOnly {
                 if hasActive {
                     NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
                 } else {
                     NotchManager.shared.hideAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen, delay: 0.4)
                 }
             }
+        }
+        .onChange(of: notchDefaults.externalNotchStyle) { _, _ in
+            notchViewModel.refreshNotchSize()
+        }
+        .onChange(of: notchDefaults.floatingIslandWidth) { _, _ in
+            notchViewModel.refreshNotchSize()
+        }
+        .onChange(of: notchDefaults.floatingIslandHeightOffset) { _, _ in
+            notchViewModel.refreshNotchSize()
         }
         .onChange(of: notchDefaults.defaultView) { _, newDefault in
             if let target = newDefault.viewType {
@@ -101,6 +119,119 @@ struct NotchView: View {
                 notchViewModel: notchViewModel,
                 collapsedNotchViewModel: collapsedNotchViewModel
             )
+        }
+    }
+
+    private var floatingIslandNotchView: some View {
+        let islandTopPadding: CGFloat = CGFloat(notchDefaults.floatingIslandTopOffset)
+        let menuBarHeight: CGFloat = {
+            let diff = notchViewModel.screen.frame.maxY - notchViewModel.screen.visibleFrame.maxY
+            return diff > 0 ? diff : 24
+        }()
+        let baseIdleHeight = max(14, menuBarHeight - islandTopPadding)
+        let idleHeight = max(14, baseIdleHeight + CGFloat(notchDefaults.floatingIslandHeightOffset))
+        let isIslandActive = notchViewModel.isExpanded || collapsedNotchViewModel.hasActiveContent
+        let islandCornerRadius: CGFloat = notchViewModel.isExpanded ? 20 : (isIslandActive ? 10 : min(8, idleHeight / 2))
+
+        let collapsedNotchView = CollapsedNotchView(
+            namespace: namespace,
+            notchViewModel: notchViewModel,
+            collapsedNotchViewModel: collapsedNotchViewModel,
+            floatingIdleHeight: idleHeight
+        )
+
+        return ZStack(
+            alignment: .top
+        ) {
+            ExpandedNotchView(
+                namespace: namespace,
+                notchViewModel: notchViewModel,
+                expandedNotchViewModel: expandedNotchViewModel,
+                collapsedNotchView: collapsedNotchView
+            ).hide(when: !notchViewModel.isExpanded)
+
+            collapsedNotchView
+        }
+        .glassEffect(
+            when: notchDefaults.applyGlassEffect,
+            in: RoundedRectangle(cornerRadius: islandCornerRadius, style: .continuous)
+        )
+        .background {
+            if !notchDefaults.applyGlassEffect {
+                Color.black
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: islandCornerRadius, style: .continuous))
+        .contentShape(Rectangle())
+        .scaleEffect(
+            notchViewModel.isHovered && !notchViewModel.isExpanded ? 1.06 : 1.0,
+            anchor: .top
+        )
+        .shadow(
+            color: Color.black.opacity(0.35),
+            radius: notchViewModel.isHovered || notchViewModel.isExpanded ? 8 : 4,
+            x: 0,
+            y: 3
+        )
+        .padding(.top, islandTopPadding)
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isIslandActive)
+        .onHover {
+            guard !isLockScreen else { return }
+            notchViewModel.onHover(
+                $0,
+                shouldExpand: notchDefaults.expandOnHover || notchDefaults.applyGlassEffect
+            )
+        }
+        .applyDropDestination(
+            isEnabled: !isLockScreen,
+            for: URL.self,
+            action: { fileURLs, _ in
+                guard !ShelfStorageManager.isDraggingFromShelf else { return false }
+                let externalURLs = fileURLs.filter { !ShelfStorageManager.shared.isShelfURL($0) }
+                guard !externalURLs.isEmpty else { return false }
+                DispatchQueue.global(qos: .userInitiated).async {
+                    guard let groupModel = ShelfFileGroupModel(
+                        urls: externalURLs
+                    ) else {
+                        return
+                    }
+
+                    DispatchQueue.main.async {
+                        expandedNotchViewModel.addShelfGroup(
+                            groupModel
+                        )
+                    }
+                }
+
+                return true
+            },
+            isTargeted: { targeted in
+                guard !isLockScreen else { return }
+                if targeted, ShelfStorageManager.isDraggingFromShelf {
+                    notchViewModel.isDropTarget = false
+                    return
+                }
+                notchViewModel.isDropTarget = targeted
+            }
+        )
+        .onChange(
+            of: notchViewModel.isDropTarget
+        ) { oldValue, newValue in
+            guard !isLockScreen, oldValue != newValue else { return }
+
+            if newValue {
+                expandedNotchViewModel.currentView = .shelf
+
+                notchViewModel.onTap()
+            } else {
+                notchViewModel.onHover(
+                    notchViewModel.isHovered
+                )
+            }
+        }
+        .onTapGesture {
+            guard !isLockScreen else { return }
+            notchViewModel.onTap()
         }
     }
 

@@ -13,6 +13,7 @@ struct CollapsedNotchView: View {
     @ObservedObject var notchViewModel: NotchViewModel
 
     @ObservedObject var collapsedNotchViewModel: CollapsedNotchViewModel
+    var floatingIdleHeight: CGFloat?
     @StateObject var notchDefaults = NotchDefaults.shared
     @StateObject var mediaDefaults = HUDMediaDefaults.shared
 
@@ -84,7 +85,8 @@ struct CollapsedNotchView: View {
                 )
 
                 OnlyNotchView(
-                    notchSize: notchViewModel.notchSize
+                    notchSize: notchViewModel.notchSize,
+                    height: (!collapsedNotchViewModel.hasActiveContent && !notchViewModel.isExpanded) ? floatingIdleHeight : nil
                 )
 
                 NowPlayingHUDRightView(

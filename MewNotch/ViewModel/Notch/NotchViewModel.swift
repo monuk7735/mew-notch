@@ -80,12 +80,27 @@ class NotchViewModel: ObservableObject {
         }
     }
 
+    private var isSimulatedNotch: Bool {
+        !isHardwareNotched && NotchDefaults.shared.externalNotchStyle == .simulatedNotch
+    }
+
+    private var extraPadWidth: CGFloat {
+        if isHardwareNotched || isSimulatedNotch {
+            return cornerRadius.top * 2
+        } else {
+            return 0
+        }
+    }
+
     func refreshNotchSize() {
         isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
-        let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly
+        let isExternalPersistent = !isHardwareNotched &&
+            (NotchDefaults.shared.externalNotchStyle == .floatingIsland ||
+             NotchDefaults.shared.externalNotchStyle == .simulatedNotch)
+        let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly || isExternalPersistent
 
         extraNotchPadSize = .init(
-            width: isHardwareNotched ? cornerRadius.top * 2 : 0,
+            width: extraPadWidth,
             height: 0
         )
 
@@ -93,6 +108,11 @@ class NotchViewModel: ObservableObject {
             screen: screen,
             force: shouldForce
         )
+
+        if !isHardwareNotched && NotchDefaults.shared.externalNotchStyle == .floatingIsland {
+            notchSize.width = CGFloat(NotchDefaults.shared.floatingIslandWidth)
+            notchSize.height += CGFloat(NotchDefaults.shared.floatingIslandHeightOffset)
+        }
 
         withAnimation {
             notchSize.width += extraNotchPadSize.width
@@ -146,7 +166,7 @@ class NotchViewModel: ObservableObject {
 
             self.cornerRadius = NotchUtils.shared.collapsedCornerRadius
             self.extraNotchPadSize = .init(
-                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
+                width: self.extraPadWidth,
                 height: 0
             )
         }
@@ -167,7 +187,7 @@ class NotchViewModel: ObservableObject {
         withAnimation {
             self.cornerRadius = NotchUtils.shared.expandedCornerRadius
             self.extraNotchPadSize = .init(
-                width: self.isHardwareNotched ? self.cornerRadius.top * 2 : 0,
+                width: self.extraPadWidth,
                 height: 0
             )
         }

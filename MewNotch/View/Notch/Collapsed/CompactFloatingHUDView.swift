@@ -12,7 +12,7 @@ struct CompactFloatingHUDView: View {
     var namespace: Namespace.ID
     @ObservedObject var notchViewModel: NotchViewModel
     @ObservedObject var collapsedNotchViewModel: CollapsedNotchViewModel
-    @StateObject private var notchDefaults = NotchDefaults.shared
+    @ObservedObject var notchDefaults = NotchDefaults.shared
 
     private var hudHeight: CGFloat {
         max(24, min(30, notchViewModel.notchSize.height))
@@ -44,7 +44,7 @@ struct CompactFloatingHUDView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
-        .padding(.top, 8)
+        .padding(.top, CGFloat(notchDefaults.externalHUDTopOffset))
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: collapsedNotchViewModel.brightnessHUD != nil)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: collapsedNotchViewModel.lockStatusHUD != nil)
     }

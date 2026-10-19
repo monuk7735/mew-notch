@@ -10,16 +10,24 @@ import Foundation
 import SwiftUI
 
 extension CollapsedNotchViewModel {
-    var isAuxiliaryScreen: Bool {
-        guard let screen else { return false }
+    var isPrimaryScreen: Bool {
+        guard let screen else { return true }
         let hasHardwareNotchScreen = NSScreen.screens.contains { NotchUtils.shared.hasNotch(screen: $0) }
         if hasHardwareNotchScreen {
-            return !NotchUtils.shared.hasNotch(screen: screen)
+            return NotchUtils.shared.hasNotch(screen: screen)
         }
         if let primary = NSScreen.screens.first {
-            return screen != primary
+            return screen == primary
         }
-        return false
+        return true
+    }
+
+    var isSecondaryScreen: Bool {
+        !isPrimaryScreen
+    }
+
+    var isAuxiliaryScreen: Bool {
+        isSecondaryScreen && NotchDefaults.shared.externalNotchStyle == .hudOnly
     }
 
     var shouldShowHUDOnThisScreen: Bool {
@@ -32,27 +40,26 @@ extension CollapsedNotchViewModel {
         let targetID = targetDisplayID ?? 0
 
         // If no target display specified, or targeted to main display:
-        // Main display handles it; auxiliary displays do not.
+        // Main display handles it; secondary displays do not.
         if targetID == 0 {
-            return !isAuxiliaryScreen
+            return isPrimaryScreen
         }
 
-        if isAuxiliaryScreen {
-            // Auxiliary screen: handle if targeted to this exact display
-            return targetID == currentDisplayID
-        } else {
-            // Main display:
+        if isPrimaryScreen {
             if targetID == currentDisplayID {
                 return true
             }
 
-            // Targeted to an auxiliary screen: fallback to main display if that screen doesn't show notch
+            // Targeted to a secondary screen: fallback to main display if that screen doesn't show notch
             if let targetScreen = NSScreen.screens.first(where: { $0.displayID == targetID }),
                !NotchManager.shared.shouldShowOnScreen(targetScreen) {
                 return true
             }
 
             return false
+        } else {
+            // Secondary screen: handle if targeted to this exact display
+            return targetID == currentDisplayID
         }
     }
 

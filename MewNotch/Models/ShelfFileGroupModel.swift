@@ -410,3 +410,21 @@ struct ShelfFileGroupModel: Identifiable, Codable {
         }
     }
 }
+
+extension ShelfFileModel: Equatable {
+    static func == (lhs: ShelfFileModel, rhs: ShelfFileModel) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.fileURL == rhs.fileURL &&
+            lhs.fileName == rhs.fileName &&
+            lhs.customName == rhs.customName
+    }
+}
+
+extension ShelfFileGroupModel: Equatable {
+    static func == (lhs: ShelfFileGroupModel, rhs: ShelfFileGroupModel) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.customGroupName == rhs.customGroupName &&
+            lhs.folderURL == rhs.folderURL &&
+            lhs.files == rhs.files
+    }
+}
