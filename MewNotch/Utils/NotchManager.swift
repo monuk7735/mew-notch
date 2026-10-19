@@ -183,7 +183,7 @@ class NotchManager {
         }
     }
 
-    private func setupNormalWindow(for screen: NSScreen, isHardwareNotched: Bool, addToSeparateSpace: Bool) {
+    private func setupNormalWindow(for screen: NSScreen, isHardwareNotched _: Bool, addToSeparateSpace: Bool) {
         var panel: NSWindow! = windows[screen]
 
         if panel == nil {

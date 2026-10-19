@@ -420,11 +420,4 @@ extension ShelfFileModel: Equatable {
     }
 }
 
-extension ShelfFileGroupModel: Equatable {
-    static func == (lhs: ShelfFileGroupModel, rhs: ShelfFileGroupModel) -> Bool {
-        lhs.id == rhs.id &&
-            lhs.customGroupName == rhs.customGroupName &&
-            lhs.folderURL == rhs.folderURL &&
-            lhs.files == rhs.files
-    }
-}
+extension ShelfFileGroupModel: Equatable {}

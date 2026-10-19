@@ -123,7 +123,7 @@ struct NotchView: View {
     }
 
     private var floatingIslandNotchView: some View {
-        let islandTopPadding: CGFloat = CGFloat(notchDefaults.floatingIslandTopOffset)
+        let islandTopPadding = CGFloat(notchDefaults.floatingIslandTopOffset)
         let menuBarHeight: CGFloat = {
             let diff = notchViewModel.screen.frame.maxY - notchViewModel.screen.visibleFrame.maxY
             return diff > 0 ? diff : 24

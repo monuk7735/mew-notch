@@ -70,12 +70,12 @@ class ExpandedNotchViewModel: ObservableObject {
             .sink { [weak self] in
                 guard let self else { return }
                 let latest = ShelfDefaults.shared.shelfFileGroups
-                guard self.shelfFileGroups != latest else { return }
-                self.isSyncingShelf = true
+                guard shelfFileGroups != latest else { return }
+                isSyncingShelf = true
                 withAnimation {
                     self.shelfFileGroups = latest
                 }
-                self.isSyncingShelf = false
+                isSyncingShelf = false
             }
             .store(in: &cancellables)
     }

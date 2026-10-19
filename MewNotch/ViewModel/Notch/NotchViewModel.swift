@@ -86,9 +86,9 @@ class NotchViewModel: ObservableObject {
 
     private var extraPadWidth: CGFloat {
         if isHardwareNotched || isSimulatedNotch {
-            return cornerRadius.top * 2
+            cornerRadius.top * 2
         } else {
-            return 0
+            0
         }
     }
 
@@ -100,7 +100,7 @@ class NotchViewModel: ObservableObject {
         let baseSize: CGSize = {
             if let hardwareScreen = NSScreen.screens.first(where: { NotchUtils.shared.hasNotch(screen: $0) }) {
                 var hwSize = NotchUtils.shared.notchSize(screen: hardwareScreen)
-                if hwSize.width > 0 && hwSize.height > 0 {
+                if hwSize.width > 0, hwSize.height > 0 {
                     hwSize.width += cornerRadius.top * 2
                     return hwSize
                 }
@@ -118,7 +118,7 @@ class NotchViewModel: ObservableObject {
         isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
         let isExternalPersistent = !isHardwareNotched &&
             (NotchDefaults.shared.externalNotchStyle == .island ||
-             NotchDefaults.shared.externalNotchStyle == .notch)
+                NotchDefaults.shared.externalNotchStyle == .notch)
         let shouldForce = NotchDefaults.shared.notchDisplayVisibility != .notchedDisplayOnly || isExternalPersistent
 
         extraNotchPadSize = .init(
@@ -131,7 +131,7 @@ class NotchViewModel: ObservableObject {
             force: shouldForce
         )
 
-        if !isHardwareNotched && NotchDefaults.shared.externalNotchStyle == .island {
+        if !isHardwareNotched, NotchDefaults.shared.externalNotchStyle == .island {
             notchSize.width = CGFloat(NotchDefaults.shared.floatingIslandWidth)
             notchSize.height += CGFloat(NotchDefaults.shared.floatingIslandHeightOffset)
         }
