@@ -51,7 +51,7 @@ struct BashView: View {
             }
         }
         .padding()
-        .frame(width: notchViewModel.notchSize.width * bashDefaults.widthMultiplier)
+        .frame(width: notchViewModel.expandedNotchSize.width * bashDefaults.widthMultiplier)
         .frame(maxHeight: .infinity)
         .background(AppColor.Surface.overlay)
         .cornerRadius(12)

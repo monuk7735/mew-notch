@@ -44,7 +44,7 @@ struct CompactFloatingHUDView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
-        .padding(.top, 8)
+        .padding(.top, CGFloat(notchDefaults.externalHUDTopOffset))
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: collapsedNotchViewModel.brightnessHUD != nil)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: collapsedNotchViewModel.lockStatusHUD != nil)
     }

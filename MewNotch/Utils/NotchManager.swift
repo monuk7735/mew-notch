@@ -80,7 +80,7 @@ class NotchManager {
         unlockWorkItem = nil
 
         guard notchDefaults.shownOnLockScreen else { return }
-        for (screen, window) in lockScreenWindows where NotchUtils.shared.hasNotch(screen: screen) {
+        for (screen, window) in lockScreenWindows where shouldPersistWindow(for: screen) {
             window.orderFrontRegardless()
         }
     }
@@ -120,9 +120,16 @@ class NotchManager {
 
     private var hideWorkItems: [NSWindow: DispatchWorkItem] = [:]
 
+    private func shouldPersistWindow(for screen: NSScreen) -> Bool {
+        if NotchUtils.shared.hasNotch(screen: screen) {
+            return true
+        }
+        return notchDefaults.externalNotchStyle == .island || notchDefaults.externalNotchStyle == .notch
+    }
+
     func showAuxiliaryWindow(for screen: NSScreen, isLockScreen: Bool = false) {
         guard !isLockScreen || notchDefaults.shownOnLockScreen,
-              !NotchUtils.shared.hasNotch(screen: screen),
+              !shouldPersistWindow(for: screen),
               let panel = isLockScreen ? lockScreenWindows[screen] : windows[screen] else { return }
         hideWorkItems[panel]?.cancel()
         hideWorkItems.removeValue(forKey: panel)
@@ -130,7 +137,7 @@ class NotchManager {
     }
 
     func hideAuxiliaryWindow(for screen: NSScreen, isLockScreen: Bool = false, delay: TimeInterval = 0.4) {
-        guard !NotchUtils.shared.hasNotch(screen: screen),
+        guard !shouldPersistWindow(for: screen),
               let panel = isLockScreen ? lockScreenWindows[screen] : windows[screen] else { return }
         hideWorkItems[panel]?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
@@ -176,7 +183,7 @@ class NotchManager {
         }
     }
 
-    private func setupNormalWindow(for screen: NSScreen, isHardwareNotched: Bool, addToSeparateSpace: Bool) {
+    private func setupNormalWindow(for screen: NSScreen, isHardwareNotched _: Bool, addToSeparateSpace: Bool) {
         var panel: NSWindow! = windows[screen]
 
         if panel == nil {
@@ -207,7 +214,7 @@ class NotchManager {
             display: true
         )
 
-        if isHardwareNotched {
+        if shouldPersistWindow(for: screen) {
             panel.orderFrontRegardless()
         } else {
             panel.orderOut(nil)

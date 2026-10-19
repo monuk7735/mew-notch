@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnlyNotchView: View {
     var notchSize: CGSize = .zero
+    var height: CGFloat?
 
     var body: some View {
         Text(
@@ -16,7 +17,7 @@ struct OnlyNotchView: View {
         )
         .frame(
             width: notchSize.width,
-            height: notchSize.height
+            height: height ?? notchSize.height
         )
         .contentShape(Rectangle())
     }

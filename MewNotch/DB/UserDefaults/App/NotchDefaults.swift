@@ -61,6 +61,56 @@ class NotchDefaults: ObservableObject {
         }
     }
 
+    @CodableUserDefault(
+        PREFIX + "ExternalNotchStyle",
+        defaultValue: ExternalNotchStyle.notch
+    )
+    var externalNotchStyle: ExternalNotchStyle {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "ExternalHUDTopOffset",
+        defaultValue: 8.0
+    )
+    var externalHUDTopOffset: Double {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "FloatingIslandTopOffset",
+        defaultValue: 8.0
+    )
+    var floatingIslandTopOffset: Double {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "FloatingIslandWidth",
+        defaultValue: 180.0
+    )
+    var floatingIslandWidth: Double {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
+    @PrimitiveUserDefault(
+        PREFIX + "FloatingIslandHeightOffset",
+        defaultValue: 0.0
+    )
+    var floatingIslandHeightOffset: Double {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+
     @PrimitiveUserDefault(
         PREFIX + "YieldBrightnessToBetterDisplay",
         defaultValue: true

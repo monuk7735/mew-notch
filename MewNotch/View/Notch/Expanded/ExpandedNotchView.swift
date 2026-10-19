@@ -34,6 +34,7 @@ struct ExpandedNotchView: View {
                 }
 
                 collapsedNotchView
+                    .frame(width: notchViewModel.expandedNotchSize.width)
                     .opacity(0)
                     .disabled(true)
 
