@@ -33,10 +33,10 @@
 ## Features
 
 - **Brightness Display** - Displays brightness adjustments in real-time, including optional auto-brightness changes and custom step sizes.
-- **External Display & BetterDisplay Support** - Tracks brightness changes across external displays with seamless BetterDisplay integration and a sleek, compact floating HUD.
+- **External Display & BetterDisplay Support** - Choose between a simulated bezel-connected **Notch**, a floating **Island**, or an on-demand **HUD** with custom position and dimension controls, plus seamless BetterDisplay integration.
 - **Sound Level Display** - Shows input/output volume changes directly on the notch with customizable step sizes.
 - **System HUD Suppression** - Option to completely hide the stock macOS HUDs for a cleaner experience.
-- **File Shelf** - Drag and drop files to the notch for quick access or AirDrop sharing. Files persist across restarts, support multi-file packaging/renaming, and work seamlessly even with **Show on Lock Screen** enabled.
+- **File Shelf** - Drag and drop files to the notch for quick access or AirDrop sharing. Files persist across restarts, sync seamlessly across multiple displays, support multi-file packaging/renaming, and work even with **Show on Lock Screen** enabled.
 - **Power State** - Show current power source. Toggle "Time Remaining" display for a cleaner look.
 - **Dedicated Lock Screen Settings** - Independently configure notch dimensions (width & height), default expanded views, and visibility for the macOS lock screen.
 - **Multi-language Support** - Available in English and Simplified Chinese (简体中文).
