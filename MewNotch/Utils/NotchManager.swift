@@ -124,7 +124,7 @@ class NotchManager {
         if NotchUtils.shared.hasNotch(screen: screen) {
             return true
         }
-        return notchDefaults.externalNotchStyle == .floatingIsland || notchDefaults.externalNotchStyle == .simulatedNotch
+        return notchDefaults.externalNotchStyle == .island || notchDefaults.externalNotchStyle == .notch
     }
 
     func showAuxiliaryWindow(for screen: NSScreen, isLockScreen: Bool = false) {

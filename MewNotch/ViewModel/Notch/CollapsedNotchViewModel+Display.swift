@@ -27,7 +27,7 @@ extension CollapsedNotchViewModel {
     }
 
     var isAuxiliaryScreen: Bool {
-        isSecondaryScreen && NotchDefaults.shared.externalNotchStyle == .hudOnly
+        isSecondaryScreen && NotchDefaults.shared.externalNotchStyle == .hud
     }
 
     var shouldShowHUDOnThisScreen: Bool {

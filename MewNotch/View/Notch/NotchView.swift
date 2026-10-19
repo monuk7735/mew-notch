@@ -48,11 +48,11 @@ struct NotchView: View {
                     hardwareNotchView
                 } else {
                     switch notchDefaults.externalNotchStyle {
-                    case .hudOnly:
+                    case .hud:
                         floatingHUDView
-                    case .floatingIsland:
+                    case .island:
                         floatingIslandNotchView
-                    case .simulatedNotch:
+                    case .notch:
                         hardwareNotchView
                     }
                 }
@@ -70,13 +70,13 @@ struct NotchView: View {
         }
         .onAppear {
             if !notchViewModel.isHardwareNotched,
-               notchDefaults.externalNotchStyle == .hudOnly,
+               notchDefaults.externalNotchStyle == .hud,
                collapsedNotchViewModel.hasActiveContent {
                 NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
             }
         }
         .onChange(of: collapsedNotchViewModel.hasActiveContent) { _, hasActive in
-            if !notchViewModel.isHardwareNotched, notchDefaults.externalNotchStyle == .hudOnly {
+            if !notchViewModel.isHardwareNotched, notchDefaults.externalNotchStyle == .hud {
                 if hasActive {
                     NotchManager.shared.showAuxiliaryWindow(for: notchViewModel.screen, isLockScreen: isLockScreen)
                 } else {

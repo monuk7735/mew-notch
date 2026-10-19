@@ -20,7 +20,7 @@ struct MinimalHUDView<Content: View>: View {
     var content: () -> Content
 
     private var isSimulatedNotch: Bool {
-        !notchViewModel.isHardwareNotched && NotchDefaults.shared.externalNotchStyle == .simulatedNotch
+        !notchViewModel.isHardwareNotched && NotchDefaults.shared.externalNotchStyle == .notch
     }
 
     private var contentPadding: CGFloat {

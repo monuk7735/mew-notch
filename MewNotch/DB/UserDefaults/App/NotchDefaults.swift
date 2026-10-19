@@ -63,7 +63,7 @@ class NotchDefaults: ObservableObject {
 
     @CodableUserDefault(
         PREFIX + "ExternalNotchStyle",
-        defaultValue: ExternalNotchStyle.simulatedNotch
+        defaultValue: ExternalNotchStyle.notch
     )
     var externalNotchStyle: ExternalNotchStyle {
         didSet {

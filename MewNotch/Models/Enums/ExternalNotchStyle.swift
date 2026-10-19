@@ -12,28 +12,28 @@ enum ExternalNotchStyle: String, CaseIterable, Codable, Identifiable {
         rawValue
     }
 
-    case simulatedNotch = "SimulatedNotch"
-    case floatingIsland = "FloatingIsland"
-    case hudOnly = "HUDOnly"
+    case notch = "Notch"
+    case island = "Island"
+    case hud = "HUD"
 
     var displayName: LocalizedStringKey {
         switch self {
-        case .simulatedNotch:
+        case .notch:
             "Notch"
-        case .floatingIsland:
+        case .island:
             "Island"
-        case .hudOnly:
+        case .hud:
             "HUD"
         }
     }
 
     var description: LocalizedStringKey {
         switch self {
-        case .simulatedNotch:
+        case .notch:
             "Simulates a full Mac-style notch connected to the top bezel"
-        case .floatingIsland:
+        case .island:
             "Shows a persistent floating pill unattached to the top bezel"
-        case .hudOnly:
+        case .hud:
             "Only shows a compact floating HUD when volume or brightness changes"
         }
     }

@@ -44,7 +44,7 @@ struct ExternalDisplaySettingsView: View {
                 Text("Notch Style")
             }
 
-            if notchDefaults.externalNotchStyle == .hudOnly {
+            if notchDefaults.externalNotchStyle == .hud {
                 Section {
                     SettingsRow(
                         title: "Top Offset",
@@ -63,7 +63,7 @@ struct ExternalDisplaySettingsView: View {
                 }
             }
 
-            if notchDefaults.externalNotchStyle == .floatingIsland {
+            if notchDefaults.externalNotchStyle == .island {
                 Section {
                     SettingsRow(
                         title: "Top Offset",
