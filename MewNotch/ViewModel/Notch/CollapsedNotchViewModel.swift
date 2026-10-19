@@ -26,10 +26,9 @@ class CollapsedNotchViewModel: ObservableObject {
     private let volumeHUDThreshold: Float = 0.04
     var screen: NSScreen?
     var isLockScreen: Bool = false
-    var isDeviceScreenLocked: Bool = false
 
     var isCurrentlyLocked: Bool {
-        isLockScreen || isDeviceScreenLocked || NotchManager.shared.isScreenLocked
+        isLockScreen || NotchManager.shared.isScreenLocked
     }
 
     var hasActiveHUD: Bool {
