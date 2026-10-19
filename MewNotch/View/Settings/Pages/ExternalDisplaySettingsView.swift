@@ -104,7 +104,7 @@ struct ExternalDisplaySettingsView: View {
                         )
                     }
                 } header: {
-                    Text("Floating Island Position & Size")
+                    Text("Island Position & Size")
                 }
             }
 

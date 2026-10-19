@@ -29,8 +29,8 @@ struct FileShelfView: View {
                 }
             )
             .frame(
-                width: notchViewModel.notchSize.height * 3,
-                height: notchViewModel.notchSize.height * 3
+                width: notchViewModel.expandedNotchSize.height * 3,
+                height: notchViewModel.expandedNotchSize.height * 3
             )
 
             ZStack {
@@ -175,8 +175,8 @@ struct FileShelfView: View {
             }
         }
         .frame(
-            width: notchViewModel.notchSize.width * 2.2,
-            height: notchViewModel.notchSize.height * 3,
+            width: notchViewModel.expandedNotchSize.width * 2.2,
+            height: notchViewModel.expandedNotchSize.height * 3,
             alignment: .bottom
         )
     }

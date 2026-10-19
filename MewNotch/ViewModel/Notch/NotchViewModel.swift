@@ -92,6 +92,28 @@ class NotchViewModel: ObservableObject {
         }
     }
 
+    var expandedNotchSize: CGSize {
+        if isHardwareNotched {
+            return notchSize
+        }
+
+        let baseSize: CGSize = {
+            if let hardwareScreen = NSScreen.screens.first(where: { NotchUtils.shared.hasNotch(screen: $0) }) {
+                var hwSize = NotchUtils.shared.notchSize(screen: hardwareScreen)
+                if hwSize.width > 0 && hwSize.height > 0 {
+                    hwSize.width += cornerRadius.top * 2
+                    return hwSize
+                }
+            }
+            return CGSize(width: 226, height: 34)
+        }()
+
+        return CGSize(
+            width: max(notchSize.width, baseSize.width),
+            height: max(notchSize.height, baseSize.height)
+        )
+    }
+
     func refreshNotchSize() {
         isHardwareNotched = NotchUtils.shared.hasNotch(screen: screen)
         let isExternalPersistent = !isHardwareNotched &&

@@ -50,7 +50,7 @@ struct NotchHomeView: View {
             }
         }
         .frame(
-            height: notchViewModel.notchSize.height * 3
+            height: notchViewModel.expandedNotchSize.height * 3
         )
     }
 }
