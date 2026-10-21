@@ -76,7 +76,7 @@ struct MirrorView: View {
                         AppIcon.personFill.image
                             .resizable()
                             .scaledToFit()
-                            .frame(height: notchViewModel.notchSize.height * 0.8) // Reduce icon size slightly to fit text
+                            .frame(height: notchViewModel.expandedNotchSize.height * 0.8) // Reduce icon size slightly to fit text
                             .foregroundStyle(
                                 LinearGradient(
                                     colors: [.white.opacity(0.8), .white.opacity(0.4)],
@@ -113,7 +113,7 @@ struct MirrorView: View {
             }
         }
         .frame(
-            width: notchViewModel.notchSize.height * 3
+            width: notchViewModel.expandedNotchSize.height * 3
         )
         .clipShape(RoundedRectangle(cornerRadius: mirrorDefaults.cornerRadius))
         .shadow(color: .white.opacity(0.1), radius: 1, x: 0, y: 1) // Subtle rim lighting

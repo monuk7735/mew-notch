@@ -95,6 +95,8 @@ struct AppIcon: Sendable, Hashable, ExpressibleByStringLiteral {
     static let chevronLeft = AppIcon("chevron.left")
     static let chevronRight = AppIcon("chevron.right")
     static let arrowUp = AppIcon("arrow.up")
+    static let arrowLeftAndRight = AppIcon("arrow.left.and.right")
+    static let arrowUpAndDown = AppIcon("arrow.up.and.down")
 
     // Notch Control & Switching Icons
     static let pin = AppIcon("pin")

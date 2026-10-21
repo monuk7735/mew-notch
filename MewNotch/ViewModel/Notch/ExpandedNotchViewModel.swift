@@ -5,6 +5,7 @@
 //  Created by Monu Kumar on 26/03/25.
 //
 
+import Combine
 import SwiftUI
 
 class ExpandedNotchViewModel: ObservableObject {
@@ -34,8 +35,12 @@ class ExpandedNotchViewModel: ObservableObject {
 
     @Published var nowPlayingMedia: NowPlayingMediaModel?
 
+    private var isSyncingShelf: Bool = false
+    private var cancellables = Set<AnyCancellable>()
+
     @Published var shelfFileGroups: [ShelfFileGroupModel] = [] {
         didSet {
+            guard !isSyncingShelf else { return }
             ShelfDefaults.shared.shelfFileGroups = shelfFileGroups
         }
     }
@@ -59,6 +64,20 @@ class ExpandedNotchViewModel: ObservableObject {
             name: NSNotification.Name.NowPlayingInfo,
             object: nil
         )
+
+        ShelfDefaults.shared.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self else { return }
+                let latest = ShelfDefaults.shared.shelfFileGroups
+                guard shelfFileGroups != latest else { return }
+                isSyncingShelf = true
+                withAnimation {
+                    self.shelfFileGroups = latest
+                }
+                isSyncingShelf = false
+            }
+            .store(in: &cancellables)
     }
 
     @objc func handleNowPlayingMediaChanges() {

@@ -67,7 +67,7 @@ struct NowPlayingDetailView: View {
             detailsView()
         }
         .frame(
-            width: notchViewModel.notchSize.width * 1.5
+            width: notchViewModel.expandedNotchSize.width * 1.5
         )
         .onChange(
             of: nowPlayingModel

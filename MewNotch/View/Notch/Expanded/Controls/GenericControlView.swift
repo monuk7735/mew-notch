@@ -47,8 +47,8 @@ struct NotchControlButton: View {
             .bold()
             .padding(5)
             .frame(
-                width: notchViewModel.notchSize.height * 0.7,
-                height: notchViewModel.notchSize.height * 0.7
+                width: notchViewModel.expandedNotchSize.height * 0.7,
+                height: notchViewModel.expandedNotchSize.height * 0.7
             )
             .background {
                 Circle()
